@@ -24,11 +24,11 @@ function UserPage() {
   }
 
   const getUserDeckList = () => {
-      // route doesn't exist yet
-      axios.get('/user/decks').then((response) => {
+      axios.get('/decks/user').then((response) => {
           const action = { type: 'SET_USER_DECK_LIST', payload: response.data };
           dispatch(action);
           setUserDeckList(response.data);
+          console.log(response.data);
       }).catch((error) => {
           console.log('GET /user/decks error', error);
           alert("Something went wrong fetching user's decks");
@@ -36,8 +36,7 @@ function UserPage() {
   }
 
   const getPublicDeckList = () => {
-    // route doesn't exist yet
-    axios.get('/public/decks').then((response) => {
+    axios.get('/decks/public').then((response) => {
         const action = { type: 'SET_PUBLIC_DECK_LIST', payload: response.data };
         dispatch(action);
         setPublicDeckList(response.data);
@@ -62,7 +61,7 @@ function UserPage() {
       <img src='https://www.statology.org/wp-content/uploads/2021/10/combo6.png' width='500px' alt='stats example' />
 
       <h3 onClick={toUserDeckList}>Recent Decks</h3>
-      {/* set limit to 8-ish, make sure to sort by most recently used decks */}
+      {/* make sure to sort by most recently used decks */}
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {
             return <DeckItem key={deck.id} deck={deck} />
@@ -71,7 +70,7 @@ function UserPage() {
       </Grid>
       
       <h3 onClick={toTrendingDeckList}> Trending Decks</h3>
-      {/* set limit to 8-ish, make sure to sort by most used! still gotta figure out how that's calculated */}
+      {/* make sure to sort by most used! still gotta figure out how that's calculated */}
       <Grid container spacing={1}>
         {publicDeckList.map((deck) => {
             return <DeckItem key={deck.id} deck={deck} />
