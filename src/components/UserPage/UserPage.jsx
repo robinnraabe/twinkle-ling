@@ -5,11 +5,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import { Grid } from '@mui/material';
-import DeckItem from '../DeckItem/DeckItem'; // component doesn't exist yet
+import DeckItem from '../DeckItem/DeckItem';
 
 function UserPage() {
-  // this component doesn't do much to start, just renders some user reducer info to the DOM
-
   const user = useSelector((store) => store.user);
   const [userDeckList, setUserDeckList] = useState([]);
   const [publicDeckList, setPublicDeckList] = useState([]);
