@@ -1,12 +1,20 @@
 import React from 'react';
-import { Card, CardMedia, CardContent, 
-  Grid } from '@mui/material';
+import { Card, CardMedia, CardContent, CardActions,
+  Grid, Button } from '@mui/material';
 
+// This displays each deck on the UserPage
 function DeckItem(props) {
+  const viewDeck = () => {
+    // this will link to View Deck page
+  }
+
+  const quickStudy = () => {
+    // this will link to Learning/Review page and load deck for studying
+  }
 
   return (
     <Grid item m={3}>
-      <Card sx={[ 
+      <Card onClick={viewDeck} sx={[ 
         {maxWidth: '200px'},
         {marginTop: '10px'},
         {display: 'flex'}, 
@@ -25,6 +33,17 @@ function DeckItem(props) {
           <h3>{props.deck.title}</h3>
           <h5>{props.deck.language}</h5>
         </CardContent>
+        <CardActions>
+          <Button variant='contained' onClick={quickStudy}>
+            {props.deck.review_status ?
+              // Shows by default
+              'Review'
+              :
+              // Shows only if the deck hasn't been studied yet
+              'Learn'
+            }
+          </Button>
+        </CardActions>
       </Card>
     </Grid>
   )
