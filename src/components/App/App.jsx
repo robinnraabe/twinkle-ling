@@ -21,6 +21,7 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
 import UserDeckList from '../UserDeckList/UserDeckList';
+import UserDeckDetails from '../UserDeckDetails/UserDeckDetails';
 
 import './App.css';
 
@@ -100,6 +101,10 @@ function App() {
 
           <Route exact path="/decks">
             <UserDeckList />
+          </Route>
+
+          <Route exact path="/deck/details">
+            <UserDeckDetails />
           </Route>
 
           {/* If none of the other routes matched, we will show a 404. */}

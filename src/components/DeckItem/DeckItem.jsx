@@ -4,9 +4,6 @@ import { Card, CardMedia, CardContent, CardActions,
 
 // This displays each deck on the UserPage
 function DeckItem(props) {
-  const viewDeck = () => {
-    // this will link to View Deck page
-  }
 
   const quickStudy = () => {
     // this will link to Learning/Review page and load deck for studying
@@ -14,7 +11,7 @@ function DeckItem(props) {
 
   return (
     <Grid item m={3}>
-      <Card onClick={viewDeck} sx={[ 
+      <Card onClick={props.toDeck} sx={[ 
         {maxWidth: '200px'},
         {marginTop: '10px'},
         {display: 'flex'}, 

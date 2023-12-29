@@ -2,12 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Grid, Switch, Stack, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import DeckItem from '../DeckItem/DeckItem';
 import { styled } from '@mui/material/styles';
 
 function UserPage() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [userDeckList, setUserDeckList] = useState([]);
   const languageList = useSelector(store => store.languages);
   const [chosenLanguage, setLanguage] = useState({});
@@ -19,8 +21,15 @@ function UserPage() {
   }
 
   // Sends user to the page for the selected deck
-  const toDeck = () => {
-    history.push('/deck/view');
+  const toDeck = (deckId) => {
+    axios.get(`/deck/${deckId}`).then(response => {
+      dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+      history.push('/deck/details');
+    })
+      .catch(error => {
+        console.log('Error getting deck details:', error);
+        alert('Something went wrong!');
+      })
   }
 
   // Sets toggle value to ALL or USER CREATED decks
@@ -130,7 +139,7 @@ function UserPage() {
       <h2>Deck List</h2>
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {
-            return <DeckItem key={deck.id} deck={deck} />
+            return <DeckItem key={deck.id} deck={deck} toDeck={() => toDeck(deck.deck_id)} />
         })} 
       </Grid>
     </div>
