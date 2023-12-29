@@ -5,7 +5,7 @@ import { Card, CardMedia, CardContent, CardActions,
 // This displays each chapter on the UserDeckDetails page
 function ChapterItem(props) {
 
-  const toLesson = (items) => {
+  const toLesson = (type) => {
     // This will link to Learning/Review page and load deck for studying
   }
 

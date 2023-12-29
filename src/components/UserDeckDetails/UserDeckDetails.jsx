@@ -2,22 +2,29 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button, Stack, Box, Grid } from '@mui/material';
-import ChapterItm from '../ChapterItem/ChapterItem';
+import ChapterItem from '../ChapterItem/ChapterItem';
 
 // Displays the details for the selected movie
 function DeckDetails({id}) {
   const deck = useSelector(store => store.deckDetails);
-  console.log('deck details:', deck);
-
   const history = useHistory();
 
-  // Sends user back to UserDeckList page
+  // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
     history.push('/decks');
   }
 
   const addChapter = () => {
+    // This will add new chapter to deck
+  }
 
+  const toLesson = (type) => {
+    // This will link to Learning/Review page and load deck for studying
+    history.push('/session');
+  }
+
+  const resetProgress = () => {
+    // Update the learning and review progress in the database to equal 0
   }
 
   const boxStyle = {
@@ -30,7 +37,6 @@ function DeckDetails({id}) {
     color: 'white',
     margin: '5px 0px'
   }
-
 
   // Displays the information for the selected Deck
   return (
@@ -64,20 +70,36 @@ function DeckDetails({id}) {
         <Box style={boxStyle}>
             <Stack direction='row' justifyContent='space-between'>
                 <Stack direction='column'>
-                    <Button variant='contained' style={btnStyle}>Learn</Button>
-                    <Button variant='contained' style={btnStyle}>Review</Button>
+                    <Button variant='contained' style={btnStyle}
+                        onClick={() => toLesson('learning')}>
+                        Learn
+                    </Button>
+                    <Button variant='contained' style={btnStyle}
+                        onClick={() => toLesson('learning')}>
+                        Review
+                    </Button>
                 </Stack>
+
                 <Stack direction='column'>
-                    <Button variant='contained' style={btnStyle}>Edit Deck</Button>
-                    <Button variant='contained' style={btnStyle}>Reset Progress</Button>
+                    <Button variant='contained' style={btnStyle}
+                        onClick={() => resetProgress()}>
+                        Edit Deck
+                    </Button>
+                    <Button variant='contained' style={btnStyle}
+                        onClick={() => resetProgress()}>
+                        Reset Progress
+                    </Button>
                 </Stack>
             </Stack>
         </Box>
+
         <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 20px'}}>
             <h2>Chapters</h2>
             <Button onClick={addChapter}>+ New Chapter</Button>
         </Stack>
-        {/* 
+        
+        {/* Chapters header */}
+        {/* Chapters will be mapped here once the sql is written
         <Grid container spacing={1}>
             {deck.map((chapter) => {
                 return <ChapterItem key={chapter.id} chapter={chapter} />
@@ -89,8 +111,3 @@ function DeckDetails({id}) {
 }
 
 export default DeckDetails;
-
-
-
-
-

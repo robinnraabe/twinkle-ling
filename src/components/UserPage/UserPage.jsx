@@ -18,6 +18,18 @@ function UserPage() {
     history.push('/decks')
   }
 
+  // Sends user to the page for the selected deck
+  const toDeck = (deckId) => {
+    axios.get(`/deck/${deckId}`).then(response => {
+      dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+      history.push('/deck/details');
+    })
+      .catch(error => {
+        console.log('Error getting deck details:', error);
+        alert('Something went wrong!');
+      })
+  }
+
   const toTrendingDeckList = () => {
     // route doesn't exist yet
     history.push('/trending')
@@ -64,7 +76,7 @@ function UserPage() {
       {/* make sure to sort by most recently used decks */}
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {
-            return <DeckItem key={deck.id} deck={deck} />
+            return <DeckItem key={deck.id} deck={deck} toDeck={() => toDeck(deck.deck_id)} />
         })} 
         {/* last card links to the user's full list of decks*/}
         <Grid item m={3}>
