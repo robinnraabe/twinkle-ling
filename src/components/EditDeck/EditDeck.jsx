@@ -1,20 +1,21 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button, Stack, Box, TextField, Select, MenuItem } from '@mui/material';
+import { Button, Stack, Box, TextField, Select, MenuItem, Switch } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 function EditDeck() {
-    const deck = useSelector(store => store.deckDetails);
-    const languageList = useSelector(store => store.languages);
-    const [chosenLanguage, setLanguage] = useState({});
-
     const history = useHistory();
-  
-    // Sets language for deck
-    const handleLanguageChange = (key) => (event) => {
-      setLanguage({[key]: event.target.value}); 
-      console.log(chosenLanguage);
-    }
+    const dispatch = useDispatch();
+    const deck = useSelector(store => store.deckDetails[0]);
+    const languageList = useSelector(store => store.languages);
+    const [newInfo, setInfo] = useState({});
+    const [details, setDetails] = useState(deck.details);
+    const [title, setTitle] = useState(deck.title);
+    const [chosenLanguage, setLanguage] = useState(deck.language_id);
+    const [contributors, setContributors] = useState(deck.contributor_id);
+    const [status, setStatus] = useState(deck.public_status);
 
     // This will delete the delected deck and send the user to the UserDeckList page
     const deleteDeck = (key) => (event) => {
@@ -23,83 +24,154 @@ function EditDeck() {
         history.push('/decks')
     }
 
-    // Sends the user back to the UserDeckDetails page
-    const toDeck = () => {
-        history.push('/..');
-      }
+    // Adds new deck details to object
+    const handleChange = (key) => (event) => {
+        event.preventDefault();
+        setInfo({...newInfo, 
+            [key]: event.target.value, 
+        })
+    }
+
+    // NEED TO SET UP ROUTER ROUTE FOR PUT REQUEST!!!!!!!
+
+    // Saves details returns user to the UserDeckDetails page
+    const saveDetails = (event) => {
+        dispatch({ type: 'UPDATE_DECK', payload: newInfo });
+        console.log('newDetails:', newInfo);
+        // add return here
+        history.push('/decks')
+    }
+
+    const stackStyle = {
+        margin: '20px'
+    }
+
+    // Toggle swtich styling, probably placeholder
+    const ToggleSwitch = styled(Switch)(({ theme }) => ({
+        width: 200,
+        height: 25,
+        padding: 0,
+        display: 'flex',
+        '&:active': {
+        '& .MuiSwitch-thumb': {
+            width: 50,
+        },
+        '& .MuiSwitch-switchBase.Mui-checked': {
+            transform: 'translateX(144px)',
+        },
+        },
+        '& .MuiSwitch-switchBase': {
+        padding: 3,
+        '&.Mui-checked': {
+            transform: 'translateX(144px)',
+            color: '#fff',
+            '& + .MuiSwitch-track': {
+            opacity: 1,
+            backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
+            },
+        },
+        },
+        '& .MuiSwitch-thumb': {
+        boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+        width: 50,
+        height: 19,
+        borderRadius: 10,
+        transition: theme.transitions.create(['width'], {
+            duration: 200,
+        }),
+        },
+        '& .MuiSwitch-track': {
+        borderRadius: 24 / 2,
+        opacity: 1,
+        backgroundColor:
+            theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
+        boxSizing: 'border-box',
+        },
+    }));
+
+    useEffect(() => {
+        dispatch({ type: 'FETCH_LANGUAGES' });
+      }, [])
 
     return (
-        <Box onClick={submit}>
-            <Stack direction='column' justifyContent='space-between'>
-                <Stack direction='column'>
-                    <img src={deck.image_url} />
-                    <Button variant='contained'> Upload </Button>
+        <Box sx={{ margin: '50px', height: '550px', backgroundColor: 'white', borderRadius: '20px' }}>
+            <Stack style={stackStyle} direction='row' height='100%' justifyContent='space-between'>
+
+                {/* Left stack */}
+                <Stack style={stackStyle} direction='column' justifyContent='space-between' >
+                    <Stack direction='column'>
+                        <img src={deck.image_url} width='300px'/>
+                        <br /><br />
+                        <Button type='button' variant='contained'> Upload </Button>
+                    </Stack>
+                    <Button type='button' variant='contained' onClick={deleteDeck(deck.id)}> Delete Deck </Button>
                 </Stack>
-                <Button variant='contained' onClick={deleteDeck(deck.id)}> Delete Deck </Button>
+
+                {/* Right stack */}
+                <Stack style={stackStyle} direction='column' justifyContent='space-between' width='380px'>
+                    <Stack style={stackStyle} direction='row' alignItems='center' justifyContent='space-between'>
+                        Title 
+                        <TextField variant='outlined'
+                            value={title}
+                            onChange={(e) => { setTitle(e.target.value); handleChange('title') }}
+
+                        />
+                    </Stack>
+
+                    <Stack style={stackStyle} direction='row' alignItems='center' justifyContent='space-between'>
+                        Language
+                        <Select sx={{ 
+                            backgroundColor: 'lavender', 
+                            borderRadius: '20px', 
+                            margin: '0px 3px', 
+                            width: '200px'  }}
+                            value={chosenLanguage}
+                            label='Language'
+                            onChange={(e) => { setLanguage(e.target.value); handleChange('language_id') }}
+                        >
+                            {languageList.map(language => {
+                                return (
+                                    <MenuItem 
+                                        key={language.id} 
+                                        value={language.id}>
+                                            {language.language}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </Stack>
+
+                    <Stack style={stackStyle} direction='row' alignItems='center' justifyContent='space-between'>
+                        Details
+                        <TextField 
+                            multiline
+                            value={details}
+                            onChange={(e) => { setDetails(e.target.value); handleChange('details') }}
+                            sx={{ width: '400px' }}
+                            inputProps={{ style: {fontWeight: '300', color: 'rgb(72, 72, 72)'} }} 
+                        />
+                    </Stack>
+
+                    <Stack style={stackStyle} direction='row' alignItems='center' justifyContent='space-between'>
+                        Contributors
+                        <TextField variant='outlined'
+                            value={contributors} 
+                            onChange={(e) => { setContributors(e.target.value); handleChange('contributor_id') }}
+                        />
+                    </Stack>
+
+                    {/* might make this a toggle instead */}
+                    <Stack style={stackStyle} direction='row' alignItems='center' justifyContent='space-between'>
+                        Make public?
+                        <ToggleSwitch inputProps={{ 'aria-label': 'ant design' }} 
+                            onChange={(e) => { setStatus(!deck.status); handleChange('public_status') }} />
+                    </Stack>
+
+                </Stack>
+                <Stack style={stackStyle} justifyContent='end'>
+                    <Button type='submit' variant='contained' onClick={() => saveDetails()}>Save</Button>
+                </Stack>
             </Stack>
-            <Stack direction='column'>
-                Title 
-                <TextField variant='outlined'
-                    value={deck.title}>
-
-                </TextField>
-
-                Language
-                <Select sx={{ 
-                    backgroundColor: 'lavender', 
-                    borderRadius: '20px', 
-                    margin: '0px 3px', 
-                    width: '200px'  }}
-                    value={chosenLanguage.id}
-                    label='Language'
-                    onChange={handleLanguageChange('id')}
-                >
-                    {languageList.map(language => {
-                        return (
-                            <MenuItem 
-                                key={language.id} 
-                                value={language.id}>
-                                    {language.language}
-                            </MenuItem>
-                        );
-                    })}
-                </Select>
-
-                Details
-                <TextField variant='outlined'
-                    value={deck.details}>
-
-                </TextField>
-
-                Contributors
-                <TextField variant='outlined'
-                    value={deck.contributor_id}>
-
-                </TextField>
-
-                {/* might make this a toggle instead */}
-                Status
-                <Select sx={{ 
-                    backgroundColor: 'lavender', 
-                    borderRadius: '20px', 
-                    margin: '0px 3px', 
-                    width: '200px'  }}
-                    value={chosenStatus.id}
-                    label='Status'
-                    onChange={handleStatusChange('id')}
-                >
-                    {statusList.map(status => {
-                        return (
-                            <MenuItem 
-                                key={status.id} 
-                                value={status.id}>
-                                    {status.status}
-                            </MenuItem>
-                        );
-                    })}
-                </Select>
-            </Stack>
-            <Button variant='contained' onClick={toDeck()}>Save</Button>
         </Box>
     )
 }

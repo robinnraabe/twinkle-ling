@@ -1,17 +1,33 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button, Stack, Box, Grid } from '@mui/material';
 import ChapterItem from '../ChapterItem/ChapterItem';
 
 // Displays the details for the selected movie
 function DeckDetails({id}) {
-  const deck = useSelector(store => store.deckDetails);
+  const deck = useSelector(store => store.deckDetails[0]);
+  const deckId = deck.id;
   const history = useHistory();
+  const dispatch = useDispatch();
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
     history.push('/decks');
+  }
+
+  // Sends the user to the EditDeck page
+  // need to figure out how to create a page for each deck...
+  const toEditDeck = () => {
+    axios.get(`/deck/${deckId}`).then(response => {
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+        history.push('/deck/edit');
+      })
+        .catch(error => {
+          console.log('Error getting deck details:', error);
+          alert('Something went wrong!');
+        })
   }
 
   const addChapter = () => {
@@ -30,7 +46,7 @@ function DeckDetails({id}) {
   const boxStyle = {
     color: 'lavender',
     padding: '20px',
-    backgroundImage: `url('${deck[0].image_url}')`
+    backgroundImage: `url('${deck.image_url}')`
   }
 
   const btnStyle = {
@@ -50,14 +66,14 @@ function DeckDetails({id}) {
                     style={{borderRadius: '200px'}} 
                     width='80px' height='80px' />
                 <Stack direction='column'>
-                    {deck[0].title}<br />
-                    Creator: {deck[0].creator_id}
+                    {deck.title}<br />
+                    Creator: {deck.creator_id}
                 </Stack>
             </Stack>
 
             {/* Right subheader items */}
             <Stack alignItems='center'>
-                Language: {deck[0].language_id}<br />
+                Language: {deck.language_id}<br />
                 <Button onClick={toUserDeckList} 
                     disableRipple
                     variant='contained'>
@@ -82,7 +98,7 @@ function DeckDetails({id}) {
 
                 <Stack direction='column'>
                     <Button variant='contained' style={btnStyle}
-                        onClick={() => resetProgress()}>
+                        onClick={() => toEditDeck()}>
                         Edit Deck
                     </Button>
                     <Button variant='contained' style={btnStyle}
@@ -93,12 +109,12 @@ function DeckDetails({id}) {
             </Stack>
         </Box>
 
+        {/* Chapters header */}
         <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 20px'}}>
             <h2>Chapters</h2>
             <Button onClick={addChapter}>+ New Chapter</Button>
         </Stack>
         
-        {/* Chapters header */}
         {/* Chapters will be mapped here once the sql is written
         <Grid container spacing={1}>
             {deck.map((chapter) => {
