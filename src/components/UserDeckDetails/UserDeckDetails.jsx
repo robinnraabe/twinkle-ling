@@ -9,7 +9,7 @@ import ChapterItem from '../ChapterItem/ChapterItem';
 // Displays the details for the selected movie
 function DeckDetails({id}) {
   const deck = useSelector(store => store.deckDetails[0]);
-  const chapters = useSelector(store => store.chapterDetails[0]);
+  const chapters = useSelector(store => store.chapterDetails);
   const deckId = deck.id;
   const history = useHistory();
   const dispatch = useDispatch();
@@ -132,13 +132,11 @@ function DeckDetails({id}) {
             <Button onClick={addChapter}>+ New Chapter</Button>
         </Stack>
         
-        {/* Chapters will be mapped here once the sql is written
-        <Grid container spacing={1}>
-            {deck.map((chapter) => {
+        <Grid container spacing={2}>
+            {chapters.map((chapter) => {
                 return <ChapterItem key={chapter.id} chapter={chapter} />
             })} 
         </Grid>
-        */}
     </div>
   );
 }

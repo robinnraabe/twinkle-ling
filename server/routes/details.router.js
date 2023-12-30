@@ -8,7 +8,6 @@ router.get('/:id', (req, res) => {
         WHERE id = ${deckId};`;
     pool.query(queryText)
       .then((result) => {
-        console.log('details result:', result.rows);
         res.send(result.rows);
     })
     .catch(error => {

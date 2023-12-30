@@ -3,7 +3,6 @@ const pool = require('../modules/pool');
 const router = express.Router();
 
 router.get('/user', (req, res) => {
-    console.log('GET /decks/user');
     const queryText = `SELECT * FROM "decks"
         JOIN user_decks ON decks.id = user_decks.deck_id
         JOIN "user" on "user".id = user_decks.user_id
@@ -13,7 +12,6 @@ router.get('/user', (req, res) => {
         LIMIT 5;`;
     pool.query(queryText)
     .then((result) => {
-        console.log(result.rows);
         res.send(result.rows);
     }).catch((error) => {
         console.log('Error in GET /decks/user', error)
@@ -22,7 +20,6 @@ router.get('/user', (req, res) => {
 });
 
 router.get('/public', (req, res) => {
-    console.log('GET /decks/public');
     const queryText = `SELECT * FROM "decks"
         JOIN user_decks ON decks.id = user_decks.deck_id
         JOIN "user" on "user".id = user_decks.user_id
@@ -32,7 +29,6 @@ router.get('/public', (req, res) => {
         LIMIT 5;`;
     pool.query(queryText)
     .then((result) => {
-        console.log(result.rows);
         res.send(result.rows);
     }).catch((error) => {
         console.log('Error in GET /decks/public', error)
@@ -51,7 +47,6 @@ router.get('/user/all', (req, res) => {
     console.log('GET /decks/user/all');
     pool.query(queryText)
     .then((result) => {
-        console.log(result.rows);
         res.send(result.rows);
     }).catch((error) => {
         console.log('Error in GET /user/all', error)
