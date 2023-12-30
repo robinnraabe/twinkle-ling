@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +9,7 @@ import ChapterItem from '../ChapterItem/ChapterItem';
 // Displays the details for the selected movie
 function DeckDetails({id}) {
   const deck = useSelector(store => store.deckDetails[0]);
+  const chapters = useSelector(store => store.chapterDetails[0]);
   const deckId = deck.id;
   const history = useHistory();
   const dispatch = useDispatch();
@@ -26,6 +28,17 @@ function DeckDetails({id}) {
       })
         .catch(error => {
           console.log('Error getting deck details:', error);
+          alert('Something went wrong!');
+        })
+  }
+
+  // Gets details for all chapters in selected deck
+  const getChapterDetails = () => {
+    axios.get(`/chapters/${deckId}`).then(response => {
+        dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
+      })
+        .catch(error => {
+          console.log('Error getting chapter details:', error);
           alert('Something went wrong!');
         })
   }
@@ -53,6 +66,10 @@ function DeckDetails({id}) {
     color: 'white',
     margin: '5px 0px'
   }
+
+  useEffect(() => {
+    getChapterDetails();
+  }, [])
 
   // Displays the information for the selected Deck
   return (

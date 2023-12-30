@@ -4,6 +4,7 @@ import user from './user.reducer';
 import deck from './deck.reducer';
 import languages from './language.reducer';
 import deckDetails from './deckDetails.reducer';
+import chapterDetails from './chapterDetails.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   user, // will have an id and username if someone is logged in
   deck,
   languages,
-  deckDetails
+  deckDetails,
+  chapterDetails,
 
 });
 

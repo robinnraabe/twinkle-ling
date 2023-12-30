@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.get('/:id', (req, res) => {
     let deckId = req.params.id;
-    console.log('deckId:', deckId);
     const queryText = `SELECT * FROM "decks"
         WHERE id = ${deckId};`;
     pool.query(queryText)
