@@ -23,7 +23,7 @@ function ItemGrid(props) {
     const columns = [
         { field: 'id', headerName: 'ID', width: 60 },
     { field: 'item', headerName: 'Word', width: 130, editable: true },
-    { field: 'description', headerName: 'Description', sortable: false, width: 200, editable: true },
+    { field: 'description', headerName: 'Definition/Translation', sortable: false, width: 200, editable: true },
     {
         field: 'audio',
         headerName: 'Audio',
@@ -39,7 +39,7 @@ function ItemGrid(props) {
         width: 90,
         editable: false
     },
-    { field: 'image', headerName: 'Image URL', sortable: false, width: 50, editable: true },
+    { field: 'image', headerName: 'Image URL', sortable: false, width: 100, editable: true },
     { field: 'hint', headerName: 'Hint', sortable: false, width: 130, editable: true }
     ];
 

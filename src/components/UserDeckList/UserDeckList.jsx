@@ -40,6 +40,7 @@ function UserPage() {
     axios.get('/decks/user/all').then((response) => {
         const action = { type: 'SET_USER_DECK_LIST', payload: response.data };
         dispatch(action);
+        console.log('Call user_deck_list:');
         setUserDeckList(response.data);
     }).catch((error) => {
         console.log('GET /user/all error', error);
@@ -50,7 +51,7 @@ function UserPage() {
   
   useEffect(() => {
     getUserDeckList();
-    dispatch({ type: 'FETCH_LANGUAGES' });
+    // dispatch({ type: 'FETCH_LANGUAGES' });
   }, [])
 
   return (

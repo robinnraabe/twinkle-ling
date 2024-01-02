@@ -17,4 +17,23 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.post('/', (req, res, next) => {
+    const itemValues = [
+        req.body.item,
+        req.body.description,
+        req.body.tags,
+        req.body.hint
+    ]
+    const queryText = `INSERT INTO "items" (item, description, tags, hint)
+      VALUES ($1, $2, $3, $4);`;
+
+    pool.query(queryText, itemValues)
+      .then(result => {
+        res.sendStatus(201);
+      }).catch((error) => {
+        console.log('Error posting new item: ', error);
+        res.sendStatus(500);
+      });
+  });
+
 module.exports = router;

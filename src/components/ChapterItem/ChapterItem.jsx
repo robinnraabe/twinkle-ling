@@ -1,21 +1,51 @@
 import React from 'react';
+import axios from 'axios';
+import { useState } from 'react';
 import { Card, Stack, CardContent, CardActions,
-  Grid, Button } from '@mui/material';
-  import ItemGrid from '../ItemGrid/ItemGrid';
+  Grid, Button, TextField, IconButton, Tooltip } from '@mui/material';
+import ItemGrid from '../ItemGrid/ItemGrid';
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 
 // This displays each chapter on the UserDeckDetails page
 function ChapterItem(props) {
+    const [newItem, setItem] = useState('');
+    let edit = props.chapter.edit;
 
   const toLesson = (type) => {
     // This will link to Learning/Review page and load deck for studying
   }
 
   const editChapter = (chapterId) => {
-    // This will expand the selected chapter for editing
+    axios.put(`/chapters/${chapterId}`)
+    .then((response) => {
+        props.getChapterDetails();
+    })
+    .catch((error) => {
+        console.log('Error in editChapter PUT request:', error);
+        alert('Something went wrong!');
+});
   }
 
   const resetProgress = (chapterId) => {
     // This will reset the progress for the selecter chapter to 0
+  }
+
+  // Sets new item to add
+  const handleChange = (key) => (event) => {
+    event.preventDefault();
+    setItem({...newItem, 
+     [key]: event.target.value,
+     chapter_id: chapterId 
+    })
+  }
+
+  // Adds new item to chapter
+  const addItem = (event) => {
+    event.preventDefault();
+    dispatch({ type: 'ADD_ITEM', payload: newItem });
+    console.log('newItem:', newItem);
   }
 
   const deleteChapter = (chapterId) => {
@@ -25,7 +55,7 @@ function ChapterItem(props) {
 
   return (
     <Grid item xs={12}>
-        {props.chapter.edit ?
+        {edit ?
             // Displays chapter in edit mode
             <Card sx={[ 
                 {width: '90%'},
@@ -41,15 +71,71 @@ function ChapterItem(props) {
                 <CardContent sx={{ width: '100%' }}>
                     <Stack direction='row' justifyContent='space-between'>
                         <h1>{props.chapter.title} </h1> 
-                        <h3> --- (button to trigger editChapter) </h3>
+                        <IconButton onClick={() => editChapter(props.chapter.id)}
+                          disableElevation
+                          disableRipple
+                          size="large"
+                          sx={{
+                            ml: 1,
+                            "&.MuiButtonBase-root:hover": {
+                              bgcolor: "transparent"
+                            }
+                          }} >
+                          <Tooltip title="Close Editor">
+                              <CloseFullscreenIcon sx={{fontSize: '40px'}} />   
+                          </Tooltip>
+                        </IconButton>
                     </Stack>
 
                     <ItemGrid chapterId={props.chapter.id} />
+                    <br />
+                    <form>
+                        <TextField label="Word" variant="outlined" sx={{}}
+                            required 
+                            type="text" 
+                            value={newItem.item} 
+                            onChange={handleChange('item')} 
+                            placeholder="word"/>
+                        <TextField label="Definition/Translation" variant="outlined" sx={{}}
+                            required 
+                            type="text" 
+                            value={newItem.description} 
+                            onChange={handleChange('description')} 
+                            placeholder="definition/translation"/>
+                        {/* Audio upload goes here */}
+                        <TextField label="Tags" variant="outlined" sx={{}}
+                            type="text" 
+                            value={newItem.tags} 
+                            onChange={handleChange('tags')} 
+                            placeholder="tags"/>
+                        <TextField label="Hint" variant="outlined" sx={{}}
+                            type="text" 
+                            value={newItem.hint} 
+                            onChange={handleChange('hint')} 
+                            placeholder="hint"/>
+                        {/* Image upload goes here */}
+                        <IconButton onClick={() => addItem()}
+                          disableElevation
+                          disableRipple
+                          size="large"
+                          sx={{
+                            ml: 1,
+                            "&.MuiButtonBase-root:hover": {
+                              bgcolor: "transparent"
+                            }
+                          }} >
+                          <Tooltip title="Add New Item">
+                              <AddIcon sx={{fontSize: '40px'}} />   
+                          </Tooltip>
+                        </IconButton>
 
+
+                    </form>
+                    <br /><br />
                     <Stack direction='row' justifyContent='space-between'>
-                        <Button type='button' onClick={() => deleteChapter(props.chapter.id)}>Delete Chapter</Button>
-                        <Button type='button' onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
-                        <Button type='button' onClick={() => saveChanges(props.chapter.id)}>Save Changes</Button>
+                        <Button type='button' variant= 'contained' onClick={() => deleteChapter(props.chapter.id)}>Delete Chapter</Button>
+                        <Button type='button' variant= 'contained' onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
+                        <Button type='button' variant= 'contained' onClick={() => saveChanges(props.chapter.id)}>Save Changes</Button>
                         
                     </Stack>
                 </CardContent>
@@ -98,9 +184,20 @@ function ChapterItem(props) {
                         </Button>
                     }
         
-                    <Button variant='contained' onClick={editChapter(props.chapter.id)}>
-                        Edit
-                    </Button>
+                    <IconButton onClick={() => editChapter(props.chapter.id)}
+                          disableElevation
+                          disableRipple
+                          size="large"
+                          sx={{
+                            ml: 1,
+                            "&.MuiButtonBase-root:hover": {
+                              bgcolor: "transparent"
+                            }
+                          }} >
+                          <Tooltip title="Open Editor">
+                              <EditIcon sx={{fontSize: '40px'}} />   
+                          </Tooltip>
+                        </IconButton>
                 </CardActions>
             </Card>
         }

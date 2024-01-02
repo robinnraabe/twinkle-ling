@@ -6,9 +6,10 @@ import { useHistory } from 'react-router-dom';
 import { Button, Stack, Box, Grid } from '@mui/material';
 import ChapterItem from '../ChapterItem/ChapterItem';
 
-// Displays the details for the selected movie
+// Displays the details for the selected deck
 function DeckDetails({id}) {
   const deck = useSelector(store => store.deckDetails[0]);
+  console.log(deck);
   const chapters = useSelector(store => store.chapters);
   const deckId = deck.id;
   const history = useHistory();
@@ -134,7 +135,7 @@ function DeckDetails({id}) {
         
         <Grid container spacing={2}>
             {chapters.map((chapter) => {
-                return <ChapterItem key={chapter.id} chapter={chapter} />
+                return <ChapterItem key={chapter.id} chapter={chapter} getChapterDetails={getChapterDetails} />
             })} 
         </Grid>
     </div>
