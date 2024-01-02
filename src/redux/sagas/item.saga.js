@@ -2,6 +2,7 @@ import { takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
 function* addNewItem(action) {
+    console.log('saga working!');
     try {
       yield axios.post('/items', action.payload);
     } catch (error) {
