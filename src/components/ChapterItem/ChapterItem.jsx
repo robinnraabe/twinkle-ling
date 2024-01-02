@@ -34,23 +34,24 @@ function ChapterItem(props) {
     // This will reset the progress for the selecter chapter to 0
   }
 
-  // Sets new item to add
+  // This sets new item to add
   const handleChange = (key) => (event) => {
     event.preventDefault();
     setItem({...newItem, 
      [key]: event.target.value,
-     chapter_id: props.chapter.id 
+     chapter_id: props.chapter.id
     })
   }
 
-  // Adds new item to chapter
+  // This adds new item to chapter
   const addItem = () => {
     dispatch({ type: 'ADD_ITEM', payload: newItem });
     console.log('newItem:', newItem);
   }
 
-  const deleteChapter = (chapterId) => {
-    // This will delete the selected chapter
+  // This deletes the selected chapter from its deck
+  const deleteChapter = (chapterAndDeck) => {
+    dispatch({ type: 'DELETE_CHAPTER', payload: chapterAndDeck });
     // make sure to alert the user and require confirmation before deleting!
   }
 
@@ -72,6 +73,7 @@ function ChapterItem(props) {
           <CardContent sx={{ width: '100%' }}>
               <Stack direction='row' justifyContent='space-between'>
                   <h1>{props.chapter.title} </h1> 
+                  {/* Button to turn edit mode off */}
                   <IconButton onClick={() => editChapter(props.chapter.id)}
                     disableElevation
                     disableRipple
@@ -115,6 +117,7 @@ function ChapterItem(props) {
                       onChange={handleChange('hints')} 
                       placeholder="hints"/>
                   {/* Image upload goes here */}
+
                   <IconButton onClick={() => addItem()}
                     disableElevation
                     disableRipple
@@ -134,7 +137,7 @@ function ChapterItem(props) {
               </form>
               <br /><br />
               <Stack direction='row' justifyContent='space-between'>
-                  <Button type='button' variant= 'contained' onClick={() => deleteChapter(props.chapter.id)}>Delete Chapter</Button>
+                  <Button type='button' variant= 'contained' onClick={() => deleteChapter([props.chapter.id, props.chapter.deck_id])}>Delete Chapter</Button>
                   <Button type='button' variant= 'contained' onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
                   <Button type='button' variant= 'contained' onClick={() => saveChanges(props.chapter.id)}>Save Changes</Button>
                   
@@ -183,7 +186,7 @@ function ChapterItem(props) {
                     Review
                 </Button>
             }
-  
+            {/* Button to turn edit mode on */}
             <IconButton onClick={() => editChapter(props.chapter.id)}
               disableElevation
               disableRipple
