@@ -7,6 +7,6 @@ const languageReducer = (state = [], action) => {
     }
   };
   
-  // language will be on the redux state at:
-  // state.language
+  // languages will be on the redux state at:
+  // state.languages
   export default languageReducer;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Stack, CardContent, CardActions,
   Grid, Button } from '@mui/material';
+  import ItemGrid from '../ItemGrid/ItemGrid';
 
 // This displays each chapter on the UserDeckDetails page
 function ChapterItem(props) {
@@ -13,11 +14,11 @@ function ChapterItem(props) {
     // This will expand the selected chapter for editing
   }
 
-  const resetProgress = () => {
+  const resetProgress = (chapterId) => {
     // This will reset the progress for the selecter chapter to 0
   }
 
-  const deleteChapter = () => {
+  const deleteChapter = (chapterId) => {
     // This will delete the selected chapter
     // make sure to alert the user and require confirmation before deleting!
   }
@@ -37,15 +38,19 @@ function ChapterItem(props) {
                 {backgroundImage: `white`},
                 {boxShadow: '-2px 2px 10px 5px teal'}
               ]}>
-                <CardContent sx={{ padding: '0px' }}>
+                <CardContent sx={{ width: '100%' }}>
                     <Stack direction='row' justifyContent='space-between'>
-                        <h3>{props.chapter.title}</h3>
-                        <h3> --- </h3>
+                        <h1>{props.chapter.title} </h1> 
+                        <h3> --- (button to trigger editChapter) </h3>
                     </Stack>
-                    
+
+                    <ItemGrid chapterId={props.chapter.id} />
+
                     <Stack direction='row' justifyContent='space-between'>
-                        <Button type='button' onClick={() => resetProgress()}>Reset Progress</Button>
-                        <Button type='button' onClick={() => deleteChapter()}>Delete Chapter</Button>
+                        <Button type='button' onClick={() => deleteChapter(props.chapter.id)}>Delete Chapter</Button>
+                        <Button type='button' onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
+                        <Button type='button' onClick={() => saveChanges(props.chapter.id)}>Save Changes</Button>
+                        
                     </Stack>
                 </CardContent>
               </Card>
@@ -63,7 +68,7 @@ function ChapterItem(props) {
                 {boxShadow: '-2px 2px 10px 5px teal'}
               ]}>
                 <CardContent sx={{ padding: '0px' }}>
-                    <h3>{props.chapter.title}</h3>
+                    <h1>{props.chapter.title}</h1>
                 </CardContent>
                 <CardContent sx={{ padding: '0px' }}>
                     Progress bar will go here - stretch goal

@@ -9,7 +9,7 @@ import ChapterItem from '../ChapterItem/ChapterItem';
 // Displays the details for the selected movie
 function DeckDetails({id}) {
   const deck = useSelector(store => store.deckDetails[0]);
-  const chapters = useSelector(store => store.chapterDetails);
+  const chapters = useSelector(store => store.chapters);
   const deckId = deck.id;
   const history = useHistory();
   const dispatch = useDispatch();

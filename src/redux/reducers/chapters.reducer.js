@@ -7,6 +7,6 @@ const chapterReducer = (state = [], action) => {
     }
   };
   
-  // deck will be on the redux state at:
-  // state.deck
+  // chapters will be on the redux state at:
+  // state.chapters
   export default chapterReducer;

@@ -13,6 +13,7 @@ const deckRouter = require('./routes/deck.router');
 const languageRouter = require('./routes/language.router');
 const detailsRouter = require('./routes/details.router');
 const chaptersRouter = require('./routes/chapters.router');
+const itemsRouter = require('./routes/items.router');
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -31,6 +32,7 @@ app.use('/decks', deckRouter);
 app.use('/deck', detailsRouter);
 app.use('/api/languages', languageRouter);
 app.use('/chapters', chaptersRouter);
+app.use('/items', itemsRouter);
 
 // Serve static files
 app.use(express.static('build'));
