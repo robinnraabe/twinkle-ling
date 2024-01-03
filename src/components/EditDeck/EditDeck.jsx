@@ -35,6 +35,7 @@ function EditDeck() {
     // NEED TO SET UP ROUTER ROUTE FOR PUT REQUEST!!!!!!!
 
     // Saves details returns user to the UserDeckDetails page
+    // should return to the deck page itself after setup
     const saveDetails = (event) => {
         dispatch({ type: 'UPDATE_DECK', payload: newInfo });
         console.log('newDetails:', newInfo);

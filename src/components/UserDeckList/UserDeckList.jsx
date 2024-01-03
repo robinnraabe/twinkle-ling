@@ -12,6 +12,7 @@ function UserPage() {
   const [userDeckList, setUserDeckList] = useState([]);
   const languageList = useSelector(store => store.languages);
   const [chosenLanguage, setLanguage] = useState({});
+  const user = useSelector(store => store.user);
 
   // Sets language ID for GET route
   const handleLanguageChange = (key) => (event) => {
@@ -37,10 +38,9 @@ function UserPage() {
 
   const getUserDeckList = () => {
     // need to pass user ID?, toggle and language filters
-    axios.get('/decks/user/all').then((response) => {
+    axios.get(`/decks/user/all/${user.id}`).then((response) => {
         const action = { type: 'SET_USER_DECK_LIST', payload: response.data };
         dispatch(action);
-        console.log('Call user_deck_list:');
         setUserDeckList(response.data);
     }).catch((error) => {
         console.log('GET /user/all error', error);

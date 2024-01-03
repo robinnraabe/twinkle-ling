@@ -40,7 +40,7 @@ function ItemGrid(props) {
         editable: false
     },
     { field: 'image', headerName: 'Image URL', sortable: false, width: 100, editable: true },
-    { field: 'hint', headerName: 'Hint', sortable: false, width: 130, editable: true }
+    { field: 'hints', headerName: 'Hint', sortable: false, width: 130, editable: true }
     ];
 
     useEffect(() => {

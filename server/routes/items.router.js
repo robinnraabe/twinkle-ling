@@ -15,6 +15,19 @@ router.get('/:id', (req, res) => {
   });
 });
 
+// this needs a lot of work
+router.put('/:id', (req, res) => {
+  const queryText = 'UPDATE items SET "learned" = 0, " WHERE "chapter_id" = $1;';
+  pool.query(queryText, [req.params.id])
+    .then((result) => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /items', error);
+      res.sendStatus(500);
+    });
+})
+
 router.post('/', (req, res) => {
   const itemValues = [
     req.body.chapter_id,

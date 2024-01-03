@@ -36,7 +36,7 @@ function UserPage() {
   }
 
   const getUserDeckList = () => {
-      axios.get('/decks/user').then((response) => {
+      axios.get(`/decks/user/${user.id}`).then((response) => {
           const action = { type: 'SET_USER_DECK_LIST', payload: response.data };
           dispatch(action);
           setUserDeckList(response.data);

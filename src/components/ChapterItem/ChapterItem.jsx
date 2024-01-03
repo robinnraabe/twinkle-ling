@@ -27,11 +27,19 @@ function ChapterItem(props) {
       .catch((error) => {
           console.log('Error in editChapter PUT request:', error);
           alert('Something went wrong!');
-});
+    });
   }
 
   const resetProgress = (chapterId) => {
-    // This will reset the progress for the selecter chapter to 0
+    // This will reset the progress for the selected chapter to 0
+    axios.put(`/items/${chapterId}`)
+    .then((response) => {
+        props.getChapterDetails();
+    })
+    .catch((error) => {
+        console.log('Error in resetProgress PUT request:', error);
+        alert('Something went wrong!');
+    });
   }
 
   // This sets new item to add
@@ -47,6 +55,10 @@ function ChapterItem(props) {
   const addItem = () => {
     dispatch({ type: 'ADD_ITEM', payload: newItem });
     console.log('newItem:', newItem);
+    newItem.item = '';
+    newItem.description = '';
+    newItem.hints = '';
+    newItem.tags = '';
   }
 
   // This deletes the selected chapter from its deck
