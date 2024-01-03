@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
 
+// This returns the user's 4 most recent decks on the UserPage
 router.get('/user/:id', (req, res) => {
   const queryText = `SELECT title, image_url, details, "language", public_status, 
     lessons_started, lessons_finished, user_id, deck_id, 
@@ -17,11 +18,12 @@ router.get('/user/:id', (req, res) => {
       res.send(result.rows);
       console.log('LOOK AT ME!!!', req.params, result.rows);
   }).catch((error) => {
-      console.log('Error in GET /decks/user', error)
+      console.log('Error in GET /decks/user:', error)
       res.sendStatus(500);
   });
 });
 
+// This returns the top 4 public decks on the UserPage
 router.get('/public', (req, res) => {
   const queryText = `SELECT DISTINCT decks.id, title, image_url, details, "language", 
   public_status, lessons_started, lessons_finished FROM "decks"
@@ -33,11 +35,12 @@ router.get('/public', (req, res) => {
   .then((result) => {
     res.send(result.rows);
   }).catch((error) => {
-    console.log('Error in GET /decks/public', error)
+    console.log('Error in GET /decks/public:', error)
     res.sendStatus(500);
   });
 });
 
+// This returns all of the user's decks on the UserDeckList
 router.get('/user/all/:id', (req, res) => {
   const queryText = `SELECT title, image_url, details, "language", public_status, 
     lessons_started, lessons_finished, user_id, deck_id, 
@@ -52,13 +55,9 @@ router.get('/user/all/:id', (req, res) => {
   .then((result) => {
     res.send(result.rows);
   }).catch((error) => {
-    console.log('Error in GET /user/all', error)
+    console.log('Error in GET decks/user/all:', error)
     res.sendStatus(500);
   });
-});
-
-router.post('/user/decks', (req, res) => {
-  // POST route code here
 });
 
 module.exports = router;

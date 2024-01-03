@@ -21,12 +21,11 @@ router.put('/:id', (req, res) => {
   pool.query(queryText, [req.params.id])
     .then((result) => {
       res.sendStatus(200);
-    })
-    .catch((error) => {
+    }).catch((error) => {
       console.log('Error in PUT /items', error);
       res.sendStatus(500);
     });
-})
+});
 
 router.post('/', (req, res) => {
   const itemValues = [
@@ -46,6 +45,6 @@ router.post('/', (req, res) => {
       console.log('Error posting new item: ', error);
       res.sendStatus(500);
     });
-  });
+});
 
 module.exports = router;

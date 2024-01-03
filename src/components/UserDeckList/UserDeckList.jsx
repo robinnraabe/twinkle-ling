@@ -32,8 +32,17 @@ function UserPage() {
       })
   }
 
+  // Creates a new (empty) deck and sends the user to the EditDeck page
   const addDeck = () => {
-    // This will create a new deck and send the user to the EditDeck page
+    const newDeck = {
+      title: '', 
+      details: '', 
+      language_id: 0, 
+      creator_id: user.id, 
+      contributor_id: user.id
+    }
+    dispatch({ type: 'ADD_DECK', payload: newDeck });
+    // history.push('/deck/details');
   }
 
   const getUserDeckList = () => {
@@ -57,13 +66,9 @@ function UserPage() {
   return (
     <div>
       {/* Subheader filters */}
-      <Stack direction='row' alignItems='center' justifyContent='space-between'>
-
-        {/* Toggle switch filter */}
-        <Stack direction='row' spacing={1} alignItems="center">
-
-        </Stack>
-
+      <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
+        <Button variant='contained' onClick={() => addDeck()}>+ New Deck</Button>
+        
         {/* Language select filter - still need to make this select an option */}
         <FormControl>
           <InputLabel>Language</InputLabel>
@@ -91,7 +96,6 @@ function UserPage() {
 
       <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 20px'}}>
             <h2>Decks</h2>
-            <Button onClick={addDeck}>+ New Deck</Button>
         </Stack>
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {

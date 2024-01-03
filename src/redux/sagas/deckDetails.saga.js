@@ -1,4 +1,4 @@
-import { takeLatest } from 'redux-saga/effects';
+import { takeLatest, put } from 'redux-saga/effects';
 import axios from 'axios';
 
 function* updateDetails(action) {
@@ -9,8 +9,20 @@ function* updateDetails(action) {
     }
 }
 
+function* addNewDeck(action) {
+    try {
+        yield axios.post('/deck', action.payload);
+        console.log('axios posted');
+        yield put ({ type: 'SET_DECK_DETAILS', payload: action.payload });
+        console.log('saga finished');
+    } catch (error) {
+        console.log('Error adding deck:', error);
+    }
+}
+
 function* updateDetailsSaga() {
     yield takeLatest('UPDATE_DECK', updateDetails);
+    yield takeLatest('ADD_DECK', addNewDeck);
 }
 
 export default updateDetailsSaga;

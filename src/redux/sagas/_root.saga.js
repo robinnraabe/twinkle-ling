@@ -5,6 +5,7 @@ import userSaga from './user.saga';
 import languageSaga from './languages.saga';
 import itemSaga from './item.saga';
 import chapterSaga from './chapter.saga';
+import updateDetailsSaga from './deckDetails.saga';
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
@@ -20,6 +21,7 @@ export default function* rootSaga() {
     userSaga(),
     languageSaga(),
     itemSaga(),
-    chapterSaga()
+    chapterSaga(),
+    updateDetailsSaga()
   ]);
 }

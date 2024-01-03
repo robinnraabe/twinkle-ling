@@ -9,7 +9,6 @@ import ChapterItem from '../ChapterItem/ChapterItem';
 // Displays the details for the selected deck
 function DeckDetails({id}) {
   const deck = useSelector(store => store.deckDetails[0]);
-  console.log(deck);
   const chapters = useSelector(store => store.chapters);
   const deckId = deck.id;
   const history = useHistory();
