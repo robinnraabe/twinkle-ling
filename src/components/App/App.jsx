@@ -23,8 +23,10 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 import UserDeckList from '../UserDeckList/UserDeckList';
 import UserDeckDetails from '../UserDeckDetails/UserDeckDetails';
 import EditDeck from '../EditDeck/EditDeck';
+import StudyPage from '../StudyPage/StudyPage';
 
 import './App.css';
+
 
 
 function App() {
@@ -112,6 +114,10 @@ function App() {
           <Route path="/deck/edit">
             <EditDeck />
           </Route> 
+
+          <Route path="/session">
+            <StudyPage />
+          </Route>
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>

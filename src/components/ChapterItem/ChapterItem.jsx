@@ -19,6 +19,27 @@ function ChapterItem(props) {
 
   const toLesson = (type) => {
     // This will link to Learning/Review page and load deck for studying
+    if (type === 'learn') {
+      axios.get(`/study/chapter/learn/${chapterId}`).then(response => {
+        dispatch({ type: 'SET_LESSON', payload: response.data });
+        history.push('/session');
+      })
+        .catch(error => {
+          console.log('Error getting deck details:', error);
+          alert('Something went wrong!');
+        })
+    }
+    else if (type === 'review') {
+      axios.get(`/study/chapter/review/${chapterId}`).then(response => {
+        dispatch({ type: 'SET_LESSON', payload: response.data });
+        history.push('/session');
+      })
+        .catch(error => {
+          console.log('Error getting deck details:', error);
+          alert('Something went wrong!');
+        })
+    }
+
     history.push('/session');
   }
 
