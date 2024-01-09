@@ -13,7 +13,7 @@ function* deleteChapter(action) {
 function* addNewChapter(action) {
   try {
       yield axios.post('/chapters', action.payload);
-      yield put ({ type: 'SET_CHAPTER_DETAILS', payload: action.payload });
+      yield put ({ type: 'FETCH_CHAPTER_DETAILS', payload: action.payload.deck_id });
   } catch (error) {
       console.log('Error adding chapter:', error);
   }

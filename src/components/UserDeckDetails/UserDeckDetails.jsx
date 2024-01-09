@@ -43,15 +43,15 @@ function DeckDetails() {
         })
   }
 
+  // This adds a new chapter to the deck
   const addChapter = () => {
-    // This will add new chapter to deck
     const newChapter = { 
       deck_id: deckId,
       title: 'New Chapter',
       learned: 0,
       reviewed: 0,
       total: 0,
-      edit: false
+      edit: true
     };
     dispatch({ type: 'ADD_CHAPTER', payload: newChapter });
     getChapterDetails();
