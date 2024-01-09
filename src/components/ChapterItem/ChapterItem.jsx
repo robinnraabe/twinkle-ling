@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Card, Stack, CardContent, CardActions,
   Grid, Button, TextField, IconButton, Tooltip } from '@mui/material';
 import ItemGrid from '../ItemGrid/ItemGrid';
@@ -12,11 +13,13 @@ import AddIcon from '@mui/icons-material/Add';
 // This displays each chapter on the UserDeckDetails page
 function ChapterItem(props) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [newItem, setItem] = useState('');
   let edit = props.chapter.edit;
 
   const toLesson = (type) => {
     // This will link to Learning/Review page and load deck for studying
+    history.push('/session');
   }
 
   const editChapter = (chapterId) => {
@@ -178,7 +181,7 @@ function ChapterItem(props) {
           <CardActions>
             {props.chapter.learned < props.chapter.total ?
                 // Clickable if there are unlearned words remaining
-                <Button variant='contained' onClick={toLesson('learn')}>
+                <Button variant='contained' onClick={() => toLesson('learn')}>
                     Learn
                 </Button>
                 :
@@ -189,7 +192,7 @@ function ChapterItem(props) {
             }
             {props.chapter.learned > 0 ?
                 // Clickable if learned words > 0
-                <Button variant='contained' onClick={toLesson('review')}>
+                <Button variant='contained' onClick={() => toLesson('review')}>
                     Review
                 </Button>
                 :

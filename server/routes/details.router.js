@@ -23,10 +23,11 @@ router.post('/', (req, res) => {
     req.body.details,
     req.body.language_id,
     req.body.creator_id,
-    req.body.contributor_id
+    req.body.contributor_id,
+    req.body.image_url
   ]
-  const queryText = `INSERT INTO "decks" (title, details, language_id, creator_id, contributor_id)
-    VALUES ($1, $2, $3, $4, $5)
+  const queryText = `INSERT INTO "decks" (title, details, language_id, creator_id, contributor_id, image_url)
+    VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING "id";`;
   pool.query(queryText, deckValues)
     .then(result => {

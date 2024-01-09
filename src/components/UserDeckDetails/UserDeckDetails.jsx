@@ -2,12 +2,12 @@ import React from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Button, Stack, Box, Grid } from '@mui/material';
 import ChapterItem from '../ChapterItem/ChapterItem';
 
 // Displays the details for the selected deck
-function DeckDetails({id}) {
+function DeckDetails() {
   const deck = useSelector(store => store.deckDetails[0]);
   const chapters = useSelector(store => store.chapters);
   const deckId = deck.id;
@@ -45,6 +45,16 @@ function DeckDetails({id}) {
 
   const addChapter = () => {
     // This will add new chapter to deck
+    const newChapter = { 
+      deck_id: deckId,
+      title: 'New Chapter',
+      learned: 0,
+      reviewed: 0,
+      total: 0,
+      edit: false
+    };
+    dispatch({ type: 'ADD_CHAPTER', payload: newChapter });
+    getChapterDetails();
   }
 
   const toLesson = (type) => {
@@ -69,7 +79,7 @@ function DeckDetails({id}) {
 
   useEffect(() => {
     getChapterDetails();
-  }, [])
+  }, []);
 
   // Displays the information for the selected Deck
   return (

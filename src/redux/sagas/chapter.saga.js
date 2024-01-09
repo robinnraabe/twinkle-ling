@@ -10,6 +10,15 @@ function* deleteChapter(action) {
   }
 }
 
+function* addNewChapter(action) {
+  try {
+      yield axios.post('/chapters', action.payload);
+      yield put ({ type: 'SET_CHAPTER_DETAILS', payload: action.payload });
+  } catch (error) {
+      console.log('Error adding chapter:', error);
+  }
+}
+
 function* fetchChapters(action) {
   try { 
     const chapterList = yield axios.get(`/chapters/${action.payload}`);
@@ -25,6 +34,7 @@ function* fetchChapters(action) {
 function* chapterSaga() {
   yield takeLatest('DELETE_CHAPTER', deleteChapter);
   yield takeLatest('FETCH_CHAPTERS', fetchChapters);
+  yield takeLatest('ADD_CHAPTER', addNewChapter);
 }
 
 export default chapterSaga;

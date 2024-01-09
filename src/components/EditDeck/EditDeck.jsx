@@ -9,6 +9,7 @@ function EditDeck() {
     const history = useHistory();
     const dispatch = useDispatch();
     const deck = useSelector(store => store.deckDetails[0]);
+    const user = useSelector(store => store.user);
     const languageList = useSelector(store => store.languages);
     const [newInfo, setInfo] = useState({});
     const [details, setDetails] = useState(deck.details);
@@ -18,9 +19,9 @@ function EditDeck() {
     const [status, setStatus] = useState(deck.public_status);
 
     // This will delete the delected deck and send the user to the UserDeckList page
-    const deleteDeck = (key) => (event) => {
+    const deleteDeck = () => {
+        dispatch({ type: 'DELETE_DECK', payload: [deck.id, user.id] });
         // make sure to alert user for confirmation before deleting!
-
         history.push('/decks')
     }
 
@@ -92,7 +93,7 @@ function EditDeck() {
 
     useEffect(() => {
         dispatch({ type: 'FETCH_LANGUAGES' });
-      }, [])
+    }, []);
 
     return (
         <Box sx={{ margin: '50px', height: '550px', backgroundColor: 'white', borderRadius: '20px' }}>
@@ -105,7 +106,7 @@ function EditDeck() {
                         <br /><br />
                         <Button type='button' variant='contained'> Upload </Button>
                     </Stack>
-                    <Button type='button' variant='contained' onClick={deleteDeck(deck.id)}> Delete Deck </Button>
+                    <Button type='button' variant='contained' onClick={() => deleteDeck(deck.id)}> Delete Deck </Button>
                 </Stack>
 
                 {/* Right stack */}
@@ -165,7 +166,7 @@ function EditDeck() {
                     <Stack style={stackStyle} direction='row' alignItems='center' justifyContent='space-between'>
                         Make public?
                         <ToggleSwitch inputProps={{ 'aria-label': 'ant design' }} 
-                            onChange={(e) => { setStatus(!deck.status); handleChange('public_status') }} />
+                            value={status} onChange={(e) => { setStatus(!deck.status); handleChange('public_status') }} />
                     </Stack>
 
                 </Stack>

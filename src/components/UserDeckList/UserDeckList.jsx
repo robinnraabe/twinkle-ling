@@ -35,14 +35,16 @@ function UserPage() {
   // Creates a new (empty) deck and sends the user to the EditDeck page
   const addDeck = () => {
     const newDeck = {
-      title: '', 
-      details: '', 
-      language_id: 0, 
+      title: 'New Deck', 
+      details: 'New Deck', 
+      language_id: 3, 
       creator_id: user.id, 
-      contributor_id: user.id
+      contributor_id: user.id,
+      image_url: 'https://images.unsplash.com/photo-1483354483454-4cd359948304'
     }
     dispatch({ type: 'ADD_DECK', payload: newDeck });
-    // history.push('/deck/details');
+    getUserDeckList();
+    // history.push('/deck/edit');
   }
 
   const getUserDeckList = () => {

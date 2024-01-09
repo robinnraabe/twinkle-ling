@@ -26,6 +26,7 @@ import EditDeck from '../EditDeck/EditDeck';
 
 import './App.css';
 
+
 function App() {
   const dispatch = useDispatch();
 
@@ -108,9 +109,9 @@ function App() {
             <UserDeckDetails />
           </Route>
 
-          <Route exact path="/deck/edit">
+          <Route path="/deck/edit">
             <EditDeck />
-          </Route>
+          </Route> 
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
