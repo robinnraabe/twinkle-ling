@@ -17,15 +17,15 @@ function ChapterItem(props) {
   const [newItem, setItem] = useState('');
   let edit = props.chapter.edit;
 
-  const toLesson = (type) => {
-    // This will link to Learning/Review page and load deck for studying
+  // This sends the user to the Study page and loads the selected chapter for studying
+  const toLesson = (type, chapterId) => {
     if (type === 'learn') {
       axios.get(`/study/chapter/learn/${chapterId}`).then(response => {
         dispatch({ type: 'SET_LESSON', payload: response.data });
         history.push('/session');
       })
         .catch(error => {
-          console.log('Error getting deck details:', error);
+          console.log('Error getting chapter lesson:', error);
           alert('Something went wrong!');
         })
     }
@@ -35,7 +35,7 @@ function ChapterItem(props) {
         history.push('/session');
       })
         .catch(error => {
-          console.log('Error getting deck details:', error);
+          console.log('Error getting chapter lesson:', error);
           alert('Something went wrong!');
         })
     }
@@ -202,7 +202,7 @@ function ChapterItem(props) {
           <CardActions>
             {props.chapter.learned < props.chapter.total ?
                 // Clickable if there are unlearned words remaining
-                <Button variant='contained' onClick={() => toLesson('learn')}>
+                <Button variant='contained' onClick={() => toLesson('learn', props.chapter.id)}>
                     Learn
                 </Button>
                 :
@@ -213,7 +213,7 @@ function ChapterItem(props) {
             }
             {props.chapter.learned > 0 ?
                 // Clickable if learned words > 0
-                <Button variant='contained' onClick={() => toLesson('review')}>
+                <Button variant='contained' onClick={() => toLesson('review', props.chapter.id)}>
                     Review
                 </Button>
                 :

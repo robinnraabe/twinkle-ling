@@ -57,8 +57,29 @@ function DeckDetails() {
     getChapterDetails();
   }
 
+  // This sends the user to the Study page and loads the selected deck for studying
   const toLesson = (type) => {
-    // This will link to Learning/Review page and load deck for studying
+    if (type === 'review') {
+      axios.get(`/study/deck/review/${deckId}`).then(response => {
+        dispatch({ type: 'SET_LESSON', payload: response.data });
+        history.push('/session');
+      })
+        .catch(error => {
+          console.log('Error getting decklesson:', error);
+          alert('Something went wrong!');
+        })
+
+    }
+    else if (type === 'learn') {
+      axios.get(`/study/deck/learn/${deckId}`).then(response => {
+        dispatch({ type: 'SET_LESSON', payload: response.data });
+        history.push('/session');
+      })
+        .catch(error => {
+          console.log('Error getting deck lesson:', error);
+          alert('Something went wrong!');
+        })
+    }
     history.push('/session');
   }
 
