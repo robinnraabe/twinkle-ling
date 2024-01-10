@@ -4,9 +4,9 @@ const router = express.Router();
 
 router.get('/chapter/review/:id', (req, res) => {
   const chapterId = req.params.id;
-  const queryText = `SELECT * FROM user_chapters
-    WHERE chapter_id = ${chapterId}
-    AND WHERE learning_status = review;`;
+  const queryText = `SELECT * FROM user_items
+    WHERE item_chapter_id = ${chapterId}
+    AND learned_status = true;`;
   pool.query(queryText)
     .then((result) => {
       console.log(result.rows);
@@ -17,13 +17,11 @@ router.get('/chapter/review/:id', (req, res) => {
   });
 });
 
-// need to get items where chapter_id matches? AND where learned of user_chapters < total
-
 router.get('/chapter/learn/:id', (req, res) => {
 const chapterId = req.params.id;
-const queryText = `SELECT * FROM user_chapters
-  WHERE chapter_id = ${chapterId}
-  AND WHERE learned < total;`;
+const queryText = `SELECT * FROM user_items
+  WHERE item_chapter_id = ${chapterId}
+  AND learned_status = false;`;
   pool.query(queryText)
     .then((result) => {
       console.log(result.rows);
@@ -36,9 +34,9 @@ const queryText = `SELECT * FROM user_chapters
 
 router.get('/deck/review/:id', (req, res) => {
   const deckId = req.params.id;
-  const queryText = `SELECT * FROM chapters
-    WHERE deck_id = ${deckId}
-    AND WHERE learned < total;`;
+  const queryText = `SELECT * FROM user_items
+    WHERE item_deck_id = ${deckId}
+    AND learned_status = true;`;
   pool.query(queryText)
     .then((result) => {
       console.log(result.rows);
@@ -51,9 +49,9 @@ router.get('/deck/review/:id', (req, res) => {
 
 router.get('/deck/learn/:id', (req, res) => {
   const deckId = req.params.id;
-  const queryText = `SELECT * FROM user_chapters
-    WHERE deck_id = ${deckId}
-    AND WHERE learned < total;`;
+  const queryText = `SELECT * FROM user_items
+    WHERE item_deck_id = ${deckId}
+    AND learned_status = false;`;
   pool.query(queryText)
     .then((result) => {
       console.log(result.rows);

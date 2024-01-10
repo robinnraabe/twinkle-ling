@@ -10,6 +10,7 @@ function StudyPage() {
   const dispatch = useDispatch();
   const history = useHistory();
   const user = useSelector(store => store.user);
+  const lesson = useSelector(store => store.lesson);
   let correct = 0;
   let missed = 0;
 
@@ -21,7 +22,7 @@ function StudyPage() {
 
   // Gets next item in session
   const getSessionItem = () => {
-
+    console.log('LESSON CONTAINS:', lesson);
   }
 
   const skipItem = () => {
@@ -136,9 +137,9 @@ function StudyPage() {
           ]}>test option</Card>
         </Grid>
         {/* Right option bar, should probably be a toggle */}
-        <Stack direction='column'>
-          Correct: {correct}
-          Missed: {missed}
+        <Stack direction='column' spacing={2} sx={{marginRight: '20px'}}>
+          <h4>Correct: {correct}</h4>
+          <h4>Missed: {missed}</h4>
           <Button variant='contained' onClick={() => skipItem()}>SKIP</Button>
           <Button variant='contained' onClick={() => setStatus('difficult')}>DIFFICULT</Button>
           <Button variant='contained' onClick={() => setStatus('known')}>KNOWN</Button>
