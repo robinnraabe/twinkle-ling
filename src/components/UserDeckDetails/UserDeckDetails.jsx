@@ -11,6 +11,7 @@ function DeckDetails() {
   const deck = useSelector(store => store.deckDetails[0]);
   const chapters = useSelector(store => store.chapters);
   const deckId = deck.id;
+  const languageId = deck.language_id;
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -57,30 +58,43 @@ function DeckDetails() {
     getChapterDetails();
   }
 
+  // Gets extra items for study session
+  const getExtraItems = () => {
+    axios.get(`/items/language/${languageId}`).then(response => {
+      console.log('extras data:', response.data);
+      dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
+    })
+      .catch(error => {
+        console.log('Error getting extra items:', error);
+        alert('Something went wrong!');
+      })
+  }
+
   // This sends the user to the Study page and loads the selected deck for studying
   const toLesson = (type) => {
     if (type === 'review') {
       axios.get(`/study/deck/review/${deckId}`).then(response => {
+        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
-        history.push('/session');
       })
         .catch(error => {
-          console.log('Error getting decklesson:', error);
+          console.log('Error getting deck/lesson:', error);
           alert('Something went wrong!');
         })
 
     }
     else if (type === 'learn') {
       axios.get(`/study/deck/learn/${deckId}`).then(response => {
+        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
-        history.push('/session');
       })
         .catch(error => {
-          console.log('Error getting deck lesson:', error);
+          console.log('Error getting deck/lesson:', error);
           alert('Something went wrong!');
         })
     }
-    history.push('/session');
+    getExtraItems();
+    // history.push('/session');
   }
 
   const resetProgress = () => {
@@ -135,11 +149,11 @@ function DeckDetails() {
             <Stack direction='row' justifyContent='space-between'>
                 <Stack direction='column'>
                     <Button variant='contained' style={btnStyle}
-                        onClick={() => toLesson('learning')}>
+                        onClick={() => toLesson('learn')}>
                         Learn
                     </Button>
                     <Button variant='contained' style={btnStyle}
-                        onClick={() => toLesson('learning')}>
+                        onClick={() => toLesson('review')}>
                         Review
                     </Button>
                 </Stack>
@@ -165,7 +179,7 @@ function DeckDetails() {
         
         <Grid container spacing={2}>
             {chapters.map((chapter) => {
-                return <ChapterItem key={chapter.id} chapter={chapter} getChapterDetails={getChapterDetails} />
+                return <ChapterItem key={chapter.id} chapter={chapter} getChapterDetails={getChapterDetails} languageId={deck.language_id}/>
             })} 
         </Grid>
     </div>

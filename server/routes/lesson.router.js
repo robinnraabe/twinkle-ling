@@ -5,6 +5,7 @@ const router = express.Router();
 router.get('/chapter/review/:id', (req, res) => {
   const chapterId = req.params.id;
   const queryText = `SELECT * FROM user_items
+    JOIN items ON items.i_id = user_items.item_id
     WHERE item_chapter_id = ${chapterId}
     AND learned_status = true;`;
   pool.query(queryText)
@@ -20,6 +21,7 @@ router.get('/chapter/review/:id', (req, res) => {
 router.get('/chapter/learn/:id', (req, res) => {
 const chapterId = req.params.id;
 const queryText = `SELECT * FROM user_items
+  JOIN items ON items.i_id = user_items.item_id
   WHERE item_chapter_id = ${chapterId}
   AND learned_status = false;`;
   pool.query(queryText)
@@ -35,6 +37,7 @@ const queryText = `SELECT * FROM user_items
 router.get('/deck/review/:id', (req, res) => {
   const deckId = req.params.id;
   const queryText = `SELECT * FROM user_items
+    JOIN items ON items.i_id = user_items.item_id
     WHERE item_deck_id = ${deckId}
     AND learned_status = true;`;
   pool.query(queryText)
@@ -50,6 +53,7 @@ router.get('/deck/review/:id', (req, res) => {
 router.get('/deck/learn/:id', (req, res) => {
   const deckId = req.params.id;
   const queryText = `SELECT * FROM user_items
+    JOIN items ON items.i_id = user_items.item_id
     WHERE item_deck_id = ${deckId}
     AND learned_status = false;`;
   pool.query(queryText)

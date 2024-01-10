@@ -17,12 +17,24 @@ function ChapterItem(props) {
   const [newItem, setItem] = useState('');
   let edit = props.chapter.edit;
 
+  // Gets extra items for study session
+  const getExtraItems = () => {
+    axios.get(`/items/language/${props.languageId}`).then(response => {
+      console.log('extras data:', response.data);
+      dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
+    })
+      .catch(error => {
+        console.log('Error getting extra items:', error);
+        alert('Something went wrong!');
+      })
+  }
+
   // This sends the user to the Study page and loads the selected chapter for studying
   const toLesson = (type, chapterId) => {
     if (type === 'learn') {
       axios.get(`/study/chapter/learn/${chapterId}`).then(response => {
+        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
-        history.push('/session');
       })
         .catch(error => {
           console.log('Error getting chapter lesson:', error);
@@ -31,16 +43,16 @@ function ChapterItem(props) {
     }
     else if (type === 'review') {
       axios.get(`/study/chapter/review/${chapterId}`).then(response => {
+        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
-        history.push('/session');
       })
         .catch(error => {
           console.log('Error getting chapter lesson:', error);
           alert('Something went wrong!');
         })
     }
-
-    history.push('/session');
+    getExtraItems();
+    // history.push('/session');
   }
 
   const editChapter = (chapterId) => {
@@ -54,8 +66,8 @@ function ChapterItem(props) {
     });
   }
 
+  // This resets the progress for the selected chapter to 0
   const resetProgress = (chapterId) => {
-    // This will reset the progress for the selected chapter to 0
     axios.put(`/items/${chapterId}`)
     .then((response) => {
         props.getChapterDetails();

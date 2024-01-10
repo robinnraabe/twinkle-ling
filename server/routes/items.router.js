@@ -15,6 +15,20 @@ router.get('/:id', (req, res) => {
   });
 });
 
+router.get('/language/:id', (req, res) => {
+  console.log(req.params.id);
+  const languageId = req.params.id;
+  const queryText = `SELECT * FROM items
+    WHERE language_id = ${languageId}`;
+  pool.query(queryText)
+    .then((result) => {
+      res.send(result.rows);
+    }).catch((error) => {
+      console.log('Error in GET /items', error)
+      res.sendStatus(500);
+  });
+});
+
 // this needs a lot of work
 router.put('/:id', (req, res) => {
   const queryText = 'UPDATE items SET "learned" = 0, " WHERE "chapter_id" = $1;';

@@ -9,8 +9,8 @@ import CloseIcon from '@mui/icons-material/Close';
 function StudyPage() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const user = useSelector(store => store.user);
   const lesson = useSelector(store => store.lesson);
+  const lessonExtras = useSelector(store => store.lessonExtras);
   let correct = 0;
   let missed = 0;
 
@@ -21,14 +21,16 @@ function StudyPage() {
   }
 
   // Gets next item in session
-  const getSessionItem = () => {
+  const sessionItem = () => {
+    
     console.log('LESSON CONTAINS:', lesson);
+    console.log('EXTRAS CONTAIN:', lessonExtras);
   }
 
   const skipItem = () => {
     // reduce SR by 10%
 
-    getSessionItem();
+    sessionItem();
   }
 
   // Changes the SR status of item according to selected button
@@ -44,16 +46,17 @@ function StudyPage() {
   }
 
   // Shows hint for item
-  const showHint = () => {
+  const showHint = (itemId) => {
 
   }
 
+  // Returns user to the deck details page for the selected deck
   const exitSession = () => {
     history.push('/deck/details');
   }
   
   useEffect(() => {
-    getSessionItem();
+    sessionItem();
   }, [])
 
   return (
@@ -137,7 +140,7 @@ function StudyPage() {
           ]}>test option</Card>
         </Grid>
         {/* Right option bar, should probably be a toggle */}
-        <Stack direction='column' spacing={2} sx={{marginRight: '20px'}}>
+        <Stack direction='column' spacing={2} sx={{marginRight: '50px'}}>
           <h4>Correct: {correct}</h4>
           <h4>Missed: {missed}</h4>
           <Button variant='contained' onClick={() => skipItem()}>SKIP</Button>
