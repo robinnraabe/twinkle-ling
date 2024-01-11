@@ -17,14 +17,64 @@ function StudyPage() {
   // Checks if selected test option matches answer
   // Updates test item and all options for next question
   const checkAnswer = () => {
-    
+    if (true) {
+      return true;
+    }
+  }
+
+  // Gets a random number
+  const getRandom = (length) => {
+    return Math.floor(Math.random() * length);
   }
 
   // Gets next item in session
   const sessionItem = () => {
-    
     console.log('LESSON CONTAINS:', lesson);
     console.log('EXTRAS CONTAIN:', lessonExtras);
+    // Picks one randomized item from 'lesson', removes index from 'lesson'
+    let itemArray = [];
+    let randomIndex = getRandom(lesson.length);
+    let lessonItem = lesson[randomIndex];
+    lesson.splice(randomIndex, 1);
+    itemArray.push(lessonItem);
+    let index = 5;
+
+    // Creates new copy of 'lessonExtras' so 'lessonExtras' isn't affected
+    const lessonExtrasCopy = [];
+    for (let item of lessonExtras) {
+      lessonExtrasCopy.push(item);
+    }
+
+    // Picks 5 randomized items from 'lessonExtrasCopy', removes each from lessonExtrasCopy
+    // make sure extras !== item!
+    while (index > 0) {
+      let randomIndex = getRandom(lessonExtrasCopy.length);
+      const extraItem = lessonExtrasCopy[randomIndex];
+      let itemNotInArray = true;
+      for (let item of itemArray) {
+        if (item.i_id === extraItem.i_id) {
+          itemNotInArray = false;
+        }
+      }
+      if (itemNotInArray) {
+        itemArray.push(extraItem);
+        lessonExtrasCopy.splice(randomIndex, 1);
+        index -= 1;
+      }
+    }
+
+    // Shuffles the item array
+    let endIndex = itemArray.length;
+    while (endIndex > 0) {
+      let randomIndex = getRandom(endIndex);
+      endIndex -= 1;
+      let removedItem = itemArray.splice(randomIndex, 1);
+      console.log(removedItem);
+      itemArray.push(removedItem[0]);
+    }
+    console.log('itemArray:', itemArray);
+
+    // map itemArray as cards on DOM
   }
 
   const skipItem = () => {
@@ -154,14 +204,3 @@ function StudyPage() {
 }
 
 export default StudyPage;
-
-
-
-<Card onClick={() => checkAnswer()} sx={[ 
-  {maxWidth: '200px'},
-  {marginTop: '10px'},
-  {display: 'flex'}, 
-  {flexDirection: 'column'},
-  {borderRadius: '10px'}, 
-  {backgroundColor: 'white'}
-]}></Card>

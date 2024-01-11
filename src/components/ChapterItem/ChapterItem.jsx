@@ -52,7 +52,9 @@ function ChapterItem(props) {
         })
     }
     getExtraItems();
-    // history.push('/session');
+    setTimeout(() => {
+      history.push('/session');
+    }, '500');
   }
 
   const editChapter = (chapterId) => {
