@@ -1,25 +1,43 @@
 import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Box, Card, Stack, Tooltip, IconButton, Button, Grid } from '@mui/material';
+import { Box, Stack, Tooltip, IconButton, Button, Grid } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import StudyItem from '../StudyItem/StudyItem';
 
 function StudyPage() {
-  const dispatch = useDispatch();
   const history = useHistory();
   const lesson = useSelector(store => store.lesson);
   const lessonExtras = useSelector(store => store.lessonExtras);
-  let correct = 0;
-  let missed = 0;
+  const [itemArray, setItemArray] = useState([]);
+  const [checkItem, setCheckItem] = useState({});
+  const [correct, setCorrect] = useState(0);
+  const [missed, setMissed] = useState(0);
+  const [skip, setSkip] = useState(false);
+  const [splice, setSplice] = useState();
 
   // Checks if selected test option matches answer
   // Updates test item and all options for next question
-  const checkAnswer = () => {
-    if (true) {
-      return true;
+  const checkAnswer = (itemId) => {
+    if (checkItem.i_id === itemId) {
+      console.log("You're right!");
+      lesson.splice(splice, 1);
+      setCorrect(correct + 1);
+      if (lesson.length > 0) {
+        sessionItem();
+      }
+      else {
+        history.push('/results');
+      }
     }
+    else {
+      console.log("You're wrong!");
+      sessionItem();
+      setMissed(missed + 1);
+    }
+    console.log('items remaining in lesson AFTER check answer:', lesson);
   }
 
   // Gets a random number
@@ -27,7 +45,7 @@ function StudyPage() {
     return Math.floor(Math.random() * length);
   }
 
-  // Gets next item in session
+  // Chooses next item + options in session
   const sessionItem = () => {
     console.log('LESSON CONTAINS:', lesson);
     console.log('EXTRAS CONTAIN:', lessonExtras);
@@ -35,9 +53,11 @@ function StudyPage() {
     let itemArray = [];
     let randomIndex = getRandom(lesson.length);
     let lessonItem = lesson[randomIndex];
-    lesson.splice(randomIndex, 1);
+    setCheckItem(lessonItem);
+    setSplice(randomIndex);
     itemArray.push(lessonItem);
     let index = 5;
+    console.log('items remaining in lesson:', lesson);
 
     // Creates new copy of 'lessonExtras' so 'lessonExtras' isn't affected
     const lessonExtrasCopy = [];
@@ -46,7 +66,6 @@ function StudyPage() {
     }
 
     // Picks 5 randomized items from 'lessonExtrasCopy', removes each from lessonExtrasCopy
-    // make sure extras !== item!
     while (index > 0) {
       let randomIndex = getRandom(lessonExtrasCopy.length);
       const extraItem = lessonExtrasCopy[randomIndex];
@@ -69,17 +88,16 @@ function StudyPage() {
       let randomIndex = getRandom(endIndex);
       endIndex -= 1;
       let removedItem = itemArray.splice(randomIndex, 1);
-      console.log(removedItem);
       itemArray.push(removedItem[0]);
     }
-    console.log('itemArray:', itemArray);
 
-    // map itemArray as cards on DOM
+    setItemArray(itemArray);
   }
 
   const skipItem = () => {
     // reduce SR by 10%
-
+    setSkip(true);
+    setMissed(missed + 1);
     sessionItem();
   }
 
@@ -136,59 +154,17 @@ function StudyPage() {
       </Box>
 
       <Stack direction='row' width='100%' justifyContent='space-between'>
-        {/* Test options */}
-        <Grid item m={4}>
-          Test Item
-          <Card onClick={() => checkAnswer()} sx={[ 
-            {maxWidth: '200px'},
-            {marginTop: '10px'},
-            {display: 'flex'}, 
-            {flexDirection: 'column'},
-            {borderRadius: '10px'}, 
-            {backgroundColor: 'white'}
-          ]}>test option</Card>
-          <Card onClick={() => checkAnswer()} sx={[ 
-            {maxWidth: '200px'},
-            {marginTop: '10px'},
-            {display: 'flex'}, 
-            {flexDirection: 'column'},
-            {borderRadius: '10px'}, 
-            {backgroundColor: 'white'}
-          ]}>test option</Card>
-          <Card onClick={() => checkAnswer()} sx={[ 
-            {maxWidth: '200px'},
-            {marginTop: '10px'},
-            {display: 'flex'}, 
-            {flexDirection: 'column'},
-            {borderRadius: '10px'}, 
-            {backgroundColor: 'white'}
-          ]}>test option</Card>
+        <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
+          <h1>{checkItem.item}</h1>
           <br />
-          <Card onClick={() => checkAnswer()} sx={[ 
-            {maxWidth: '200px'},
-            {marginTop: '10px'},
-            {display: 'flex'}, 
-            {flexDirection: 'column'},
-            {borderRadius: '10px'}, 
-            {backgroundColor: 'white'}
-          ]}>test option</Card>
-          <Card onClick={() => checkAnswer()} sx={[ 
-            {maxWidth: '200px'},
-            {marginTop: '10px'},
-            {display: 'flex'}, 
-            {flexDirection: 'column'},
-            {borderRadius: '10px'}, 
-            {backgroundColor: 'white'}
-          ]}>test option</Card>
-          <Card onClick={() => checkAnswer()} sx={[ 
-            {maxWidth: '200px'},
-            {marginTop: '10px'},
-            {display: 'flex'}, 
-            {flexDirection: 'column'},
-            {borderRadius: '10px'}, 
-            {backgroundColor: 'white'}
-          ]}>test option</Card>
-        </Grid>
+          {/* Test options */}
+          <Grid container spacing={2}>
+            {itemArray.map((item) => {
+                return <StudyItem key={item.i_id} item={item} checkAnswer={checkAnswer}/>
+            })}
+          </Grid>
+        </Stack>
+
         {/* Right option bar, should probably be a toggle */}
         <Stack direction='column' spacing={2} sx={{marginRight: '50px'}}>
           <h4>Correct: {correct}</h4>
