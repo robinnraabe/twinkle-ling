@@ -15,6 +15,8 @@ const detailsRouter = require('./routes/details.router');
 const chaptersRouter = require('./routes/chapters.router');
 const itemsRouter = require('./routes/items.router');
 const lessonRouter = require('./routes/lesson.router');
+const promptRouter = require('./routes/prompts.router');
+const dataRouter = require('./routes/data.router');
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -35,6 +37,8 @@ app.use('/api/languages', languageRouter);
 app.use('/chapters', chaptersRouter);
 app.use('/items', itemsRouter);
 app.use('/study', lessonRouter);
+app.use('/prompts', promptRouter);
+app.use('/data', dataRouter);
 
 // Serve static files
 app.use(express.static('build'));

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Card, Stack, CardContent, CardActions,
   Grid, Button, TextField, IconButton, Tooltip } from '@mui/material';
@@ -9,15 +9,20 @@ import ItemGrid from '../ItemGrid/ItemGrid';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import ProgressBar from '../ProgressBar/ProgressBar';
 
 // This displays each chapter on the UserDeckDetails page
 function ChapterItem(props) {
   const dispatch = useDispatch();
   const history = useHistory();
+  const user = useSelector(store => store.user);
   const [newItem, setItem] = useState('');
+  const lessonCount = useSelector(store => store.lessonCount);
+  const itemCount = useSelector(store => store.itemCount);
   let edit = props.chapter.edit;
+  console.log(props.chapter.id, lessonCount, itemCount);
 
-  // Gets extra items for study session
+  // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
     axios.get(`/items/language/${props.languageId}`).then(response => {
       console.log('extras data:', response.data);
@@ -27,6 +32,36 @@ function ChapterItem(props) {
         console.log('Error getting extra items:', error);
         alert('Something went wrong!');
       })
+  }
+
+  // This gets the data for each chapter's progress bar
+  const getProgressData = () => {
+
+    const request = {
+      params: {
+        chapterId: props.chapter.id,
+        userId: user.id
+      }
+    }
+
+    // This gets the number of learned items in chapter
+    axios.get(`/data/progress`, request).then(response => {
+      dispatch({type: 'SET_LESSON_ITEMS_COUNT', payload: response.data})
+      console.log('learned response:', response.data);
+    })
+      .catch(error => {
+        console.log('Error getting learned count:', error);
+        alert('Something went wrong!');
+    })
+    // This gets the total number of items in chapter
+    axios.get(`/data/total`, request).then(response => {
+      dispatch({type: 'SET_TOTAL_ITEMS_COUNT', payload: response.data})
+      console.log('total response:', response.data);
+    })
+      .catch(error => {
+        console.log('Error getting total count:', error);
+        alert('Something went wrong!');
+    })
   }
 
   // This sends the user to the Study page and loads the selected chapter for studying
@@ -60,24 +95,43 @@ function ChapterItem(props) {
   const editChapter = (chapterId) => {
     axios.put(`/chapters/${chapterId}`)
       .then((response) => {
-          props.getChapterDetails();
+        props.getChapterDetails();
       })
       .catch((error) => {
-          console.log('Error in editChapter PUT request:', error);
-          alert('Something went wrong!');
+        console.log('Error in editChapter PUT request:', error);
+        alert('Something went wrong!');
     });
   }
 
-  // This resets the progress for the selected chapter to 0
+  // This resets the progress for the selected chapter
   const resetProgress = (chapterId) => {
-    axios.put(`/items/${chapterId}`)
-    .then((response) => {
-        props.getChapterDetails();
-    })
-    .catch((error) => {
-        console.log('Error in resetProgress PUT request:', error);
+
+    const request = {
+      params: {
+        chapterId: chapterId,
+        userId: user.id
+      }
+    }
+    // This resets learned_status
+    axios.put(`/items/reset/learned`, request)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log('Error in resetProgress/learned PUT request:', error);
         alert('Something went wrong!');
     });
+
+    // This resets repetition
+    axios.put(`/items/reset/repetition`, request)
+      .then((response) => {
+        console.log(response.data);
+        props.getChapterDetails();
+      })
+      .catch((error) => {
+        console.log('Error in resetProgress/repetition PUT request:', error);
+        alert('Something went wrong!');
+  });
   }
 
   // This sets new item to add
@@ -104,6 +158,10 @@ function ChapterItem(props) {
     dispatch({ type: 'DELETE_CHAPTER', payload: chapterAndDeck });
     // make sure to alert the user and require confirmation before deleting!
   }
+
+  useEffect(() => {
+    getProgressData();
+  }, [])
 
   return (
     <Grid item xs={12}>
@@ -211,8 +269,8 @@ function ChapterItem(props) {
               <h1>{props.chapter.title}</h1>
           </CardContent>
           <CardContent sx={{ padding: '0px' }}>
-              Progress bar will go here - stretch goal
-          </CardContent>
+            <ProgressBar getProgressData={getProgressData} fillColor="gold" progress={`${(lessonCount/itemCount)*100}%`} height={30} />
+          </CardContent> 
           <CardActions>
             {props.chapter.learned < props.chapter.total ?
                 // Clickable if there are unlearned words remaining

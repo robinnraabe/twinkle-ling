@@ -8,6 +8,10 @@ import chapters from './chapters.reducer';
 import items from './items.reducer';
 import lesson from './lesson.reducer';
 import lessonExtras from './lessonExtras.reducer';
+import prompts from './prompts.reducer';
+import answers from './answers.reducer';
+import lessonCount from './lessonCount.reducer';
+import itemCount from './itemCount.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -24,7 +28,11 @@ const rootReducer = combineReducers({
   chapters,
   items,
   lesson,
-  lessonExtras
+  lessonExtras,
+  prompts,
+  answers,
+  lessonCount,
+  itemCount
 
 });
 

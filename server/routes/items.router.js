@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
 
+// This gets all items for the selected chapter
 router.get('/:id', (req, res) => {
   const chapterId = req.params.id;
   const queryText = `SELECT * FROM items
@@ -15,6 +16,7 @@ router.get('/:id', (req, res) => {
   });
 });
 
+// This gets items in the same language for study session
 router.get('/language/:id', (req, res) => {
   console.log(req.params.id);
   const languageId = req.params.id;
@@ -24,21 +26,41 @@ router.get('/language/:id', (req, res) => {
     .then((result) => {
       res.send(result.rows);
     }).catch((error) => {
-      console.log('Error in GET /items', error)
+      console.log('Error in GET /items/language', error)
       res.sendStatus(500);
   });
 });
 
-// this needs a lot of work
-router.put('/:id', (req, res) => {
-  const queryText = 'UPDATE items SET "learned" = 0, " WHERE "chapter_id" = $1;';
-  pool.query(queryText, [req.params.id])
-    .then((result) => {
+// This updates all items' 'learned_status' to false in the selected chapter
+// then updates all items' 'repetition' to 0 in the selected chapter
+router.put('/reset/learned', (req, res) => {
+  const chapterId = req.body.params.chapterId;
+  const userId = req.body.params.userId;
+  const queryText = `UPDATE user_items SET "learned_status" = false
+    WHERE "item_chapter_id" = ${chapterId}
+    AND "item_user_id" = ${userId};`;
+  pool.query(queryText)
+    .then(result => {
       res.sendStatus(200);
     }).catch((error) => {
-      console.log('Error in PUT /items', error);
+      console.log('Error in PUT /items/reset/learned', error);
       res.sendStatus(500);
-    });
+  });
+});
+
+router.put('/reset/repetition', (req, res) => {
+  const chapterId = req.body.params.chapterId;
+  const userId = req.body.params.userId;
+  const queryText = `UPDATE user_items SET "repetition" = 0 
+  WHERE "item_chapter_id" = ${chapterId}
+  AND "item_user_id" = ${userId};`;
+  pool.query(queryText)
+  .then(result => {
+    res.sendStatus(201);
+  }).catch(error => {
+    console.log('Error in PUT /items/reset/repetition', error);
+    res.sendStatus(500)
+  })
 });
 
 router.post('/', (req, res) => {

@@ -24,6 +24,7 @@ import UserDeckList from '../UserDeckList/UserDeckList';
 import UserDeckDetails from '../UserDeckDetails/UserDeckDetails';
 import EditDeck from '../EditDeck/EditDeck';
 import StudyPage from '../StudyPage/StudyPage';
+import ResultsPage from '../ResultsPage/ResultsPage';
 
 import './App.css';
 
@@ -117,6 +118,10 @@ function App() {
 
           <Route path="/session">
             <StudyPage />
+          </Route>
+
+          <Route path="/results">
+            <ResultsPage />
           </Route>
 
           {/* If none of the other routes matched, we will show a 404. */}

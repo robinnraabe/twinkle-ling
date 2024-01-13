@@ -6,10 +6,12 @@ import { useHistory } from 'react-router-dom';
 import { Box, Stack, Tooltip, IconButton, Button, Grid } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import StudyItem from '../StudyItem/StudyItem';
+import ProgressBar from '../ProgressBar/ProgressBar';
 
 function StudyPage() {
   const history = useHistory();
   const lesson = useSelector(store => store.lesson);
+  const lessonLength = lesson.length;
   const lessonExtras = useSelector(store => store.lessonExtras);
   const [itemArray, setItemArray] = useState([]);
   const [checkItem, setCheckItem] = useState({});
@@ -146,7 +148,7 @@ function StudyPage() {
                 bgcolor: "transparent"
               }
             }} >
-            <Tooltip title="Close Editor">
+            <Tooltip title="End Session">
               <CloseIcon sx={{fontSize: '80px'}} />   
             </Tooltip>
           </IconButton>
@@ -155,7 +157,8 @@ function StudyPage() {
 
       <Stack direction='row' width='100%' justifyContent='space-between'>
         <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
-          <h1>{checkItem.item}</h1>
+          <ProgressBar fillColor="gold" progress={`${(correct/lessonLength)*100}%`} height={30} />
+          <h1>{checkItem.item}</h1> 
           <br />
           {/* Test options */}
           <Grid container spacing={2}>
