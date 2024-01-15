@@ -5,8 +5,10 @@ const router = express.Router();
 // This gets all items for the selected chapter
 router.get('/:id', (req, res) => {
   const chapterId = req.params.id;
+  
   const queryText = `SELECT * FROM items
     WHERE chapter_id = ${chapterId}`;
+
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows);
@@ -18,10 +20,11 @@ router.get('/:id', (req, res) => {
 
 // This gets items in the same language for study session
 router.get('/language/:id', (req, res) => {
-  console.log(req.params.id);
   const languageId = req.params.id;
+
   const queryText = `SELECT * FROM items
     WHERE language_id = ${languageId}`;
+
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows);
@@ -36,9 +39,11 @@ router.get('/language/:id', (req, res) => {
 router.put('/reset/learned', (req, res) => {
   const chapterId = req.body.params.chapterId;
   const userId = req.body.params.userId;
+
   const queryText = `UPDATE user_items SET "learned_status" = false
     WHERE "item_chapter_id" = ${chapterId}
     AND "item_user_id" = ${userId};`;
+
   pool.query(queryText)
     .then(result => {
       res.sendStatus(200);
@@ -51,9 +56,11 @@ router.put('/reset/learned', (req, res) => {
 router.put('/reset/repetition', (req, res) => {
   const chapterId = req.body.params.chapterId;
   const userId = req.body.params.userId;
+
   const queryText = `UPDATE user_items SET "repetition" = 0 
   WHERE "item_chapter_id" = ${chapterId}
   AND "item_user_id" = ${userId};`;
+
   pool.query(queryText)
   .then(result => {
     res.sendStatus(201);

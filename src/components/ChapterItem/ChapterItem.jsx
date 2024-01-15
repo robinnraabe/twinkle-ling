@@ -205,25 +205,21 @@ function ChapterItem(props) {
                       required 
                       type="text" 
                       value={newItem.item} 
-                      onChange={handleChange('item')} 
-                      placeholder="word"/>
+                      onChange={handleChange('item')} />
                   <TextField label="Definition/Translation" variant="outlined" sx={{}}
                       required 
                       type="text" 
                       value={newItem.description} 
-                      onChange={handleChange('description')} 
-                      placeholder="definition/translation"/>
+                      onChange={handleChange('description')}/>
                   {/* Audio upload goes here */}
-                  <TextField label="Tags" variant="outlined" sx={{}}
+                  <TextField label="Custom" variant="outlined" sx={{}}
                       type="text" 
-                      value={newItem.tags} 
-                      onChange={handleChange('tags')} 
-                      placeholder="tags"/>
+                      value={newItem.custom} 
+                      onChange={handleChange('custom')} />
                   <TextField label="Hint" variant="outlined" sx={{}}
                       type="text" 
                       value={newItem.hints} 
-                      onChange={handleChange('hints')} 
-                      placeholder="hints"/>
+                      onChange={handleChange('hints')} />
                   {/* Image upload goes here */}
 
                   <IconButton onClick={() => addItem()}
