@@ -48,17 +48,17 @@ function ItemGrid(props) {
   }, [])
 
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
     <DataGrid
       getRowId={(row) => row.i_id}
       rows={items}
       columns={columns}
       initialState={{
       pagination: {
-        paginationModel: { page: 0, pageSize: 10 },
+        paginationModel: { page: 0, pageSize: 5 },
       },
       }}
-      pageSizeOptions={[10]}
+      pageSizeOptions={[5]}
       checkboxSelection
     />
     </div>

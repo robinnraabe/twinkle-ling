@@ -72,17 +72,18 @@ function ChapterItem(props) {
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
-          console.log('Error getting chapter lesson:', error);
+          console.log('Error getting chapter learning:', error);
           alert('Something went wrong!');
         })
     }
+
     else if (type === 'review') {
       axios.get(`/study/chapter/review/${chapterId}`).then(response => {
         console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
-          console.log('Error getting chapter lesson:', error);
+          console.log('Error getting chapter review:', error);
           alert('Something went wrong!');
         })
     }
@@ -174,13 +175,13 @@ function ChapterItem(props) {
           {display: 'flex'}, 
           {flexDirection: 'row'},
           {justifyContent: 'space-between'},
-          {borderRadius: '10px'}, 
+          {borderRadius: '0px'}, 
           {backgroundImage: `white`},
-          {boxShadow: '-2px 2px 10px 5px teal'}
+          {alignItems: 'center'}
         ]}>
           <CardContent sx={{ width: '100%' }}>
               <Stack direction='row' justifyContent='space-between'>
-                  <h1>{props.chapter.title} </h1> 
+                  <h2>{props.chapter.title} </h2> 
                   {/* Button to turn edit mode off */}
                   <IconButton onClick={() => editChapter(props.chapter.id)}
                     disableElevation
@@ -256,17 +257,18 @@ function ChapterItem(props) {
         // Displays chapter in minimized view mode
         <Card sx={[ 
             {width: '90%'},
+            {height: '80px'},
             {margin: 'auto'},
             {padding: '0px 20px'},
             {display: 'flex'}, 
             {flexDirection: 'row'},
             {justifyContent: 'space-between'},
-            {borderRadius: '10px'}, 
+            {borderRadius: '0px'}, 
             {backgroundImage: `white`},
-            {boxShadow: '-2px 2px 10px 5px teal'}
+            {alignItems: 'center'}
         ]}>
           <CardContent sx={{ padding: '0px' }}>
-              <h1>{props.chapter.title}</h1>
+              <h2>{props.chapter.title}</h2>
           </CardContent>
           <CardContent sx={{ padding: '0px' }}>
             <ProgressBar getProgressData={getProgressData} fillColor="gold" progress={`${(lessonCount/itemCount)*100}%`} height={30} />
