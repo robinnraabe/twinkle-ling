@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import axios from 'axios';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -26,7 +27,7 @@ function EditDeck() {
   const [contributors, setContributors] = useState(deck.contributor_id);
   const [status, setStatus] = useState(deck.public_status);
 
-  // This will delete the delected deck and send the user to the UserDeckList page
+  // This will delete the selected deck and send the user to the UserDeckList page
   const deleteDeck = () => {
     dispatch({ type: 'DELETE_DECK', payload: [deck.id, user.id] });
     // make sure to alert user for confirmation before deleting!
@@ -55,9 +56,16 @@ function EditDeck() {
 
   // Saves details returns user to the UserDeckDetails page
   // should return to the deck page itself after setup
-  const saveDetails = () => {
-    dispatch({ type: 'UPDATE_DECK', payload: newInfo });
-    setTimeout(dispatch({ type: 'FETCH_DECK_DETAILS', payload: deck.id}), '1000');
+  const saveDetails = async () => {
+    await axios.put('/deck/update', newInfo)
+      .then(response => {
+        dispatch({ type: 'SET_DECK_DETAILS', payload: newInfo });
+      })
+      .catch(error => {
+        console.log('Error saving EditDeck details:', error);
+        alert('Something went wrong!');
+    })
+    history.push('/decks');
   }
 
   const stackStyle = {
@@ -108,8 +116,8 @@ function EditDeck() {
   }));
 
   useEffect(() => {
-      dispatch({ type: 'FETCH_LANGUAGES' });
-  }, []);
+    dispatch({ type: 'FETCH_LANGUAGES' });
+  }, [deck]);
 
   return (
       <Box sx={{ margin: '50px', height: '550px', backgroundColor: 'white', borderRadius: '20px' }}>

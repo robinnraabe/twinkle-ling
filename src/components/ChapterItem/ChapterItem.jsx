@@ -17,6 +17,7 @@ function ChapterItem(props) {
   const history = useHistory();
   const user = useSelector(store => store.user);
   const [newItem, setItem] = useState('');
+  const [newTitle, setTitle] = useState(props.chapter.title);
   const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
 
@@ -60,7 +61,7 @@ function ChapterItem(props) {
   }
 
   const editChapter = (chapterId) => {
-    axios.put(`/chapters/${chapterId}`)
+    axios.put(`/chapters/edit/${chapterId}`)
       .then((response) => {
         dispatch({ type: 'FETCH_CHAPTERS', payload: props.deckId })
         props.getChapterDetails();
@@ -126,29 +127,43 @@ function ChapterItem(props) {
   // This updates all items in chapter when saved
   const saveChanges = (chapterId) => {
     // This removes all but the most recent edit from updateList
-    let removeIndexList = [0];
-    for (let index = updateList.length-1; index > -1; index--) {
-      for (let removeIndex of removeIndexList) {
-        if (updateList[index].i_id === removeIndex) {
-          updateList.splice(index, 1);
-          break;
+    if (updateList.length > 0) {
+      let removeIndexList = [0];
+      for (let index = updateList.length-1; index > -1; index--) {
+        for (let removeIndex of removeIndexList) {
+          if (updateList[index].i_id === removeIndex) {
+            updateList.splice(index, 1);
+            break;
+          }
         }
+        removeIndexList.push(updateList[index].i_id);
       }
-      removeIndexList.push(updateList[index].i_id);
+      for (let index of updateList) {
+        index.chapter_id = chapterId;
+      }
+      // This creates a PUT request for every row in updateList
+      for (let update of updateList) {
+        axios.put('/items/update', update)
+          .then((response) => {
+            dispatch({ type: 'FETCH_CHAPTERS', payload: props.deckId })
+            props.getChapterDetails();
+          })
+          .catch((error) => {
+            console.log('Error in ChapterItem/saveChanges PUT request:', error);
+            alert('Something went wrong!');
+        });
+      }
     }
-    for (let index of updateList) {
-      index.chapter_id = chapterId;
-    }
-    // This creates a PUT request for every row in updateList
-    for (let update of updateList) {
-      axios.put('/items/update', update)
+    // This updates the chapter title
+    console.log('chapterId:', props.chapter.id);
+    if (newTitle !== props.chapter.title) {
+      axios.put('/chapters/update', {title: newTitle, chapterId: props.chapter.id})
         .then((response) => {
           dispatch({ type: 'FETCH_CHAPTERS', payload: props.deckId })
           props.getChapterDetails();
-          props.setUpdater(props.updater + 1);
         })
         .catch((error) => {
-          console.log('Error in ChapterItem/saveChanges PUT request:', error);
+          console.log('Error in ChapterItem/saveChanges/title PUT request:', error);
           alert('Something went wrong!');
       });
     }
@@ -172,7 +187,10 @@ function ChapterItem(props) {
         ]}>
           <CardContent sx={{ width: '100%' }}>
               <Stack direction='row' justifyContent='space-between'>
-                  <h2>{props.chapter.title} </h2> 
+                <TextField label="Title" variant="outlined"
+                    type="text" 
+                    value={newTitle} 
+                    onChange={e => setTitle(e.target.value)} />
                   {/* Button to turn edit mode off */}
                   <IconButton onClick={() => editChapter(props.chapter.id)}
                     disableElevation
@@ -228,8 +246,6 @@ function ChapterItem(props) {
                         <AddIcon sx={{fontSize: '40px'}} />   
                     </Tooltip>
                   </IconButton>
-
-
               </form>
               <br /><br />
               <Stack direction='row' justifyContent='space-between'>

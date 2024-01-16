@@ -72,7 +72,7 @@ function UserPage() {
       {/* placeholder image for stats */}
       <img src='https://www.statology.org/wp-content/uploads/2021/10/combo6.png' width='500px' alt='stats example' />
 
-      <h3 onClick={toUserDeckList}>Recent Decks</h3>
+      <h3>Recent Decks</h3>
       {/* make sure to sort by most recently used decks */}
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {

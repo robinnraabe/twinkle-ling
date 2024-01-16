@@ -91,8 +91,6 @@ router.post('/', (req, res) => {
 });
 
 router.put('/update', (req, res) => {
-  console.log("items put req.body:", req.body);
-  console.log()
   const itemValues = [
     req.body.item,
     req.body.description,

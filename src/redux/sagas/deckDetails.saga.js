@@ -33,8 +33,14 @@ function* addNewDeck(action) {
 }
 
 function* deleteDeck(action) {
+  const request = {
+    params: {
+      deckId: action.payload[0],
+      userId: action.payload[1]
+    }
+  }
     try {
-      yield axios.delete(`/decks/${action.payload[0]}`);
+      yield axios.delete(`/deck/delete`, request); 
       yield put ({ type: 'FETCH_DECKS', payload: action.payload[1] });
     } catch (error) {
       console.log('Error deleting deck:', error);

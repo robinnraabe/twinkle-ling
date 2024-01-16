@@ -46,7 +46,6 @@ router.post('/', (req, res) => {
           console.log(error);
           res.sendStatus(500)
       })
-      res.sendStatus(201);
     })
     .catch(error => {
       console.log('Error in POST /chapters', error);
@@ -69,7 +68,7 @@ router.put('/learned/:id', (req, res) => {
     });
 })
 
-router.put('/:id', (req, res) => {
+router.put('/edit/:id', (req, res) => {
   const queryText = `UPDATE user_chapters SET "edit" = NOT "edit" WHERE "chapter_id" = $1;`;
 
   pool.query(queryText, [req.params.id])
@@ -81,6 +80,23 @@ router.put('/:id', (req, res) => {
       res.sendStatus(500);
   });
 })
+
+router.put('/update', (req, res) => {
+  const queryValues = [req.body.title, req.body.chapterId];
+
+  const queryText = `UPDATE "chapters" 
+    SET title = $1 WHERE "id" = $2;`;
+
+  pool.query(queryText, queryValues)
+    .then((result) => {
+      console.log('Successfully updated chapter');
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /chapters/update', error);
+      res.sendStatus(500);
+  });
+});
 
 router.delete('/:id', (req, res) => {
   const queryText = `DELETE FROM chapters WHERE "id" = $1;`;

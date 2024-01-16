@@ -95,6 +95,18 @@ router.put('/update', (req, res) => {
   })
 });
 
+router.delete('/:id', (req, res) => {
+  const queryText = `DELETE FROM user_decks WHERE deck_id = $1 AND user_id = $2;`;
+  pool.query(queryText, [req.query.deckId, req.query.userId])
+    .then(result => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in DELETE /deck/decks', error);
+      res.sendStatus(500);
+  });
+})
+
 module.exports = router;
         
 
