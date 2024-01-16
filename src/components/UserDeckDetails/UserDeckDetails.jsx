@@ -136,7 +136,6 @@ function DeckDetails() {
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
-          console.log('Error getting deck review:', error);
           alert('Something went wrong!');
         })
     }
