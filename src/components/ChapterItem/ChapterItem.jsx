@@ -17,51 +17,20 @@ function ChapterItem(props) {
   const history = useHistory();
   const user = useSelector(store => store.user);
   const [newItem, setItem] = useState('');
-  const lessonCount = useSelector(store => store.lessonCount);
-  const itemCount = useSelector(store => store.itemCount);
   let edit = props.chapter.edit;
-  console.log(props.chapter.id, lessonCount, itemCount);
+  console.log(props.chapter.id, props.chapter.learned, props.chapter.total);
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
-    axios.get(`/items/language/${props.languageId}`).then(response => {
-      console.log('extras data:', response.data);
-      dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
-    })
+    axios.get(`/items/language/${props.languageId}`)
+      .then(response => {
+        console.log('extras data:', response.data);
+        dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
+      })
       .catch(error => {
         console.log('Error getting extra items:', error);
         alert('Something went wrong!');
       })
-  }
-
-  // This gets the data for each chapter's progress bar
-  const getProgressData = () => {
-
-    const request = {
-      params: {
-        chapterId: props.chapter.id,
-        userId: user.id
-      }
-    }
-
-    // This gets the number of learned items in chapter
-    axios.get(`/data/progress`, request).then(response => {
-      dispatch({type: 'SET_LESSON_ITEMS_COUNT', payload: response.data})
-      console.log('learned response:', response.data);
-    })
-      .catch(error => {
-        console.log('Error getting learned count:', error);
-        alert('Something went wrong!');
-    })
-    // This gets the total number of items in chapter
-    axios.get(`/data/total`, request).then(response => {
-      dispatch({type: 'SET_TOTAL_ITEMS_COUNT', payload: response.data})
-      console.log('total response:', response.data);
-    })
-      .catch(error => {
-        console.log('Error getting total count:', error);
-        alert('Something went wrong!');
-    })
   }
 
   // This sends the user to the Study page and loads the selected chapter for studying
@@ -159,10 +128,6 @@ function ChapterItem(props) {
     dispatch({ type: 'DELETE_CHAPTER', payload: chapterAndDeck });
     // make sure to alert the user and require confirmation before deleting!
   }
-
-  useEffect(() => {
-    getProgressData();
-  }, [])
 
   return (
     <Grid item xs={12}>
@@ -270,48 +235,50 @@ function ChapterItem(props) {
           <CardContent sx={{ padding: '0px' }}>
               <h2>{props.chapter.title}</h2>
           </CardContent>
-          <CardContent sx={{ padding: '0px' }}>
-            <ProgressBar getProgressData={getProgressData} fillColor="gold" progress={`${(lessonCount/itemCount)*100}%`} height={30} />
-          </CardContent> 
-          <CardActions>
-            {props.chapter.learned < props.chapter.total ?
-                // Clickable if there are unlearned words remaining
-                <Button variant='contained' onClick={() => toLesson('learn', props.chapter.id)}>
-                    Learn
-                </Button>
-                :
-                // Greyed out and unclickable
-                <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
-                    Learn
-                </Button>
-            }
-            {props.chapter.learned > 0 ?
-                // Clickable if learned words > 0
-                <Button variant='contained' onClick={() => toLesson('review', props.chapter.id)}>
-                    Review
-                </Button>
-                :
-                // Greyed out and unclickable
-                <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
-                    Review
-                </Button>
-            }
-            {/* Button to turn edit mode on */}
-            <IconButton onClick={() => editChapter(props.chapter.id)}
-              disableElevation
-              disableRipple
-              size="large"
-              sx={{
-                ml: 1,
-                "&.MuiButtonBase-root:hover": {
-                  bgcolor: "transparent"
-                }
-            }}>
-              <Tooltip title="Open Editor">
-                <EditIcon sx={{fontSize: '40px'}} />   
-              </Tooltip>
-            </IconButton>
-          </CardActions>
+          <Stack direction='row' spacing={20} width='70%' justifyContent='end'>
+            <CardContent sx={{ padding: '0px', width: '100%' }}>
+              <ProgressBar fillColor="gold" progress={`${(props.chapter.learned/props.chapter.total)*100}%`} height={30} />
+            </CardContent> 
+            <CardActions>
+              {props.chapter.learned < props.chapter.total ?
+                  // Clickable if there are unlearned words remaining
+                  <Button variant='contained' onClick={() => toLesson('learn', props.chapter.id)}>
+                      Learn
+                  </Button>
+                  :
+                  // Greyed out and unclickable
+                  <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+                      Learn
+                  </Button>
+              }
+              {props.chapter.learned > 0 ?
+                  // Clickable if learned words > 0
+                  <Button variant='contained' onClick={() => toLesson('review', props.chapter.id)}>
+                      Review
+                  </Button>
+                  :
+                  // Greyed out and unclickable
+                  <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+                      Review
+                  </Button>
+              }
+              {/* Button to turn edit mode on */}
+              <IconButton onClick={() => editChapter(props.chapter.id)}
+                disableElevation
+                disableRipple
+                size="large"
+                sx={{
+                  ml: 1,
+                  "&.MuiButtonBase-root:hover": {
+                    bgcolor: "transparent"
+                  }
+              }}>
+                <Tooltip title="Open Editor">
+                  <EditIcon sx={{fontSize: '40px'}} />   
+                </Tooltip>
+              </IconButton>
+            </CardActions>
+          </Stack>
         </Card>
       }
     </Grid>
