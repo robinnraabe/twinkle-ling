@@ -25,11 +25,10 @@ router.post('/', (req, res) => {
     req.body.deck_id,
     req.body.title
   ]
-
   const queryText = `INSERT INTO "chapters" (deck_id, title)
     VALUES ($1, $2) 
     RETURNING id;`;
-    
+
   pool.query(queryText, chapterValues)
     .then(result => {
       const chapterId = result.rows[0].id;

@@ -150,10 +150,6 @@ function ChapterItem(props) {
     setUpdateList([]);
   }
 
-  useEffect(() => {
-    getProgressData();
-  }, [])
-
   return (
     <Grid item xs={12}>
       {edit ?
