@@ -17,50 +17,17 @@ function ChapterItem(props) {
   const history = useHistory();
   const user = useSelector(store => store.user);
   const [newItem, setItem] = useState('');
-  const lessonCount = useSelector(store => store.lessonCount);
-  const itemCount = useSelector(store => store.itemCount);
   const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
-  console.log('ChapterItem log:', props.chapter.id, lessonCount, itemCount);
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
-    axios.get(`/items/language/${props.languageId}`).then(response => {
-      console.log('extras data:', response.data);
-      dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
-    })
-      .catch(error => {
-        console.log('Error in ChapterItem/getExtraItems GET request:', error);
-        alert('Something went wrong!');
+    axios.get(`/items/language/${props.languageId}`)
+      .then(response => {
+        dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
       })
-  }
-
-  // This gets the data for each chapter's progress bar
-  const getProgressData = () => {
-
-    const request = {
-      params: {
-        chapterId: props.chapter.id,
-        userId: user.id
-      }
-    }
-
-    // This gets the number of learned items in chapter
-    axios.get(`/data/progress`, request).then(response => {
-      dispatch({type: 'SET_LESSON_ITEMS_COUNT', payload: response.data})
-      console.log('learned response:', response.data);
-    })
       .catch(error => {
-        console.log('Error getting learned count:', error);
-        alert('Something went wrong!');
-    })
-    // This gets the total number of items in chapter
-    axios.get(`/data/total`, request).then(response => {
-      dispatch({type: 'SET_TOTAL_ITEMS_COUNT', payload: response.data})
-      console.log('total response:', response.data);
-    })
-      .catch(error => {
-        console.log('Error getting total count:', error);
+        console.log('Error getting extra items:', error);
         alert('Something went wrong!');
     })
   }
@@ -69,7 +36,6 @@ function ChapterItem(props) {
   const toLesson = (type, chapterId) => {
     if (type === 'learn') {
       axios.get(`/study/chapter/learn/${chapterId}`).then(response => {
-        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -77,9 +43,9 @@ function ChapterItem(props) {
           alert('Something went wrong!');
         })
     }
+
     else if (type === 'review') {
       axios.get(`/study/chapter/review/${chapterId}`).then(response => {
-        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -90,7 +56,7 @@ function ChapterItem(props) {
     getExtraItems();
     setTimeout(() => {
       history.push('/session');
-    }, '500');
+    }, '1000');
   }
 
   const editChapter = (chapterId) => {
@@ -116,9 +82,6 @@ function ChapterItem(props) {
     }
     // This resets learned_status
     axios.put(`/items/reset/learned`, request)
-      .then((response) => {
-        console.log(response.data);
-      })
       .catch((error) => {
         console.log('Error in ChapterItem/resetProgress/learned PUT request:', error);
         alert('Something went wrong!');
@@ -127,7 +90,6 @@ function ChapterItem(props) {
     // This resets repetition
     axios.put(`/items/reset/repetition`, request)
       .then((response) => {
-        console.log(response.data);
         props.getChapterDetails();
       })
       .catch((error) => {
@@ -148,7 +110,6 @@ function ChapterItem(props) {
   // This adds new item to chapter
   const addItem = () => {
     dispatch({ type: 'ADD_ITEM', payload: newItem });
-    console.log('newItem:', newItem);
     newItem.item = '';
     newItem.description = '';
     newItem.hints = '';
@@ -188,11 +149,7 @@ function ChapterItem(props) {
       });
     setUpdateList([]);
   }
-
-  useEffect(() => {
-    getProgressData();
-  }, [])
-
+  
   return (
     <Grid item xs={12}>
       {edit ?
@@ -204,13 +161,13 @@ function ChapterItem(props) {
           {display: 'flex'}, 
           {flexDirection: 'row'},
           {justifyContent: 'space-between'},
-          {borderRadius: '10px'}, 
+          {borderRadius: '0px'}, 
           {backgroundImage: `white`},
-          {boxShadow: '-2px 2px 10px 5px teal'}
+          {alignItems: 'center'}
         ]}>
           <CardContent sx={{ width: '100%' }}>
               <Stack direction='row' justifyContent='space-between'>
-                  <h1>{props.chapter.title} </h1> 
+                  <h2>{props.chapter.title} </h2> 
                   {/* Button to turn edit mode off */}
                   <IconButton onClick={() => editChapter(props.chapter.id)}
                     disableElevation
@@ -282,60 +239,63 @@ function ChapterItem(props) {
         // Displays chapter in minimized view mode
         <Card sx={[ 
             {width: '90%'},
+            {height: '80px'},
             {margin: 'auto'},
             {padding: '0px 20px'},
             {display: 'flex'}, 
             {flexDirection: 'row'},
             {justifyContent: 'space-between'},
-            {borderRadius: '10px'}, 
+            {borderRadius: '0px'}, 
             {backgroundImage: `white`},
-            {boxShadow: '-2px 2px 10px 5px teal'}
+            {alignItems: 'center'}
         ]}>
           <CardContent sx={{ padding: '0px' }}>
-              <h1>{props.chapter.title}</h1>
+              <h2>{props.chapter.title}</h2>
           </CardContent>
-          <CardContent sx={{ padding: '0px' }}>
-            <ProgressBar getProgressData={getProgressData} fillColor="gold" progress={`${(lessonCount/itemCount)*100}%`} height={30} />
-          </CardContent> 
-          <CardActions>
-            {props.chapter.learned < props.chapter.total ?
-                // Clickable if there are unlearned words remaining
-                <Button variant='contained' onClick={() => toLesson('learn', props.chapter.id)}>
-                    Learn
-                </Button>
-                :
-                // Greyed out and unclickable
-                <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
-                    Learn
-                </Button>
-            }
-            {props.chapter.learned > 0 ?
-                // Clickable if learned words > 0
-                <Button variant='contained' onClick={() => toLesson('review', props.chapter.id)}>
-                    Review
-                </Button>
-                :
-                // Greyed out and unclickable
-                <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
-                    Review
-                </Button>
-            }
-            {/* Button to turn edit mode on */}
-            <IconButton onClick={() => editChapter(props.chapter.id)}
-              disableElevation
-              disableRipple
-              size="large"
-              sx={{
-                ml: 1,
-                "&.MuiButtonBase-root:hover": {
-                  bgcolor: "transparent"
-                }
-            }}>
-              <Tooltip title="Open Editor">
-                <EditIcon sx={{fontSize: '40px'}} />   
-              </Tooltip>
-            </IconButton>
-          </CardActions>
+          <Stack direction='row' spacing={20} width='70%' justifyContent='end'>
+            <CardContent sx={{ padding: '0px', width: '100%' }}>
+              <ProgressBar fillColor="gold" progress={`${(props.chapter.learned/props.chapter.total)*100}%`} height={30} />
+            </CardContent> 
+            <CardActions>
+              {props.chapter.learned < props.chapter.total ?
+                  // Clickable if there are unlearned words remaining
+                  <Button variant='contained' onClick={() => toLesson('learn', props.chapter.id)}>
+                      Learn
+                  </Button>
+                  :
+                  // Greyed out and unclickable
+                  <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+                      Learn
+                  </Button>
+              }
+              {props.chapter.learned > 0 ?
+                  // Clickable if learned words > 0
+                  <Button variant='contained' onClick={() => toLesson('review', props.chapter.id)}>
+                      Review
+                  </Button>
+                  :
+                  // Greyed out and unclickable
+                  <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+                      Review
+                  </Button>
+              }
+              {/* Button to turn edit mode on */}
+              <IconButton onClick={() => editChapter(props.chapter.id)}
+                disableElevation
+                disableRipple
+                size="large"
+                sx={{
+                  ml: 1,
+                  "&.MuiButtonBase-root:hover": {
+                    bgcolor: "transparent"
+                  }
+              }}>
+                <Tooltip title="Open Editor">
+                  <EditIcon sx={{fontSize: '40px'}} />   
+                </Tooltip>
+              </IconButton>
+            </CardActions>
+          </Stack>
         </Card>
       }
     </Grid>

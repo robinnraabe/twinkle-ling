@@ -19,27 +19,56 @@ router.get('/:id', (req, res) => {
   });
 });
 
-// This adds a new deck to the database
+// This adds a new chapter to the database
 router.post('/', (req, res) => {
   const chapterValues = [
     req.body.deck_id,
-    req.body.title,
-    req.body.learned,
-    req.body.reviewed,
-    req.body.total,
-    req.body.edit
+    req.body.title
   ]
-  const queryText = `INSERT INTO "chapters" (deck_id, title, edit)
-    VALUES ($1, $2, $3)`;
+  
+  const queryText = `INSERT INTO "chapters" (deck_id, title)
+    VALUES ($1, $2) 
+    RETURNING id;`;
 
   pool.query(queryText, chapterValues)
     .then(result => {
+      const chapterId = result.rows[0].id;
+      const userChaptersQuery = `INSERT INTO "user_chapters" 
+        (chapter_id, user_id)
+        VALUES ($1, $2);`;
+  
+      const userChapterValues = [chapterId, req.body.user_id];   
+
+      pool.query(userChaptersQuery, userChapterValues)
+        .then(result => {
+          res.sendStatus(201);
+        })
+        .catch('Error in POST /chapters/userChapters', error => {
+          console.log(error);
+          res.sendStatus(500)
+      })
       res.sendStatus(201);
-    }).catch(error => {
-      console.log('Error in POST /chapters: ', error);
+    })
+    .catch(error => {
+      console.log('Error in POST /chapters', error);
       res.sendStatus(500)
   });
 });
+
+// This updates the learned + total count for the selected chapter
+router.put('/learned/:id', (req, res) => {
+  const queryValues = [req.body.learned, req.body.total, req.body.userId, req.params.id];
+  const queryText = `UPDATE user_chapters SET learned = $1, total = $2 WHERE user_id = $3 AND chapter_id = $4;`;
+
+  pool.query(queryText, queryValues)
+    .then((result) => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /chapters/learned', error);
+      res.sendStatus(500);
+    });
+})
 
 router.put('/:id', (req, res) => {
   const queryText = `UPDATE user_chapters SET "edit" = NOT "edit" WHERE "chapter_id" = $1;`;

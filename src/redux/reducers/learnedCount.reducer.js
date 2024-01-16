@@ -1,6 +1,6 @@
-const lessonCountReducer = (state = [], action) => {
+const learnedCountReducer = (state = [], action) => {
     switch (action.type) {
-      case 'SET_LESSON_ITEMS_COUNT':
+      case 'SET_LEARNED_ITEMS_COUNT':
         return action.payload;
       default:
         return state;
@@ -9,5 +9,5 @@ const lessonCountReducer = (state = [], action) => {
   
   // lessonCount will be on the redux state at:
   // state.lessonCount
-  export default lessonCountReducer;
+  export default learnedCountReducer;
 

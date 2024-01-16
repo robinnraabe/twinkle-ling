@@ -35,8 +35,6 @@ function ResultsPage() {
       dispatch(action);
     }
   }
-
-
   
   useEffect(() => {
     dispatch({type: 'FETCH_PROMPTS'})

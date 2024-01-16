@@ -1,4 +1,4 @@
-const itemCountReducer = (state = [], action) => {
+const totalCountReducer = (state = [], action) => {
     switch (action.type) {
         case 'SET_TOTAL_ITEMS_COUNT':
         return action.payload;
@@ -9,4 +9,4 @@ const itemCountReducer = (state = [], action) => {
     
     // itemCount will be on the redux state at:
     // state.itemCount
-    export default itemCountReducer;
+    export default totalCountReducer;

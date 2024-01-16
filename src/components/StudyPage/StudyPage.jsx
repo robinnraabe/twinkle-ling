@@ -40,7 +40,6 @@ function StudyPage() {
       sessionItem();
       setMissed(missed + 1);
     }
-    console.log('items remaining in lesson AFTER check answer:', lesson);
   }
 
   // Gets a random number
@@ -50,8 +49,6 @@ function StudyPage() {
 
   // Chooses next item + options in session
   const sessionItem = () => {
-    console.log('LESSON CONTAINS:', lesson);
-    console.log('EXTRAS CONTAIN:', lessonExtras);
     // Picks one randomized item from 'lesson', removes index from 'lesson'
     let itemArray = [];
     let randomIndex = getRandom(lesson.length);
@@ -60,7 +57,7 @@ function StudyPage() {
     setSplice(randomIndex);
     itemArray.push(lessonItem);
     let index = 5;
-    console.log('items remaining in lesson:', lesson);
+
 
     // Creates new copy of 'lessonExtras' so 'lessonExtras' isn't affected
     const lessonExtrasCopy = [];
@@ -74,7 +71,7 @@ function StudyPage() {
       const extraItem = lessonExtrasCopy[randomIndex];
       let itemNotInArray = true;
       for (let item of itemArray) {
-        if (item.i_id === extraItem.i_id) {
+        if (item.item_id === extraItem.i_id) {
           itemNotInArray = false;
         }
       }

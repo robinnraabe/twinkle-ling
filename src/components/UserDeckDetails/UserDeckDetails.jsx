@@ -36,30 +36,81 @@ function DeckDetails() {
 
   // Gets details for all chapters in selected deck
   const getChapterDetails = () => {
-    axios.get(`/chapters/${deckId}`).then(response => {
+    axios.get(`/chapters/${deckId}`)
+      .then(response => {
         dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
       })
-        .catch(error => {
-          console.log('Error getting chapter details:', error);
-          alert('Something went wrong!');
-        })
+      .catch(error => {
+        console.log('Error getting chapter details:', error);
+        alert('Something went wrong!');
+    })
+  }
+
+  // This gets the data for each chapter's progress bar
+  const getProgressData = (chapterId) => {
+    let learned, total;
+    const userId = user.id;
+    const request = {
+      params: {
+        chapterId: chapterId,
+        userId: userId
+      }
+    }
+
+    // This gets the number of learned items in chapter
+    axios.get(`/data/progress`, request)
+      .then(response => {
+        learned = response.data;
+      })
+      .catch(error => {
+        console.log('Error getting learned count:', error);
+        alert('Something went wrong!');
+    })
+
+    // This gets the total number of items in chapter
+    axios.get(`/data/total`, request)
+      .then(response => {
+        total = response.data;
+      })
+      .catch(error => {
+        console.log('Error getting total count:', error);
+        alert('Something went wrong!');
+    })
+
+    // This updates the chapter with 'learned' and 'total' numbers
+    axios.put(`/chapters/learned/${chapterId}`, [learned, total, userId])
+      .then(response => {
+        getChapterDetails();
+      })
+      .catch(error => {
+        console.log('Error updating ChapterItem/GetProgressData counts:', error);
+        alert('Something went wrong!');
+    })
+  }
+  
+  const updateChapterData = () => {
+    for (let chapter of chapters) {
+      getProgressData(chapter.id);
+    }
   }
 
   // This adds a new chapter to the deck
-  const addChapter = () => {
+  const addChapter = (event) => {
+    event.preventDefault();
     const newChapter = { 
       deck_id: deckId,
       title: '-- New Chapter',
       user_id: user.id
     };
     dispatch({ type: 'ADD_CHAPTER', payload: newChapter });
-    getChapterDetails();
+    setTimeout(() => {
+      // getChapterDetails();
+    }, "500");
   }
 
   // This gets extra items for study session
   const getExtraItems = () => {
     axios.get(`/items/language/${languageId}`).then(response => {
-      console.log('extras data:', response.data);
       dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
     })
       .catch(error => {
@@ -72,7 +123,6 @@ function DeckDetails() {
   const toLesson = (type) => {
     if (type === 'learn') {
       axios.get(`/study/deck/learn/${deckId}`).then(response => {
-        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -83,7 +133,6 @@ function DeckDetails() {
 
     else if (type === 'review') {
       axios.get(`/study/deck/review/${deckId}`).then(response => {
-        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -114,6 +163,7 @@ function DeckDetails() {
 
   useEffect(() => {
     getChapterDetails();
+    updateChapterData();
   }, []);
 
   // Displays the information for the selected Deck
@@ -181,7 +231,7 @@ function DeckDetails() {
         
         <Grid container spacing={2}>
             {chapters.map((chapter) => {
-                return <ChapterItem key={chapter.id} chapter={chapter} getChapterDetails={getChapterDetails} languageId={deck.language_id}/>
+                return <ChapterItem key={chapter.id} chapter={chapter} languageId={languageId} getChapterDetails={getChapterDetails}/>
             })} 
         </Grid>
     </div>
