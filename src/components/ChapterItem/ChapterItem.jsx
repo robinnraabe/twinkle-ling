@@ -18,26 +18,23 @@ function ChapterItem(props) {
   const user = useSelector(store => store.user);
   const [newItem, setItem] = useState('');
   let edit = props.chapter.edit;
-  console.log(props.chapter.id, props.chapter.learned, props.chapter.total);
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
     axios.get(`/items/language/${props.languageId}`)
       .then(response => {
-        console.log('extras data:', response.data);
         dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
       })
       .catch(error => {
         console.log('Error getting extra items:', error);
         alert('Something went wrong!');
-      })
+    })
   }
 
   // This sends the user to the Study page and loads the selected chapter for studying
   const toLesson = (type, chapterId) => {
     if (type === 'learn') {
       axios.get(`/study/chapter/learn/${chapterId}`).then(response => {
-        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -48,7 +45,6 @@ function ChapterItem(props) {
 
     else if (type === 'review') {
       axios.get(`/study/chapter/review/${chapterId}`).then(response => {
-        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -59,7 +55,7 @@ function ChapterItem(props) {
     getExtraItems();
     setTimeout(() => {
       history.push('/session');
-    }, '500');
+    }, '1000');
   }
 
   const editChapter = (chapterId) => {
@@ -84,9 +80,6 @@ function ChapterItem(props) {
     }
     // This resets learned_status
     axios.put(`/items/reset/learned`, request)
-      .then((response) => {
-        console.log(response.data);
-      })
       .catch((error) => {
         console.log('Error in resetProgress/learned PUT request:', error);
         alert('Something went wrong!');
@@ -95,7 +88,6 @@ function ChapterItem(props) {
     // This resets repetition
     axios.put(`/items/reset/repetition`, request)
       .then((response) => {
-        console.log(response.data);
         props.getChapterDetails();
       })
       .catch((error) => {
@@ -116,7 +108,6 @@ function ChapterItem(props) {
   // This adds new item to chapter
   const addItem = () => {
     dispatch({ type: 'ADD_ITEM', payload: newItem });
-    console.log('newItem:', newItem);
     newItem.item = '';
     newItem.description = '';
     newItem.hints = '';

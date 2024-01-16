@@ -60,7 +60,6 @@ function DeckDetails() {
     // This gets the number of learned items in chapter
     axios.get(`/data/progress`, request)
       .then(response => {
-        console.log('learned response:', response.data);
         learned = response.data;
       })
       .catch(error => {
@@ -71,7 +70,6 @@ function DeckDetails() {
     // This gets the total number of items in chapter
     axios.get(`/data/total`, request)
       .then(response => {
-        console.log('total response:', response.data);
         total = response.data;
       })
       .catch(error => {
@@ -96,22 +94,23 @@ function DeckDetails() {
     }
   }
 
-
   // This adds a new chapter to the deck
-  const addChapter = () => {
+  const addChapter = (event) => {
+    event.preventDefault();
     const newChapter = { 
       deck_id: deckId,
       title: '-- New Chapter',
       user_id: user.id
     };
     dispatch({ type: 'ADD_CHAPTER', payload: newChapter });
-    getChapterDetails();
+    setTimeout(() => {
+      // getChapterDetails();
+    }, "500");
   }
 
   // This gets extra items for study session
   const getExtraItems = () => {
     axios.get(`/items/language/${languageId}`).then(response => {
-      console.log('extras data:', response.data);
       dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
     })
       .catch(error => {
@@ -124,7 +123,6 @@ function DeckDetails() {
   const toLesson = (type) => {
     if (type === 'learn') {
       axios.get(`/study/deck/learn/${deckId}`).then(response => {
-        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -135,7 +133,6 @@ function DeckDetails() {
 
     else if (type === 'review') {
       axios.get(`/study/deck/review/${deckId}`).then(response => {
-        console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -234,7 +231,7 @@ function DeckDetails() {
         
         <Grid container spacing={2}>
             {chapters.map((chapter) => {
-                return <ChapterItem key={chapter.id} chapter={chapter} getChapterDetails={getChapterDetails} languageId={deck.language_id}/>
+                return <ChapterItem key={chapter.id} chapter={chapter} languageId={languageId} getChapterDetails={getChapterDetails}/>
             })} 
         </Grid>
     </div>

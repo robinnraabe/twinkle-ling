@@ -13,7 +13,8 @@ router.get('/:id', (req, res) => {
     decks.contributor_id,
     decks.public_status,
     "user".username,
-    languages."language"
+    languages."language",
+    languages.id AS language_id
     FROM 
     "decks"
     JOIN "user" ON "user"."id" = decks.creator_id

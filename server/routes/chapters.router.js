@@ -27,31 +27,32 @@ router.post('/', (req, res) => {
     req.body.title
   ]
   const queryText = `INSERT INTO "chapters" (deck_id, title)
-    VALUES ($1, $2);`;
+    VALUES ($1, $2) 
+    RETURNING id;`;
 
   pool.query(queryText, chapterValues)
     .then(result => {
-      console.log(result);
       const chapterId = result.rows[0].id;
       const userChaptersQuery = `INSERT INTO "user_chapters" 
         (chapter_id, user_id)
         VALUES ($1, $2);`;
-
-      const userId = req.body.user_id;   
-      const userChapterValues = [chapterId, userId];   
+  
+      const userChapterValues = [chapterId, req.body.user_id];   
 
       pool.query(userChaptersQuery, userChapterValues)
         .then(result => {
           res.sendStatus(201);
-        }).catch('Error in POST /chapters/userChapters', error => {
+        })
+        .catch('Error in POST /chapters/userChapters', error => {
           console.log(error);
           res.sendStatus(500)
       })
       res.sendStatus(201);
-    }).catch(error => {
+    })
+    .catch(error => {
       console.log('Error in POST /chapters', error);
       res.sendStatus(500)
-    });
+  });
 });
 
 // This updates the learned + total count for the selected chapter

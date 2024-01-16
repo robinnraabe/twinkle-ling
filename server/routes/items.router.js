@@ -18,7 +18,6 @@ router.get('/:id', (req, res) => {
 
 // This gets items in the same language for study session
 router.get('/language/:id', (req, res) => {
-  console.log(req.params.id);
   const languageId = req.params.id;
   const queryText = `SELECT * FROM items
     WHERE language_id = ${languageId}`;
