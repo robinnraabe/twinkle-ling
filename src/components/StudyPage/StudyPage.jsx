@@ -10,6 +10,7 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 
 function StudyPage() {
   const history = useHistory();
+  const deck = useSelector(store => store.deckDetails[0]);
   const lesson = useSelector(store => store.lesson);
   const lessonLength = lesson.length;
   const lessonExtras = useSelector(store => store.lessonExtras);
@@ -136,7 +137,7 @@ function StudyPage() {
         <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
           <Stack direction='row' alignItems='center' justifyContent='space-between' padding='20px 0px' width= '32%'>
             <img src='https://www.jame-world.com/media/image/2011-06/4009.jpg' width='200px' />
-            <h1>Session Title</h1>
+            <h1>{deck.title}</h1>
           </Stack>
           <IconButton onClick={() => exitSession()}
             disableElevation

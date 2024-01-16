@@ -3,7 +3,6 @@ const pool = require('../modules/pool');
 const router = express.Router();
 
 router.get('/:id', (req, res) => {
-  console.log('GET /chapters');
   const deckId = req.params.id;
 
   const queryText = `SELECT * FROM user_chapters

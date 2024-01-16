@@ -8,6 +8,7 @@ import ChapterItem from '../ChapterItem/ChapterItem';
 
 // Displays the details for the selected deck
 function DeckDetails() {
+  const user = useSelector(store => store.user);
   const deck = useSelector(store => store.deckDetails[0]);
   const chapters = useSelector(store => store.chapters);
   const deckId = deck.id;
@@ -48,17 +49,14 @@ function DeckDetails() {
   const addChapter = () => {
     const newChapter = { 
       deck_id: deckId,
-      title: 'New Chapter',
-      learned: 0,
-      reviewed: 0,
-      total: 0,
-      edit: true
+      title: '-- New Chapter',
+      user_id: user.id
     };
     dispatch({ type: 'ADD_CHAPTER', payload: newChapter });
     getChapterDetails();
   }
 
-  // Gets extra items for study session
+  // This gets extra items for study session
   const getExtraItems = () => {
     axios.get(`/items/language/${languageId}`).then(response => {
       console.log('extras data:', response.data);
@@ -72,29 +70,31 @@ function DeckDetails() {
 
   // This sends the user to the Study page and loads the selected deck for studying
   const toLesson = (type) => {
-    if (type === 'review') {
-      axios.get(`/study/deck/review/${deckId}`).then(response => {
-        console.log('lesson data:', response.data);
-        dispatch({ type: 'SET_LESSON', payload: response.data });
-      })
-        .catch(error => {
-          console.log('Error getting deck/lesson:', error);
-          alert('Something went wrong!');
-        })
-
-    }
-    else if (type === 'learn') {
+    if (type === 'learn') {
       axios.get(`/study/deck/learn/${deckId}`).then(response => {
         console.log('lesson data:', response.data);
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
-          console.log('Error getting deck/lesson:', error);
+          console.log('Error getting deck learning:', error);
+          alert('Something went wrong!');
+        })
+    }
+
+    else if (type === 'review') {
+      axios.get(`/study/deck/review/${deckId}`).then(response => {
+        console.log('lesson data:', response.data);
+        dispatch({ type: 'SET_LESSON', payload: response.data });
+      })
+        .catch(error => {
+          console.log('Error getting deck review:', error);
           alert('Something went wrong!');
         })
     }
     getExtraItems();
-    // history.push('/session');
+    setTimeout(() => {
+      history.push('/session');
+    }, '500');
   }
 
   const resetProgress = () => {
@@ -123,29 +123,31 @@ function DeckDetails() {
         <Stack direction='row' justifyContent='space-between' >
 
             {/* Left subheader items */}
-            <Stack direction='row' alignItems='center'>
+            <Stack direction='row' alignItems='center' margin='0px 50px'>
                 <img src='https://static.tumblr.com/d7d601c9f738a1e6098326472def2cac/zd84lno/qI6p0mf8w/tumblr_static_9tutvrt14iskcs04w448040wo.png' 
                     style={{borderRadius: '200px'}} 
                     width='80px' height='80px' />
-                <Stack direction='column'>
-                    {deck.title}<br />
-                    Creator: {deck.creator_id}
+                <Stack direction='column' justifyItems='center'>
+                    <h3 style={{ margin: '0px' }}>{deck.title}</h3>
+                    <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.username}</h4>
                 </Stack>
             </Stack>
 
             {/* Right subheader items */}
             <Stack alignItems='center'>
-                Language: {deck.language_id}<br />
-                <Button onClick={toUserDeckList} 
-                    disableRipple
-                    variant='contained'>
-                        Return to decks
-                </Button>
+              <Button onClick={toUserDeckList}
+                sx={{ margin: '0px 50px' }} 
+                disableRipple
+                variant='contained'>
+                Return to decks
+              </Button>
+              <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.language}</h4>
             </Stack>
         </Stack>
+        <br />
 
         {/* Stats and deck options */}
-        <Box style={boxStyle}>
+        <Box style={boxStyle} margin='0px 50px'>
             <Stack direction='row' justifyContent='space-between'>
                 <Stack direction='column'>
                     <Button variant='contained' style={btnStyle}
@@ -172,9 +174,9 @@ function DeckDetails() {
         </Box>
 
         {/* Chapters header */}
-        <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 20px'}}>
-            <h2>Chapters</h2>
-            <Button onClick={addChapter}>+ New Chapter</Button>
+        <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 50px'}}>
+            <h1>Chapters</h1>
+            <Button sx={{ fontSize: '24px' }} onClick={addChapter}>+ New Chapter</Button>
         </Stack>
         
         <Grid container spacing={2}>

@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DataGrid } from '@mui/x-data-grid';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 import ItemRow from '../ItemRow/ItemRow';
 
@@ -21,22 +20,6 @@ function ItemGrid(props) {
       })
   }
 
-  setUpdateList({...updateList, 
-
-   })
-  // This updates each item
-  const updateItem = () => {
-    axios.put(`/items/${row.i_id}`)
-    .then((response) => {
-      console.log('putted from ItemGri');
-      getItemDetails();
-    })
-    .catch((error) => {
-      console.log('Error in ItemRow PUT request:', error);
-      alert('Something went wrong!');
-    });
-  }
-
   useEffect(() => {
     getItemDetails();
   }, [])
@@ -53,13 +36,11 @@ function ItemGrid(props) {
             <TableCell align="center">Image</TableCell>
             <TableCell align="center">Custom</TableCell>
             <TableCell align="center">Hint</TableCell>
-            <TableCell align="center">Save</TableCell>
-            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {items.map((row) => (
-            <ItemRow row={row} updateItem={updateItem} />
+            <ItemRow row={row} updateList={props.updateList} setUpdateList={props.setUpdateList} />
           ))}
         </TableBody> 
       </Table>

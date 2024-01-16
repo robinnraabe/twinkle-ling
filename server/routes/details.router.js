@@ -5,8 +5,20 @@ const router = express.Router();
 // This returns the details for a single selected deck
 router.get('/:id', (req, res) => {
   let deckId = req.params.id;
-  const queryText = `SELECT * FROM "decks"
-    WHERE id = ${deckId};`;
+  const queryText = `SELECT 
+    decks."id",
+    decks.title,
+    decks.image_url,
+    decks.details,
+    decks.contributor_id,
+    decks.public_status,
+    "user".username,
+    languages."language"
+    FROM 
+    "decks"
+    JOIN "user" ON "user"."id" = decks.creator_id
+    JOIN languages ON languages.id = decks.language_id
+    WHERE decks.id = ${deckId};`;
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows);

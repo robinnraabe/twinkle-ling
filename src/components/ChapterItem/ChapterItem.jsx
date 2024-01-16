@@ -19,8 +19,9 @@ function ChapterItem(props) {
   const [newItem, setItem] = useState('');
   const lessonCount = useSelector(store => store.lessonCount);
   const itemCount = useSelector(store => store.itemCount);
+  const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
-  console.log(props.chapter.id, lessonCount, itemCount);
+  console.log('ChapterItem log:', props.chapter.id, lessonCount, itemCount);
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
@@ -29,7 +30,7 @@ function ChapterItem(props) {
       dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
     })
       .catch(error => {
-        console.log('Error getting extra items:', error);
+        console.log('Error in ChapterItem/getExtraItems GET request:', error);
         alert('Something went wrong!');
       })
   }
@@ -72,7 +73,7 @@ function ChapterItem(props) {
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
-          console.log('Error getting chapter lesson:', error);
+          console.log('Error in ChapterItem/toLesson/learn GET request:', error);
           alert('Something went wrong!');
         })
     }
@@ -82,7 +83,7 @@ function ChapterItem(props) {
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
-          console.log('Error getting chapter lesson:', error);
+          console.log('Error in ChapterItem/toLesson/review GET request:', error);
           alert('Something went wrong!');
         })
     }
@@ -98,9 +99,10 @@ function ChapterItem(props) {
         props.getChapterDetails();
       })
       .catch((error) => {
-        console.log('Error in editChapter PUT request:', error);
+        console.log('Error in ChapterItem/editChapter PUT request:', error);
         alert('Something went wrong!');
     });
+    setUpdateList([]);
   }
 
   // This resets the progress for the selected chapter
@@ -118,7 +120,7 @@ function ChapterItem(props) {
         console.log(response.data);
       })
       .catch((error) => {
-        console.log('Error in resetProgress/learned PUT request:', error);
+        console.log('Error in ChapterItem/resetProgress/learned PUT request:', error);
         alert('Something went wrong!');
     });
 
@@ -129,7 +131,7 @@ function ChapterItem(props) {
         props.getChapterDetails();
       })
       .catch((error) => {
-        console.log('Error in resetProgress/repetition PUT request:', error);
+        console.log('Error in ChapterItem/resetProgress/repetition PUT request:', error);
         alert('Something went wrong!');
   });
   }
@@ -157,6 +159,34 @@ function ChapterItem(props) {
   const deleteChapter = (chapterAndDeck) => {
     dispatch({ type: 'DELETE_CHAPTER', payload: chapterAndDeck });
     // make sure to alert the user and require confirmation before deleting!
+  }
+
+  // This updates each item
+  const saveChanges = (chapterId) => {
+    let removeIndexList = [0];
+    for (let index = updateList.length-1; index > -1; index--) {
+      for (let removeIndex of removeIndexList) {
+        if (updateList[index].i_id === removeIndex) {
+          updateList.splice(index, 1);
+          break;
+        }
+      }
+      removeIndexList.push(updateList[index].i_id);
+    }
+    for (let index of updateList) {
+      index.chapter_id = chapterId;
+    }
+    console.log('updateList after splicing:', updateList);
+      axios.put('/', updateList[0])
+        .then((response) => {
+          console.log('Successfully updated row', update.i_id);
+          props.getChapterDetails();
+        })
+        .catch((error) => {
+          console.log('Error in ChapterItem/saveChanges PUT request:', error);
+          alert('Something went wrong!');
+      });
+    setUpdateList([]);
   }
 
   useEffect(() => {
@@ -198,7 +228,7 @@ function ChapterItem(props) {
                   </IconButton>
               </Stack>
 
-              <ItemGrid chapterId={props.chapter.id} />
+              <ItemGrid chapterId={props.chapter.id} updateList={updateList} setUpdateList={setUpdateList}/>
               <br />
               <form>
                   <TextField label="Word" variant="outlined" sx={{}}

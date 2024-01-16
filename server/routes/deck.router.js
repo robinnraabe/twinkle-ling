@@ -16,7 +16,6 @@ router.get('/user/:id', (req, res) => {
   pool.query(queryText, [req.params.id])
   .then((result) => {
       res.send(result.rows);
-      console.log('LOOK AT ME!!!', req.params, result.rows);
   }).catch((error) => {
       console.log('Error in GET /decks/user:', error)
       res.sendStatus(500);
@@ -50,7 +49,6 @@ router.get('/user/all/:id', (req, res) => {
     JOIN "languages" on "languages".id = decks.language_id
     WHERE "user".id = $1
     ORDER BY last_used;`;
-  console.log('GET /decks/user/all');
   pool.query(queryText, [req.params.id])
   .then((result) => {
     res.send(result.rows);
