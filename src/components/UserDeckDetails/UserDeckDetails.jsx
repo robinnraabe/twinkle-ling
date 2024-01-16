@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
@@ -15,6 +15,7 @@ function DeckDetails() {
   const languageId = deck.language_id;
   const history = useHistory();
   const dispatch = useDispatch();
+  const [updater, setUpdater] = useState(0);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
@@ -88,6 +89,7 @@ function DeckDetails() {
     })
   }
   
+  // This executes getProgressData for each chapter on page load
   const updateChapterData = () => {
     for (let chapter of chapters) {
       getProgressData(chapter.id);
@@ -152,7 +154,9 @@ function DeckDetails() {
   const boxStyle = {
     color: 'lavender',
     padding: '20px',
-    backgroundImage: `url('${deck.image_url}')`
+    backgroundImage: `url('${deck.image_url}')`,
+    backgroundSize: '250px',
+    backgroundRepeat: 'repeat'
   }
 
   const btnStyle = {
@@ -163,7 +167,7 @@ function DeckDetails() {
   useEffect(() => {
     getChapterDetails();
     updateChapterData();
-  }, []);
+  }, [updater]);
 
   // Displays the information for the selected Deck
   return (
@@ -171,27 +175,27 @@ function DeckDetails() {
         {/* Top subheader */}
         <Stack direction='row' justifyContent='space-between' >
 
-            {/* Left subheader items */}
-            <Stack direction='row' alignItems='center' margin='0px 50px'>
-                <img src='https://static.tumblr.com/d7d601c9f738a1e6098326472def2cac/zd84lno/qI6p0mf8w/tumblr_static_9tutvrt14iskcs04w448040wo.png' 
-                    style={{borderRadius: '200px'}} 
-                    width='80px' height='80px' />
-                <Stack direction='column' justifyItems='center'>
-                    <h3 style={{ margin: '0px' }}>{deck.title}</h3>
-                    <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.username}</h4>
-                </Stack>
-            </Stack>
+          {/* Left subheader items */}
+          <Stack direction='row' alignItems='center' margin='0px 50px'>
+              <img src='https://static.tumblr.com/d7d601c9f738a1e6098326472def2cac/zd84lno/qI6p0mf8w/tumblr_static_9tutvrt14iskcs04w448040wo.png' 
+                  style={{borderRadius: '200px'}} 
+                  width='80px' height='80px' />
+              <Stack direction='column' justifyItems='center'>
+                  <h3 style={{ margin: '0px' }}>{deck.title}</h3>
+                  <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.username}</h4>
+              </Stack>
+          </Stack>
 
-            {/* Right subheader items */}
-            <Stack alignItems='center'>
-              <Button onClick={toUserDeckList}
-                sx={{ margin: '0px 50px' }} 
-                disableRipple
-                variant='contained'>
-                Return to decks
-              </Button>
-              <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.language}</h4>
-            </Stack>
+          {/* Right subheader items */}
+          <Stack alignItems='center'>
+            <Button onClick={toUserDeckList}
+              sx={{ margin: '0px 50px' }} 
+              disableRipple
+              variant='contained'>
+              Return to decks
+            </Button>
+            <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.language}</h4>
+          </Stack>
         </Stack>
         <br />
 
@@ -230,7 +234,14 @@ function DeckDetails() {
         
         <Grid container spacing={2}>
             {chapters.map((chapter) => {
-                return <ChapterItem key={chapter.id} chapter={chapter} languageId={languageId} getChapterDetails={getChapterDetails}/>
+                return <ChapterItem 
+                  key={chapter.id} 
+                  chapter={chapter} 
+                  deckId={deckId}
+                  languageId={languageId} 
+                  setUpdater={setUpdater}
+                  updater={updater}
+                  getChapterDetails={getChapterDetails}/>
             })} 
         </Grid>
     </div>

@@ -90,15 +90,16 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/', (req, res) => {
-  console.log("items put req.body:", req.body, req.params);
+router.put('/update', (req, res) => {
+  console.log("items put req.body:", req.body);
+  console.log()
   const itemValues = [
     req.body.item,
     req.body.description,
     req.body.audio,
     req.body.image,
     req.body.custom,
-    req.body.hints,
+    req.body.hint,
     req.body.i_id,
     req.body.chapter_id
   ]
@@ -118,5 +119,18 @@ router.put('/', (req, res) => {
       res.sendStatus(500);
   });
 });
+
+router.delete('/:id', (req, res) => {
+  const queryText = `DELETE FROM items WHERE "i_id" = $1;`;
+
+  pool.query(queryText, [req.params.id])
+    .then((result) => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in DELETE /items', error);
+      res.sendStatus(500);
+  });
+})
 
 module.exports = router;

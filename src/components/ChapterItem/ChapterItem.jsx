@@ -62,6 +62,7 @@ function ChapterItem(props) {
   const editChapter = (chapterId) => {
     axios.put(`/chapters/${chapterId}`)
       .then((response) => {
+        dispatch({ type: 'FETCH_CHAPTERS', payload: props.deckId })
         props.getChapterDetails();
       })
       .catch((error) => {
@@ -122,8 +123,9 @@ function ChapterItem(props) {
     // make sure to alert the user and require confirmation before deleting!
   }
 
-  // This updates each item
+  // This updates all items in chapter when saved
   const saveChanges = (chapterId) => {
+    // This removes all but the most recent edit from updateList
     let removeIndexList = [0];
     for (let index = updateList.length-1; index > -1; index--) {
       for (let removeIndex of removeIndexList) {
@@ -137,16 +139,19 @@ function ChapterItem(props) {
     for (let index of updateList) {
       index.chapter_id = chapterId;
     }
-    console.log('updateList after splicing:', updateList);
-      axios.put('/', updateList[0])
+    // This creates a PUT request for every row in updateList
+    for (let update of updateList) {
+      axios.put('/items/update', update)
         .then((response) => {
-          console.log('Successfully updated row', update.i_id);
+          dispatch({ type: 'FETCH_CHAPTERS', payload: props.deckId })
           props.getChapterDetails();
+          props.setUpdater(props.updater + 1);
         })
         .catch((error) => {
           console.log('Error in ChapterItem/saveChanges PUT request:', error);
           alert('Something went wrong!');
       });
+    }
     setUpdateList([]);
   }
 

@@ -40,7 +40,7 @@ function ItemGrid(props) {
         </TableHead>
         <TableBody>
           {items.map((row) => (
-            <ItemRow row={row} updateList={props.updateList} setUpdateList={props.setUpdateList} />
+            <ItemRow row={row} chapterId={props.chapterId} updateList={props.updateList} setUpdateList={props.setUpdateList} />
           ))}
         </TableBody> 
       </Table>

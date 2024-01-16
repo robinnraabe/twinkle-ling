@@ -3,7 +3,8 @@ import axios from 'axios';
 
 function* updateDeckDetails(action) {
     try {
-        yield axios.put(`/deck/${action.payload.deck_id}`, action.payload);
+        yield axios.put(`/deck/update`, action.payload);
+        yield put ({ type: 'FETCH_DECK_DETAILS', payload: action.payload.id });
     } catch (error) {
         console.log('Error updating deck:', error);
     }

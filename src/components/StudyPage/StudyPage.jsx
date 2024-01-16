@@ -32,7 +32,9 @@ function StudyPage() {
         sessionItem();
       }
       else {
-        history.push('/results');
+        setTimeout(() => {
+          history.push('/results');
+        }, '1000');
       }
     }
     else {

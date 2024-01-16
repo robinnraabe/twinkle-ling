@@ -23,7 +23,8 @@ router.get('/:id', (req, res) => {
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows);
-    }).catch(error => {
+    })
+    .catch(error => {
       console.log('Error in GET /deck/id', error);
       res.sendStatus(500);
   })
@@ -54,9 +55,10 @@ router.post('/', (req, res) => {
       pool.query(joinedQueryText, joinedValues)
         .then(result => {
           res.sendStatus(201);
-        }).catch(error => {
+        })
+        .catch(error => {
           console.log(error);
-          res.sendStatus(500)
+          res.sendStatus(500);
       })
     }).catch(error => {
       console.log('Error in POST /deck: ', error);
@@ -64,6 +66,35 @@ router.post('/', (req, res) => {
     })
 });
 
-  module.exports = router;
+router.put('/update', (req, res) => {
+  const editValues = [
+    req.body.details,
+    req.body.title,
+    req.body.language_id,
+    req.body.public_status,
+    req.body.contributor_id,
+    req.body.image_url,
+    req.body.id
+  ]
+  const queryText = `UPDATE decks 
+    SET details = $1, 
+    title = $2, 
+    language_id = $3, 
+    public_status = $4,
+    contributor_id = $5,
+    image_url = $6
+    WHERE id = $7;`;
+
+  pool.query(queryText, editValues)
+    .then(result => {
+      res.sendStatus(201);
+    })
+    .catch(error => {
+      console.log(error);
+      res.sendStatus(500);
+  })
+});
+
+module.exports = router;
         
 
