@@ -3,9 +3,8 @@ const pool = require('../modules/pool');
 const router = express.Router();
 
 router.get('/:id', (req, res) => {
-  console.log('GET /chapters');
-
   const deckId = req.params.id;
+
   const queryText = `SELECT * FROM user_chapters
   JOIN chapters ON chapters.id = user_chapters.chapter_id
   WHERE deck_id = ${deckId}
@@ -13,11 +12,11 @@ router.get('/:id', (req, res) => {
 
   pool.query(queryText)
     .then((result) => {
-        res.send(result.rows);
+      res.send(result.rows);
     }).catch((error) => {
-        console.log('Error in GET /chapters', error)
-        res.sendStatus(500);
-    });
+      console.log('Error in GET /chapters', error)
+      res.sendStatus(500);
+  });
 });
 
 // This adds a new chapter to the database
@@ -26,6 +25,7 @@ router.post('/', (req, res) => {
     req.body.deck_id,
     req.body.title
   ]
+  
   const queryText = `INSERT INTO "chapters" (deck_id, title)
     VALUES ($1, $2) 
     RETURNING id;`;
@@ -75,26 +75,25 @@ router.put('/:id', (req, res) => {
 
   pool.query(queryText, [req.params.id])
     .then((result) => {
-        res.sendStatus(200);
+      res.sendStatus(200);
     })
     .catch((error) => {
-        console.log('Error in PUT /chapters', error);
-        res.sendStatus(500);
-    });
+      console.log('Error in PUT /chapters', error);
+      res.sendStatus(500);
+  });
 })
 
 router.delete('/:id', (req, res) => {
-  console.log('Request to delete chapter', req.params.id);
   const queryText = `DELETE FROM chapters WHERE "id" = $1;`;
 
   pool.query(queryText, [req.params.id])
     .then((result) => {
-        res.sendStatus(200);
+      res.sendStatus(200);
     })
     .catch((error) => {
-        console.log('Error in DELETE /chapters', error);
-        res.sendStatus(500);
-    });
+      console.log('Error in DELETE /chapters', error);
+      res.sendStatus(500);
+  });
 })
 
 module.exports = router;

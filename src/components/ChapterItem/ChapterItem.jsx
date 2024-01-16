@@ -17,6 +17,7 @@ function ChapterItem(props) {
   const history = useHistory();
   const user = useSelector(store => store.user);
   const [newItem, setItem] = useState('');
+  const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
 
   // Gets 5 extra random items in the same language for study session
@@ -38,7 +39,7 @@ function ChapterItem(props) {
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
-          console.log('Error getting chapter learning:', error);
+          console.log('Error in ChapterItem/toLesson/learn GET request:', error);
           alert('Something went wrong!');
         })
     }
@@ -48,7 +49,7 @@ function ChapterItem(props) {
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
-          console.log('Error getting chapter review:', error);
+          console.log('Error in ChapterItem/toLesson/review GET request:', error);
           alert('Something went wrong!');
         })
     }
@@ -64,9 +65,10 @@ function ChapterItem(props) {
         props.getChapterDetails();
       })
       .catch((error) => {
-        console.log('Error in editChapter PUT request:', error);
+        console.log('Error in ChapterItem/editChapter PUT request:', error);
         alert('Something went wrong!');
     });
+    setUpdateList([]);
   }
 
   // This resets the progress for the selected chapter
@@ -81,7 +83,7 @@ function ChapterItem(props) {
     // This resets learned_status
     axios.put(`/items/reset/learned`, request)
       .catch((error) => {
-        console.log('Error in resetProgress/learned PUT request:', error);
+        console.log('Error in ChapterItem/resetProgress/learned PUT request:', error);
         alert('Something went wrong!');
     });
 
@@ -91,7 +93,7 @@ function ChapterItem(props) {
         props.getChapterDetails();
       })
       .catch((error) => {
-        console.log('Error in resetProgress/repetition PUT request:', error);
+        console.log('Error in ChapterItem/resetProgress/repetition PUT request:', error);
         alert('Something went wrong!');
   });
   }
@@ -120,6 +122,34 @@ function ChapterItem(props) {
     // make sure to alert the user and require confirmation before deleting!
   }
 
+  // This updates each item
+  const saveChanges = (chapterId) => {
+    let removeIndexList = [0];
+    for (let index = updateList.length-1; index > -1; index--) {
+      for (let removeIndex of removeIndexList) {
+        if (updateList[index].i_id === removeIndex) {
+          updateList.splice(index, 1);
+          break;
+        }
+      }
+      removeIndexList.push(updateList[index].i_id);
+    }
+    for (let index of updateList) {
+      index.chapter_id = chapterId;
+    }
+    console.log('updateList after splicing:', updateList);
+      axios.put('/', updateList[0])
+        .then((response) => {
+          console.log('Successfully updated row', update.i_id);
+          props.getChapterDetails();
+        })
+        .catch((error) => {
+          console.log('Error in ChapterItem/saveChanges PUT request:', error);
+          alert('Something went wrong!');
+      });
+    setUpdateList([]);
+  }
+  
   return (
     <Grid item xs={12}>
       {edit ?
@@ -155,32 +185,28 @@ function ChapterItem(props) {
                   </IconButton>
               </Stack>
 
-              <ItemGrid chapterId={props.chapter.id} />
+              <ItemGrid chapterId={props.chapter.id} updateList={updateList} setUpdateList={setUpdateList}/>
               <br />
               <form>
                   <TextField label="Word" variant="outlined" sx={{}}
                       required 
                       type="text" 
                       value={newItem.item} 
-                      onChange={handleChange('item')} 
-                      placeholder="word"/>
+                      onChange={handleChange('item')} />
                   <TextField label="Definition/Translation" variant="outlined" sx={{}}
                       required 
                       type="text" 
                       value={newItem.description} 
-                      onChange={handleChange('description')} 
-                      placeholder="definition/translation"/>
+                      onChange={handleChange('description')}/>
                   {/* Audio upload goes here */}
-                  <TextField label="Tags" variant="outlined" sx={{}}
+                  <TextField label="Custom" variant="outlined" sx={{}}
                       type="text" 
-                      value={newItem.tags} 
-                      onChange={handleChange('tags')} 
-                      placeholder="tags"/>
+                      value={newItem.custom} 
+                      onChange={handleChange('custom')} />
                   <TextField label="Hint" variant="outlined" sx={{}}
                       type="text" 
                       value={newItem.hints} 
-                      onChange={handleChange('hints')} 
-                      placeholder="hints"/>
+                      onChange={handleChange('hints')} />
                   {/* Image upload goes here */}
 
                   <IconButton onClick={() => addItem()}

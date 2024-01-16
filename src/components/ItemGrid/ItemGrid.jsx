@@ -2,7 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DataGrid } from '@mui/x-data-grid';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
+import ItemRow from '../ItemRow/ItemRow';
 
 function ItemGrid(props) {
   const items = useSelector(store => store.items);
@@ -19,49 +20,31 @@ function ItemGrid(props) {
       })
   }
 
-  // Set column header data for table
-  const columns = [
-    { field: 'i_id', headerName: 'ID', width: 60 },
-    { field: 'item', headerName: 'Word', width: 130, editable: true },
-    { field: 'description', headerName: 'Definition/Translation', sortable: false, width: 200, editable: true },
-    {
-      field: 'audio',
-      headerName: 'Audio',
-      sortable: false,
-      width: 50,
-      editable: true
-    },
-    {
-      field: 'learning_status',
-      headerName: 'Status',
-      description: 'Not editable',
-      sortable: false,
-      width: 90,
-      editable: false
-    },
-    { field: 'image', headerName: 'Image URL', sortable: false, width: 100, editable: true },
-    { field: 'hints', headerName: 'Hint', sortable: false, width: 130, editable: true }
-  ];
-
   useEffect(() => {
     getItemDetails();
   }, [])
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-    <DataGrid
-      getRowId={(row) => row.i_id}
-      rows={items}
-      columns={columns}
-      initialState={{
-      pagination: {
-        paginationModel: { page: 0, pageSize: 5 },
-      },
-      }}
-      pageSizeOptions={[5]}
-      checkboxSelection
-    />
-    </div>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell align="center">Word</TableCell>
+            <TableCell align="center">Definition/Translation</TableCell>
+            <TableCell align="center">Audio</TableCell>
+            <TableCell align="center">Image</TableCell>
+            <TableCell align="center">Custom</TableCell>
+            <TableCell align="center">Hint</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {items.map((row) => (
+            <ItemRow row={row} updateList={props.updateList} setUpdateList={props.setUpdateList} />
+          ))}
+        </TableBody> 
+      </Table>
+    </TableContainer>
   );
 }
 
