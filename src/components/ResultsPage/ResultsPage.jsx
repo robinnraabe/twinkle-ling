@@ -3,37 +3,100 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import {useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Box, Stack, Tooltip, IconButton, Button, MenuItem, InputLabel, FormControl, FormHelperText, Select } from '@mui/material';
+import { Box, Stack, Tooltip, IconButton, Button, MenuItem, InputLabel, FormControl, FormHelperText, Select, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ProgressBar from '../ProgressBar/ProgressBar';
 
 function ResultsPage() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [promptAnswer, setPromptAnswer] = useState({});
+  const user = useSelector(store => store.user);
+  const deck = useSelector(store => store.deckDetails[0]);
+  const missed = useSelector(store => store.wrong);
+  const correct = useSelector(store => store.correct) + 1;
+  const [size, setSize] = useState(user.size);
+  const [prompt, setPrompt] = useState(user.prompt);
+  const [answer, setAnswer] = useState(user.answer);
+  const [chooseAnswer, setChooseAnswer] = useState(false);
   const promptList = useSelector(store => store.prompts);
   const answerList = useSelector(store => store.answers);
+  console.log('prompts', prompt);
+  console.log('answers', answer);
 
   // Returns user to the deck details page for the selected deck
   const exitSession = () => {
     history.push('/deck/details');
   }
 
-  // This will get the new session and send user to StudyPage
-  const getSession = (type) => {
+  // Gets 5 extra random items in the same language for study session
+  const getExtraItems = () => {
+    axios.get(`/items/language/${deck.language_id}`)
+      .then(response => {
+        dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
+      })
+      .catch(error => {
+        console.log('Error in ChapterItem/getExtraItems GET request:', error);
+        alert('Something went wrong!');
+    })
+  }
 
+  // Gets deck details to pass to StudyPage
+  const getDetails = () => {
+    axios.get(`/deck/${deck.id}`)
+      .then(response => {
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+      })
+      .catch(error => {
+        console.log('Error in DeckItem/getDetails GET request:', error);
+        alert('Something went wrong!');
+    })
+  }
+
+  // This will get the new session and send user to StudyPage
+  const getSession = () => {
+    dispatch({ type: 'SET_USER_SETTINGS', payload: {prompt: prompt, answer: answer, size: size} });
+    getDetails();
+    let dispatched = false;
+    axios.get(`/study/deck/review/${deck.id}`)
+      .then(response => {
+        if (response.data.length > 0) {
+          dispatch({ type: 'SET_LESSON', payload: response.data });
+          getExtraItems();
+          setTimeout(() => {
+            dispatched = true;
+            history.push('/session');
+          }, '500');
+        }
+      })
+      .catch(error => {
+        console.log('Error in UserDeckDetails/toLesson/review GET request:', error);
+        alert('Something went wrong!');
+    })
+    if (dispatched === false) {
+      axios.get(`/study/deck/learn/${deck.id}`)
+      .then(response => {
+        if (response.data.length > 0) {
+          dispatch({ type: 'SET_LESSON', payload: response.data });
+          getExtraItems();
+          setTimeout(() => {
+            history.push('/session');
+          }, '500');
+        }
+      })
+      .catch(error => {
+        console.log('Error in UserDeckDetails/toLesson/learn GET request:', error);
+        alert('Something went wrong!');
+      })
+    }
   }
 
   // Sets prompt ID for GET route, gets answers for answer selector
-  const handleChange = (key) => (event) => {
-    setPromptAnswer({...promptAnswer, 
-      [key]: event.target.value
-    }); 
-
-    if (key === 'prompt_id') {
-      const action = { type: 'FETCH_ANSWERS', payload: event.target.value};
-      dispatch(action);
-    }
+  const handlePromptChange = (value) => {
+    setPrompt(value);
+    setAnswer('');
+    setChooseAnswer(true);
+    const action = { type: 'FETCH_ANSWERS', payload: value.id};
+    dispatch(action);
   }
   
   useEffect(() => {
@@ -47,7 +110,7 @@ function ResultsPage() {
         <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
           <Stack direction='row' alignItems='center' justifyContent='space-between' padding='20px 0px' width= '32%'>
             <img src='https://www.jame-world.com/media/image/2011-06/4009.jpg' width='200px' />
-            <h1>Session Title</h1>
+            <h1>{deck.title}</h1>
           </Stack>
           <IconButton onClick={() => exitSession()}
             disableElevation
@@ -75,52 +138,54 @@ function ResultsPage() {
         <Stack direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
           <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center'
             sx={{ backgroundColor: 'white', padding: '20px' }}>
-            Here's your progress so far:
-            <ProgressBar fillColor="gold" progress={`${30}%`} height={30} />
-            <h5>Words reviewed: 0</h5>
-            <h5>Words remaining: 0</h5>
+            <h2 style={{ paddingBottom: '0px', marginBottom: '0px' }}>Accuracy: {(correct / (missed+correct)) * 100}%</h2>
+            <ProgressBar fillColor="gold" progress={`${(correct / (missed+correct)) * 100}%`} height={30} />
+            <h3 style={{ paddingTop: '0px', marginTop: '0px' }}>Words reviewed: {correct}</h3>
           </Stack>
           <br />
-          <Button variant='contained' onClick={() => getSession(type)}>Next Lesson</Button>
+          <Button variant='contained' onClick={() => getSession()}>Next Lesson</Button>
         </Stack>
 
         {/* Learning settings */}
         <Stack direction='column' spacing={2} sx={{marginRight: '50px', backgroundColor: 'white', padding: '20px'}}>
           <h4>Learning Settings</h4>
           <p style={{ color: 'gray', fontSize: '12px' }}>*leave blank to keep current settings</p>
-          <Select sx={{ 
-            margin: '0px 3px', 
-            width: '200px'  }}
-            value={promptAnswer.prompt_id}
-            label='Prompt'
-            onChange={(e) => { handleChange('prompt_id') }}>
-            {promptList.map(prompt => {
-              return (
-                <MenuItem 
-                  key={prompt.id} 
-                  value={prompt.id}>
-                    {prompt.prompt}
-                </MenuItem>
-              );
-            })}
-          </Select>
+          <FormControl sx={{ m: 1, minWidth: 120 }} >
+            <InputLabel>Prompt</InputLabel>
+            <Select sx={{ 
+              margin: '0px 3px', 
+              width: '200px'  }}
+              label='Prompt'
+              value={prompt}
+              onChange={e => { handlePromptChange(e.target.value) }}>
+              {promptList.map(prompt => {
+                return (
+                  <MenuItem 
+                    key={prompt.id} 
+                    value={prompt}>
+                      {prompt.prompt_label}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
 
-          {promptAnswer.prompt_id != null ?
+          {chooseAnswer ?
             // Allows answer selection
             <FormControl sx={{ m: 1, minWidth: 120 }} >
               <InputLabel>Answer</InputLabel>
               <Select sx={{ 
                 margin: '0px 3px', 
                 width: '200px' }}
-                value={promptAnswer.answer_id}
+                value={answer}
                 label='Answer'
-                onChange={(e) => { handleChange('answer_id') }}>
+                onChange={(e) => { setAnswer(e.target.value) }}>
                 {answerList.map(answer => {
                   return (
                     <MenuItem 
                       key={answer.id} 
-                      value={answer.id}>
-                        {answer.answer}
+                      value={answer}>
+                        {answer.answer_label}
                     </MenuItem>
                   );
                 })}
@@ -133,24 +198,20 @@ function ResultsPage() {
               <Select sx={{ 
                 margin: '0px 3px', 
                 width: '200px' }}
-                value={promptAnswer.answer_id}
-                label='Answer'
-                onChange={(e) => { handleChange('answer_id') }}>
-                {answerList.map(answer => {
-                  return (
-                    <MenuItem 
-                      key={answer.id} 
-                      value={answer.id}>
-                        {answer.answer}
-                    </MenuItem>
-                  );
-                })}
+                label='Answer'>
               </Select>
               <FormHelperText>Prompt Required</FormHelperText>
             </FormControl>
           }
-          <Button variant='contained' onClick={() => getSession('review')}>Review</Button>
-          <Button variant='contained' onClick={() => getSession('learn')}>Learn</Button>
+          <FormControl sx={{ m: 1, minWidth: 120 }} disabled>
+            <TextField sx={{ 
+              margin: '0px 3px', 
+              width: '200px' }}
+              type='number'
+              label='Size'
+              value={size}
+              onChange={e => setSize(e.target.value)} />
+          </FormControl>
         </Stack>
       </Stack>
     </div>

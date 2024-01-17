@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import {useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Box, Stack, Tooltip, IconButton, Button, Grid } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,9 +10,10 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 
 function StudyPage() {
   const history = useHistory();
+  const dispatch = useDispatch();
   const deck = useSelector(store => store.deckDetails[0]);
   const lesson = useSelector(store => store.lesson);
-  const lessonLength = lesson.length;
+  const [lessonLength] = useState(lesson.length);
   const lessonExtras = useSelector(store => store.lessonExtras);
   const [itemArray, setItemArray] = useState([]);
   const [checkItem, setCheckItem] = useState({});
@@ -39,6 +40,8 @@ function StudyPage() {
       }
       else {
         setTimeout(() => {
+          dispatch({ type: 'SET_CORRECT', payload: correct});
+          dispatch({ type: 'SET_WRONG', payload: missed});
           history.push('/results');
         }, '1000');
       }

@@ -25,14 +25,15 @@ function DeckDetails() {
   // Sends the user to the EditDeck page
   // need to figure out how to create a page for each deck...
   const toEditDeck = () => {
-    axios.get(`/deck/${deckId}`).then(response => {
+    axios.get(`/deck/${deckId}`)
+      .then(response => {
         dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
         history.push('/deck/edit');
       })
-        .catch(error => {
-          console.log('Error getting deck details:', error);
-          alert('Something went wrong!');
-        })
+      .catch(error => {
+        console.log('Error getting deck details:', error);
+        alert('Something went wrong!');
+    })
   }
 
   // Gets details for all chapters in selected deck

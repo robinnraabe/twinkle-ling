@@ -12,6 +12,8 @@ import prompts from './prompts.reducer';
 import answers from './answers.reducer';
 import learnedCount from './learnedCount.reducer';
 import totalCount from './totalCount.reducer';
+import correct from './correct.reducer';
+import wrong from './wrong.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -32,7 +34,9 @@ const rootReducer = combineReducers({
   prompts,
   answers,
   learnedCount,
-  totalCount
+  totalCount,
+  correct,
+  wrong
 
 });
 

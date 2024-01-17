@@ -40,6 +40,24 @@ router.post('/login', userStrategy.authenticate('local'), (req, res) => {
   res.sendStatus(200);
 });
 
+router.put('/settings', (req, res) => {
+  const values = [req.body.prompt.prompt_item, req.body.answer.answer_item, req.body.size, req.user.id];
+
+  const queryText = `UPDATE "user" SET prompt = $1,
+    answer = $2, size = $3
+    WHERE id = $4;`;
+
+  pool.query(queryText, values)
+    .then(result => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /user/settings', error);
+      res.sendStatus(500);
+  });
+});
+
+
 // clear all server session information about this user
 router.post('/logout', (req, res) => {
   // Use passport's built-in method to log out the user

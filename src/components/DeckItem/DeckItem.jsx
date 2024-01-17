@@ -44,7 +44,7 @@ function DeckItem(props) {
           dispatch({ type: 'SET_LESSON', payload: response.data });
           getExtraItems();
           setTimeout(() => {
-            dispatch = true;
+            dispatched = true;
             history.push('/session');
           }, '500');
         }
