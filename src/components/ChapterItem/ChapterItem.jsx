@@ -16,7 +16,11 @@ function ChapterItem(props) {
   const dispatch = useDispatch();
   const history = useHistory();
   const user = useSelector(store => store.user);
-  const [newItem, setItem] = useState('');
+  const [newItem, setItem] = useState({ 
+    chapter_id: props.chapter.id,
+    deck_id: props.deckId,
+    user_id: user.id
+  });
   const [newTitle, setTitle] = useState(props.chapter.title);
   const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
@@ -60,6 +64,7 @@ function ChapterItem(props) {
     }, '1000');
   }
 
+  // This toggles the editor for the selected chapter
   const editChapter = (chapterId) => {
     axios.put(`/chapters/edit/${chapterId}`)
       .then((response) => {
@@ -105,17 +110,21 @@ function ChapterItem(props) {
     event.preventDefault();
     setItem({...newItem, 
      [key]: event.target.value,
-     chapter_id: props.chapter.id
     })
   }
 
   // This adds new item to chapter
   const addItem = () => {
     dispatch({ type: 'ADD_ITEM', payload: newItem });
-    newItem.item = '';
-    newItem.description = '';
-    newItem.hints = '';
-    newItem.tags = '';
+    setItem({ 
+      chapter_id: props.chapter.id,
+      deck_id: props.deckId,
+      user_id: user.id,
+      item: '',
+      description: '',
+      hints: '',
+      custom: '',
+    })
   }
 
   // This deletes the selected chapter from its deck
@@ -301,20 +310,37 @@ function ChapterItem(props) {
                   </Button>
               }
               {/* Button to turn edit mode on */}
-              <IconButton onClick={() => editChapter(props.chapter.id)}
-                disableElevation
-                disableRipple
-                size="large"
-                sx={{
-                  ml: 1,
-                  "&.MuiButtonBase-root:hover": {
-                    bgcolor: "transparent"
-                  }
-              }}>
-                <Tooltip title="Open Editor">
-                  <EditIcon sx={{fontSize: '40px'}} />   
-                </Tooltip>
-              </IconButton>
+              { user.id === props.creatorId ?
+                <IconButton onClick={() => editChapter(props.chapter.id)}
+                  disableElevation
+                  disableRipple
+                  size="large"
+                  sx={{
+                    ml: 1,
+                    "&.MuiButtonBase-root:hover": {
+                      bgcolor: "transparent"
+                    }
+                }}>
+                  <Tooltip title="Open Editor">
+                    <EditIcon sx={{fontSize: '40px'}} />   
+                  </Tooltip>
+                </IconButton>
+              :
+                <IconButton
+                  disableElevation
+                  disableRipple
+                  size="large"
+                  sx={{
+                    ml: 1,
+                    "&.MuiButtonBase-root:hover": {
+                      bgcolor: "transparent"
+                    }
+                }}>
+                  <Tooltip title="You must be a creator or contributor to edit this deck">
+                    <EditIcon sx={{fontSize: '40px'}} />   
+                  </Tooltip>
+                </IconButton>
+              } 
             </CardActions>
           </Stack>
         </Card>

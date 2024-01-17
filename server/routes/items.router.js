@@ -12,7 +12,8 @@ router.get('/:id', (req, res) => {
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows);
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.log('Error in GET /items', error)
       res.sendStatus(500);
   });
@@ -28,7 +29,8 @@ router.get('/language/:id', (req, res) => {
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows);
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.log('Error in GET /items/language', error)
       res.sendStatus(500);
   });
@@ -47,7 +49,8 @@ router.put('/reset/learned', (req, res) => {
   pool.query(queryText)
     .then(result => {
       res.sendStatus(200);
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.log('Error in PUT /items/reset/learned', error);
       res.sendStatus(500);
   });
@@ -62,12 +65,51 @@ router.put('/reset/repetition', (req, res) => {
   AND "item_user_id" = ${userId};`;
 
   pool.query(queryText)
+    .then(result => {
+      res.sendStatus(201);
+    })
+    .catch(error => {
+      console.log('Error in PUT /items/reset/repetition', error);
+      res.sendStatus(500)
+  });
+});
+
+// This updates all items' 'learned_status' to false in the selected deck
+// then updates all items' 'repetition' to 0 in the selected deck
+router.put('/reset/deck/learned', (req, res) => {
+  const deckId = req.body.params.deckId;
+  const userId = req.body.params.userId;
+
+  const queryText = `UPDATE user_items SET "learned_status" = false
+    WHERE "item_deck_id" = ${deckId}
+    AND "item_user_id" = ${userId};`;
+
+  pool.query(queryText)
+    .then(result => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /items/reset/deck/learned', error);
+      res.sendStatus(500);
+  });
+});
+
+router.put('/reset/deck/repetition', (req, res) => {
+  const deckId = req.body.params.deckId;
+  const userId = req.body.params.userId;
+
+  const queryText = `UPDATE user_items SET "repetition" = 0 
+  WHERE "item_deck_id" = ${deckId}
+  AND "item_user_id" = ${userId};`;
+
+  pool.query(queryText)
   .then(result => {
     res.sendStatus(201);
-  }).catch(error => {
-    console.log('Error in PUT /items/reset/repetition', error);
-    res.sendStatus(500)
   })
+  .catch(error => {
+    console.log('Error in PUT /items/reset/deck/repetition', error);
+    res.sendStatus(500)
+  });
 });
 
 router.post('/', (req, res) => {
@@ -78,16 +120,34 @@ router.post('/', (req, res) => {
     req.body.custom,
     req.body.hints
   ]
-  const queryText = `INSERT INTO "items" (chapter_id, item, description, custom, hints)
-    VALUES ($1, $2, $3, $4, $5);`;
+  const queryText = `INSERT INTO "items" (chapter_id, item, description, custom, hint)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING i_id;`;
 
   pool.query(queryText, itemValues)
     .then(result => {
-      res.sendStatus(201);
-    }).catch((error) => {
+      const userItemValues = [
+        req.body.user_id,
+        result.rows[0].i_id,
+        req.body.chapter_id,
+        req.body.deck_id
+      ]
+      const secondQuery = `INSERT INTO "user_items" (item_user_id, item_id, item_chapter_id, item_deck_id)
+        VALUES ($1, $2, $3, $4)`;
+
+      pool.query(secondQuery, userItemValues)
+        .then(result => {
+          res.sendStatus(201);
+        })
+        .catch((error) => {
+          console.log('Error posting new item/userItems: ', error);
+          res.sendStatus(500);
+      })
+    })
+    .catch((error) => {
       console.log('Error posting new item: ', error);
       res.sendStatus(500);
-    });
+  });
 });
 
 router.put('/update', (req, res) => {
@@ -109,26 +169,33 @@ router.put('/update', (req, res) => {
 
   pool.query(queryText, itemValues)
     .then((result) => {
-      console.log('Successfully updated item');
       res.sendStatus(200);
     })
     .catch((error) => {
-      console.log('Error in PUT /items', error);
+      console.log('Error in PUT /items/update', error);
       res.sendStatus(500);
   });
 });
 
 router.delete('/:id', (req, res) => {
-  const queryText = `DELETE FROM items WHERE "i_id" = $1;`;
+  const queryText = `DELETE FROM user_items WHERE "item_id" = $1;`;
 
   pool.query(queryText, [req.params.id])
     .then((result) => {
-      res.sendStatus(200);
+      const secondQuery = `DELETE FROM items WHERE "i_id" = $1;`;
+
+      pool.query(secondQuery, [req.params.id])
+      .then((result) => {
+        res.sendStatus(200);
+      })
+      .catch((error) => {
+        console.log('Error in DELETE /items', error);
+        res.sendStatus(500);
     })
     .catch((error) => {
       console.log('Error in DELETE /items', error);
       res.sendStatus(500);
-  });
-})
+  })});
+});
 
 module.exports = router;

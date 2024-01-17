@@ -10,6 +10,7 @@ router.get('/:id', (req, res) => {
     decks.title,
     decks.image_url,
     decks.details,
+    decks.creator_id,
     decks.contributor_id,
     decks.public_status,
     "user".username,

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { Button, Stack, Box, Grid } from '@mui/material';
+import { Button, Stack, Box, Grid, Tooltip } from '@mui/material';
 import ChapterItem from '../ChapterItem/ChapterItem';
 
 // Displays the details for the selected deck
@@ -16,6 +16,7 @@ function DeckDetails() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [updater, setUpdater] = useState(0);
+  console.log('deck:', deck);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
@@ -98,16 +99,16 @@ function DeckDetails() {
 
   // This adds a new chapter to the deck
   const addChapter = (event) => {
-    event.preventDefault();
-    const newChapter = { 
-      deck_id: deckId,
-      title: '-- New Chapter',
-      user_id: user.id
-    };
-    dispatch({ type: 'ADD_CHAPTER', payload: newChapter });
-    setTimeout(() => {
-      // getChapterDetails();
-    }, "500");
+    if (user.id === deck.creator_id) {
+      event.preventDefault();
+      const newChapter = { 
+        deck_id: deckId,
+        title: '-- New Chapter',
+        user_id: user.id
+      };
+      dispatch({ type: 'ADD_CHAPTER', payload: newChapter });
+      getChapterDetails();
+    }
   }
 
   // This gets extra items for study session
@@ -147,9 +148,32 @@ function DeckDetails() {
     }, '500');
   }
 
-  const resetProgress = () => {
-    // Update the learning and review progress in the database to equal 0
+ // This resets the progress for the deck
+ const resetProgress = () => {
+  const request = {
+    params: {
+      deckId: deckId,
+      userId: user.id
+    }
   }
+  // This resets learned_status
+  axios.put(`/items/reset/deck/learned`, request)
+    .catch((error) => {
+      console.log('Error in UserDeckDetails/resetProgress/learned PUT request:', error);
+      alert('Something went wrong!');
+  });
+
+  // This resets repetition
+  axios.put(`/items/reset/deck/repetition`, request)
+    .then((response) => {
+      getChapterDetails();
+      updateChapterData();
+    })
+    .catch((error) => {
+      console.log('Error in UserDeckDetails/resetProgress/repetition PUT request:', error);
+      alert('Something went wrong!');
+});
+}
 
   const boxStyle = {
     color: 'lavender',
@@ -167,7 +191,7 @@ function DeckDetails() {
   useEffect(() => {
     getChapterDetails();
     updateChapterData();
-  }, [updater]);
+  }, []);
 
   // Displays the information for the selected Deck
   return (
@@ -214,13 +238,21 @@ function DeckDetails() {
                 </Stack>
 
                 <Stack direction='column'>
+                  { user.id === deck.creator_id ?
                     <Button variant='contained' style={btnStyle}
-                        onClick={() => toEditDeck()}>
-                        Edit Deck
+                      onClick={() => toEditDeck()}>
+                      Edit Deck
                     </Button>
+                  :
+                    <Tooltip title="You must be a creator or contributor to edit this deck">
+                      <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+                        Edit Deck
+                      </Button>
+                    </Tooltip>
+                  }
                     <Button variant='contained' style={btnStyle}
-                        onClick={() => resetProgress()}>
-                        Reset Progress
+                      onClick={() => resetProgress()}>
+                      Reset Progress
                     </Button>
                 </Stack>
             </Stack>
@@ -228,8 +260,14 @@ function DeckDetails() {
 
         {/* Chapters header */}
         <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 50px'}}>
-            <h1>Chapters</h1>
+          <h1>Chapters</h1>
+          {user.id === deck.creator_id ? 
             <Button sx={{ fontSize: '24px' }} onClick={addChapter}>+ New Chapter</Button>
+          :
+            <Tooltip title="You must be a creator or contributor to edit this deck">
+              <Button sx={{ fontSize: '24px', color: 'gray' }} onClick={addChapter}>+ New Chapter</Button>
+            </Tooltip>
+          }   
         </Stack>
         
         <Grid container spacing={2}>
@@ -238,6 +276,7 @@ function DeckDetails() {
                   key={chapter.id} 
                   chapter={chapter} 
                   deckId={deckId}
+                  creatorId={deck.creator_id}
                   languageId={languageId} 
                   setUpdater={setUpdater}
                   updater={updater}

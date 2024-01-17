@@ -4,7 +4,7 @@ import LogOutButton from '../LogOutButton/LogOutButton'; // this will probably g
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useState, useEffect } from "react";
-import { Grid, Card, CardActions, Button } from '@mui/material';
+import { Grid, Card, CardContent, Button } from '@mui/material';
 import DeckItem from '../DeckItem/DeckItem';
 
 function UserPage() {
@@ -76,29 +76,27 @@ function UserPage() {
       {/* make sure to sort by most recently used decks */}
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {
-            return <DeckItem key={deck.id} deck={deck} toDeck={() => toDeck(deck.deck_id)} />
+            return <DeckItem key={deck.id} deck={deck} public={false} toDeck={() => toDeck(deck.deck_id)} />
         })} 
         {/* last card links to the user's full list of decks*/}
         <Grid item m={3}>
-        <Card onClick={toUserDeckList} sx={[ 
+        <Card onClick={toUserDeckList} sx={[
           {width: '200px'},
           {height: '270px'},
           {marginTop: '10px'},
           {display: 'flex'}, 
-          {alignContent: 'end'},
+          {justifyContent: 'center'},
+          {alignItems: 'center'},
           {flexDirection: 'column'},
-          {borderRadius: '10px'}, 
+          {borderRadius: '0px'}, 
           {backgroundImage: `white`},
-          {boxShadow: '-2px 2px 10px 5px teal'},
           {'&:hover': {
               opacity: .5
           }}
         ]}>
-          <CardActions>
-            <Button variant='contained' onClick={toUserDeckList}>
-            View All Decks
-            </Button>
-          </CardActions>
+          <CardContent sx={{ textAlign: 'center' }}>
+            <h1>View</h1> <h1>All</h1> <h1>Decks</h1>
+          </CardContent>
         </Card>
         </Grid>
       </Grid>
@@ -107,7 +105,7 @@ function UserPage() {
       {/* make sure to sort by most used! still gotta figure out how that's calculated */}
       <Grid container spacing={1}>
         {publicDeckList.map((deck) => {
-            return <DeckItem key={deck.id} deck={deck} />
+            return <DeckItem key={deck.id} public={true} deck={deck} />
         })} 
         {/* last card should be a link to trending list - stretch goal */}
       </Grid>

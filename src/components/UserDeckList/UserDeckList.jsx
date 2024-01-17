@@ -69,10 +69,8 @@ function UserPage() {
     <div>
       {/* Subheader filters */}
       <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
-        <Button variant='contained' onClick={() => addDeck()}>+ New Deck</Button>
-        
         {/* Language select filter - still need to make this select an option */}
-        <FormControl>
+        {/* <FormControl>
           <InputLabel>Language</InputLabel>
           <Select sx={{ 
             backgroundColor: 'lavender', 
@@ -93,11 +91,12 @@ function UserPage() {
                 );
             })}
           </Select>
-        </FormControl>
+          </FormControl> */}
       </Stack>
 
       <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 20px'}}>
-            <h2>Decks</h2>
+            <h2>{user.username}'s Decks</h2>
+            <Button sx={{ fontSize: '24px' }} onClick={addDeck}>+ New Deck</Button>
         </Stack>
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {

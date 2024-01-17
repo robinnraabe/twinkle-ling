@@ -99,12 +99,19 @@ router.put('/update', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  const queryText = `DELETE FROM chapters WHERE "id" = $1;`;
+  const queryText = `DELETE FROM user_chapters WHERE chapter_id = $1;`;
 
   pool.query(queryText, [req.params.id])
     .then((result) => {
-      res.sendStatus(200);
-    })
+      const secondQuery = `DELETE FROM chapters WHERE "id" = $1;`;
+      pool.query(secondQuery, [req.params.id])
+      .then((result) => {
+        res.sendStatus(200);
+      })
+      .catch((error) => {
+        console.log('Error in DELETE /chapters', error);
+        res.sendStatus(500);
+    })})
     .catch((error) => {
       console.log('Error in DELETE /chapters', error);
       res.sendStatus(500);
