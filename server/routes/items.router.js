@@ -198,4 +198,36 @@ router.delete('/:id', (req, res) => {
   })});
 });
 
+router.put('/set/correct', (req, res) => {
+  const itemId = req.body[0];
+  const queryText = `UPDATE "user_items" 
+    SET repetition = repetition + 5, learned_status = true 
+    WHERE item_id = $1 AND item_user_id = $2`;
+
+  pool.query(queryText, [itemId, req.user.id])
+    .then((result) => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /items/set/correct', error);
+      res.sendStatus(500);
+  });
+});
+
+router.put('/set/wrong', (req, res) => {
+  const itemId = req.body[0];
+  const queryText = `UPDATE "user_items" 
+    SET repetition = repetition - 5, learned_status = true 
+    WHERE item_id = $1 AND item_user_id = $2`;
+
+  pool.query(queryText, [itemId, req.user.id])
+    .then((result) => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /items/set/correct', error);
+      res.sendStatus(500);
+  });
+});
+
 module.exports = router;

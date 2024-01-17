@@ -20,15 +20,20 @@ function StudyPage() {
   const [missed, setMissed] = useState(0);
   const [skip, setSkip] = useState(false);
   const [splice, setSplice] = useState();
-  console.log(lesson, lessonExtras);
 
   // Checks if selected test option matches answer
   // Updates test item and all options for next question
   const checkAnswer = (itemId) => {
     if (checkItem.i_id === itemId) {
-      console.log("You're right!");
       lesson.splice(splice, 1);
       setCorrect(correct + 1);
+
+      axios.put(`/items/set/correct`, [itemId])
+        .catch((error) => {
+          console.log('Error in StudyPage/checkAnswer/correct PUT request:', error);
+          alert('Something went wrong!');
+      })
+
       if (lesson.length > 0) {
         sessionItem();
       }
@@ -38,8 +43,14 @@ function StudyPage() {
         }, '1000');
       }
     }
+
     else {
-      console.log("You're wrong!");
+      axios.put(`/items/set/wrong`, [checkItem.i_id])
+        .catch((error) => {
+          console.log('Error in StudyPage/checkAnswer/wrong PUT request:', error);
+          alert('Something went wrong!');
+      })
+
       sessionItem();
       setMissed(missed + 1);
     }
@@ -60,7 +71,6 @@ function StudyPage() {
     setSplice(randomIndex);
     itemArray.push(lessonItem);
     let index = 5;
-
 
     // Creates new copy of 'lessonExtras' so 'lessonExtras' isn't affected
     const lessonExtrasCopy = [];
@@ -118,7 +128,7 @@ function StudyPage() {
 
   // Shows hint for item
   const showHint = (itemId) => {
-
+    
   }
 
   // Returns user to the deck details page for the selected deck

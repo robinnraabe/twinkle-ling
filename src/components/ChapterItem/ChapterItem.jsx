@@ -164,7 +164,6 @@ function ChapterItem(props) {
       }
     }
     // This updates the chapter title
-    console.log('chapterId:', props.chapter.id);
     if (newTitle !== props.chapter.title) {
       axios.put('/chapters/update', {title: newTitle, chapterId: props.chapter.id})
         .then((response) => {

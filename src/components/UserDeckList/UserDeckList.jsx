@@ -21,14 +21,15 @@ function UserPage() {
 
   // Sends user to the page for the selected deck
   const toDeck = (deckId) => {
-    axios.get(`/deck/${deckId}`).then(response => {
-      dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
-      history.push('/deck/details');
-    })
+    axios.get(`/deck/${deckId}`)
+      .then(response => {
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+        history.push('/deck/details');
+      })
       .catch(error => {
         console.log('Error getting deck details:', error);
         alert('Something went wrong!');
-      })
+    })
   }
 
   // Creates a new (empty) deck and sends the user to the EditDeck page
@@ -48,11 +49,13 @@ function UserPage() {
 
   const getUserDeckList = () => {
     // need to pass user ID?, toggle and language filters
-    axios.get(`/decks/user/all/${user.id}`).then((response) => {
+    axios.get(`/decks/user/all/${user.id}`)
+      .then((response) => {
         const action = { type: 'SET_USER_DECK_LIST', payload: response.data };
         dispatch(action);
         setUserDeckList(response.data);
-    }).catch((error) => {
+      })
+      .catch((error) => {
         console.log('GET /user/all error', error);
         alert("Something went wrong fetching user's decks");
     })

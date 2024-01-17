@@ -9,7 +9,6 @@ import { Card, CardContent, CardActions,
 function DeckItem(props) {
   const dispatch = useDispatch();
   const history = useHistory();
-  console.log('deckId:', props.deck.id);
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
@@ -23,15 +22,31 @@ function DeckItem(props) {
     })
   }
 
+  // Gets deck details to pass to StudyPage
+  const getDetails = () => {
+    axios.get(`/deck/${props.deck.id}`)
+      .then(response => {
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+      })
+      .catch(error => {
+        console.log('Error in DeckItem/getDetails GET request:', error);
+        alert('Something went wrong!');
+    })
+  }
+
   // This sends the user to the Study page and loads the selected deck for studying
   const toLesson = () => {
+    getDetails();
     let dispatched = false;
     axios.get(`/study/deck/review/${props.deck.id}`)
       .then(response => {
-        console.log('response.data:', response.data);
         if (response.data.length > 0) {
           dispatch({ type: 'SET_LESSON', payload: response.data });
-          dispatched = true;
+          getExtraItems();
+          setTimeout(() => {
+            dispatch = true;
+            history.push('/session');
+          }, '500');
         }
       })
       .catch(error => {
@@ -41,17 +56,19 @@ function DeckItem(props) {
     if (dispatched === false) {
       axios.get(`/study/deck/learn/${props.deck.id}`)
       .then(response => {
-        dispatch({ type: 'SET_LESSON', payload: response.data });
+        if (response.data.length > 0) {
+          dispatch({ type: 'SET_LESSON', payload: response.data });
+          getExtraItems();
+          setTimeout(() => {
+            history.push('/session');
+          }, '500');
+        }
       })
       .catch(error => {
         console.log('Error in UserDeckDetails/toLesson/learn GET request:', error);
         alert('Something went wrong!');
       })
     }
-    getExtraItems();
-    setTimeout(() => {
-      history.push('/session');
-    }, '500');
   }
 
   return (
