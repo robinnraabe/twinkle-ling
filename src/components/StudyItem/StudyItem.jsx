@@ -13,7 +13,7 @@ function StudyItem(props) {
           {marginTop: '10px'},
           {display: 'flex'}, 
           {flexDirection: 'column'},
-          {borderRadius: '10px'}, 
+          {borderRadius: '0px'}, 
           {backgroundColor: 'white'} 
         ]}>
           <CardContent sx={{ padding: '20px' }}>

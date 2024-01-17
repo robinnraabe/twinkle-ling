@@ -76,7 +76,7 @@ function UserPage() {
       {/* make sure to sort by most recently used decks */}
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {
-            return <DeckItem key={deck.id} deck={deck} public={false} toDeck={() => toDeck(deck.deck_id)} />
+            return <DeckItem key={deck.id} deck={deck} public={false} toDeck={() => toDeck(deck.id)} />
         })} 
         {/* last card links to the user's full list of decks*/}
         <Grid item m={3}>

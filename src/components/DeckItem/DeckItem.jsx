@@ -1,13 +1,57 @@
 import React from 'react';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Card, CardContent, CardActions,
   Grid, Box } from '@mui/material';
 
 // This displays each deck on the UserPage
 function DeckItem(props) {
-  console.log(props.deck);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  console.log('deckId:', props.deck.id);
 
+  // Gets 5 extra random items in the same language for study session
+  const getExtraItems = () => {
+    axios.get(`/items/language/${props.deck.language_id}`)
+      .then(response => {
+        dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
+      })
+      .catch(error => {
+        console.log('Error in ChapterItem/getExtraItems GET request:', error);
+        alert('Something went wrong!');
+    })
+  }
+
+  // This sends the user to the Study page and loads the selected deck for studying
   const toLesson = () => {
-    // this will link to Learning/Review page and load deck for studying
+    let dispatched = false;
+    axios.get(`/study/deck/review/${props.deck.id}`)
+      .then(response => {
+        console.log('response.data:', response.data);
+        if (response.data.length > 0) {
+          dispatch({ type: 'SET_LESSON', payload: response.data });
+          dispatched = true;
+        }
+      })
+      .catch(error => {
+        console.log('Error in UserDeckDetails/toLesson/review GET request:', error);
+        alert('Something went wrong!');
+    })
+    if (dispatched === false) {
+      axios.get(`/study/deck/learn/${props.deck.id}`)
+      .then(response => {
+        dispatch({ type: 'SET_LESSON', payload: response.data });
+      })
+      .catch(error => {
+        console.log('Error in UserDeckDetails/toLesson/learn GET request:', error);
+        alert('Something went wrong!');
+      })
+    }
+    getExtraItems();
+    setTimeout(() => {
+      history.push('/session');
+    }, '500');
   }
 
   return (

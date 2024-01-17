@@ -16,7 +16,6 @@ function DeckDetails() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [updater, setUpdater] = useState(0);
-  console.log('deck:', deck);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
@@ -196,93 +195,93 @@ function DeckDetails() {
   // Displays the information for the selected Deck
   return (
     <div data-testid="deckDetails">
-        {/* Top subheader */}
-        <Stack direction='row' justifyContent='space-between' >
+      {/* Top subheader */}
+      <Stack direction='row' justifyContent='space-between' >
 
-          {/* Left subheader items */}
-          <Stack direction='row' alignItems='center' margin='0px 50px'>
-              <img src='https://static.tumblr.com/d7d601c9f738a1e6098326472def2cac/zd84lno/qI6p0mf8w/tumblr_static_9tutvrt14iskcs04w448040wo.png' 
-                  style={{borderRadius: '200px'}} 
-                  width='80px' height='80px' />
-              <Stack direction='column' justifyItems='center'>
-                  <h3 style={{ margin: '0px' }}>{deck.title}</h3>
-                  <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.username}</h4>
-              </Stack>
+        {/* Left subheader items */}
+        <Stack direction='row' alignItems='center' margin='0px 50px'>
+          <img src='https://static.tumblr.com/d7d601c9f738a1e6098326472def2cac/zd84lno/qI6p0mf8w/tumblr_static_9tutvrt14iskcs04w448040wo.png' 
+            style={{borderRadius: '200px'}} 
+            width='80px' height='80px' />
+          <Stack direction='column' justifyItems='center'>
+            <h3 style={{ margin: '0px' }}>{deck.title}</h3>
+            <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.username}</h4>
           </Stack>
+        </Stack>
 
-          {/* Right subheader items */}
-          <Stack alignItems='center'>
-            <Button onClick={toUserDeckList}
-              sx={{ margin: '0px 50px' }} 
-              disableRipple
-              variant='contained'>
-              Return to decks
+        {/* Right subheader items */}
+        <Stack alignItems='center'>
+          <Button onClick={toUserDeckList}
+            sx={{ margin: '0px 50px' }} 
+            disableRipple
+            variant='contained'>
+            Return to decks
+          </Button>
+          <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.language}</h4>
+        </Stack>
+      </Stack>
+      <br />
+
+      {/* Stats and deck options */}
+      <Box style={boxStyle} margin='0px 50px'>
+        <Stack direction='row' justifyContent='space-between'>
+          <Stack direction='column'>
+            <Button variant='contained' style={btnStyle}
+              onClick={() => toLesson('learn')}>
+              Learn
             </Button>
-            <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.language}</h4>
+            <Button variant='contained' style={btnStyle}
+              onClick={() => toLesson('review')}>
+              Review
+            </Button>
+          </Stack>
+
+          <Stack direction='column'>
+            { user.id === deck.creator_id ?
+              <Button variant='contained' style={btnStyle}
+                onClick={() => toEditDeck()}>
+                Edit Deck
+              </Button>
+            :
+              <Tooltip title="You must be a creator or contributor to edit this deck">
+                <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+                  Edit Deck
+                </Button>
+              </Tooltip>
+            }
+              <Button variant='contained' style={btnStyle}
+                onClick={() => resetProgress()}>
+                Reset Progress
+              </Button>
           </Stack>
         </Stack>
-        <br />
+      </Box>
 
-        {/* Stats and deck options */}
-        <Box style={boxStyle} margin='0px 50px'>
-            <Stack direction='row' justifyContent='space-between'>
-                <Stack direction='column'>
-                    <Button variant='contained' style={btnStyle}
-                        onClick={() => toLesson('learn')}>
-                        Learn
-                    </Button>
-                    <Button variant='contained' style={btnStyle}
-                        onClick={() => toLesson('review')}>
-                        Review
-                    </Button>
-                </Stack>
-
-                <Stack direction='column'>
-                  { user.id === deck.creator_id ?
-                    <Button variant='contained' style={btnStyle}
-                      onClick={() => toEditDeck()}>
-                      Edit Deck
-                    </Button>
-                  :
-                    <Tooltip title="You must be a creator or contributor to edit this deck">
-                      <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
-                        Edit Deck
-                      </Button>
-                    </Tooltip>
-                  }
-                    <Button variant='contained' style={btnStyle}
-                      onClick={() => resetProgress()}>
-                      Reset Progress
-                    </Button>
-                </Stack>
-            </Stack>
-        </Box>
-
-        {/* Chapters header */}
-        <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 50px'}}>
-          <h1>Chapters</h1>
-          {user.id === deck.creator_id ? 
-            <Button sx={{ fontSize: '24px' }} onClick={addChapter}>+ New Chapter</Button>
-          :
-            <Tooltip title="You must be a creator or contributor to edit this deck">
-              <Button sx={{ fontSize: '24px', color: 'gray' }} onClick={addChapter}>+ New Chapter</Button>
-            </Tooltip>
-          }   
-        </Stack>
-        
-        <Grid container spacing={2}>
-            {chapters.map((chapter) => {
-                return <ChapterItem 
-                  key={chapter.id} 
-                  chapter={chapter} 
-                  deckId={deckId}
-                  creatorId={deck.creator_id}
-                  languageId={languageId} 
-                  setUpdater={setUpdater}
-                  updater={updater}
-                  getChapterDetails={getChapterDetails}/>
-            })} 
-        </Grid>
+      {/* Chapters header */}
+      <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 50px'}}>
+        <h1>Chapters</h1>
+        {user.id === deck.creator_id ? 
+          <Button sx={{ fontSize: '24px' }} onClick={addChapter}>+ New Chapter</Button>
+        :
+          <Tooltip title="You must be a creator or contributor to edit this deck">
+            <Button sx={{ fontSize: '24px', color: 'gray' }} onClick={addChapter}>+ New Chapter</Button>
+          </Tooltip>
+        }   
+      </Stack>
+      
+      <Grid container spacing={2}>
+        {chapters.map((chapter) => {
+          return <ChapterItem 
+            key={chapter.id} 
+            chapter={chapter} 
+            deckId={deckId}
+            creatorId={deck.creator_id}
+            languageId={languageId} 
+            setUpdater={setUpdater}
+            updater={updater}
+            getChapterDetails={getChapterDetails}/>
+        })} 
+      </Grid>
     </div>
   );
 }

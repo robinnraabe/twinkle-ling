@@ -17,7 +17,6 @@ function UserPage() {
   // Sets language ID for GET route
   const handleLanguageChange = (key) => (event) => {
     setLanguage({[key]: event.target.value}); 
-    console.log(chosenLanguage);
   }
 
   // Sends user to the page for the selected deck
@@ -57,7 +56,6 @@ function UserPage() {
         console.log('GET /user/all error', error);
         alert("Something went wrong fetching user's decks");
     })
-    console.log('chosenLanguage:', chosenLanguage);
   }
   
   useEffect(() => {
@@ -100,7 +98,7 @@ function UserPage() {
         </Stack>
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {
-            return <DeckItem key={deck.id} deck={deck} toDeck={() => toDeck(deck.deck_id)} />
+            return <DeckItem key={deck.id} deck={deck} toDeck={() => toDeck(deck.id)} />
         })} 
       </Grid>
     </div>

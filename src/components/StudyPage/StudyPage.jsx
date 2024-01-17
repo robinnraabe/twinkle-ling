@@ -20,6 +20,7 @@ function StudyPage() {
   const [missed, setMissed] = useState(0);
   const [skip, setSkip] = useState(false);
   const [splice, setSplice] = useState();
+  console.log(lesson, lessonExtras);
 
   // Checks if selected test option matches answer
   // Updates test item and all options for next question
@@ -172,9 +173,9 @@ function StudyPage() {
         <Stack direction='column' spacing={2} sx={{marginRight: '50px'}}>
           <h4>Correct: {correct}</h4>
           <h4>Missed: {missed}</h4>
-          <Button variant='contained' onClick={() => skipItem()}>SKIP</Button>
+          {/* <Button variant='contained' onClick={() => skipItem()}>SKIP</Button>
           <Button variant='contained' onClick={() => setStatus('difficult')}>DIFFICULT</Button>
-          <Button variant='contained' onClick={() => setStatus('known')}>KNOWN</Button>
+          <Button variant='contained' onClick={() => setStatus('known')}>KNOWN</Button> */}
           <Button variant='contained' onClick={() => showHint()}>SHOW HINT</Button>
         </Stack>
       </Stack>

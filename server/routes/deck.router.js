@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/user/:id', (req, res) => {
   const queryText = `SELECT decks.title, decks.image_url, decks.details, languages."language", 
     decks.public_status, decks.lessons_started, decks.lessons_finished, "user".id AS user_id, 
-    decks.id AS deck_id, "user".username, creator.username AS creator
+    decks.id, "user".username, creator.username AS creator, languages.id AS language_id
     FROM "decks"
     JOIN user_decks ON decks.id = user_decks.deck_id
     JOIN "user" ON "user".id = user_decks.user_id 
@@ -26,8 +26,9 @@ router.get('/user/:id', (req, res) => {
 
 // This returns the top 4 public decks on the UserPage
 router.get('/public', (req, res) => {
-  const queryText = `SELECT decks.id, decks.title, decks.image_url, decks.details, languages."language", 
-    decks.public_status, decks.lessons_started, decks.lessons_finished, creator.username AS creator FROM "decks"
+  const queryText = `SELECT decks.id, decks.title, decks.language_id, decks.image_url, decks.details, 
+    languages."language", decks.public_status, decks.lessons_started, decks.lessons_finished, 
+    creator.username AS creator FROM "decks"
     JOIN "languages" on "languages".id = decks.language_id
     JOIN "user" AS creator ON creator.id = decks.creator_id
     WHERE "decks".public_status = true
@@ -46,8 +47,8 @@ router.get('/public', (req, res) => {
 router.get('/user/all/:id', (req, res) => {
   console.log(req.params.id);
   const queryText = `SELECT decks.title, decks.image_url, decks.details, languages."language", decks.public_status, 
-    decks.lessons_started, decks.lessons_finished, "user".id AS user_id, decks.id AS deck_id,
-    "user".username, creator.username AS creator
+    decks.lessons_started, decks.lessons_finished, "user".id AS user_id, decks.id,
+    "user".username, creator.username AS creator, languages.id AS language_id
     FROM "decks"
     JOIN user_decks ON decks.id = user_decks.deck_id
     JOIN "user" ON "user".id = user_decks.user_id 
