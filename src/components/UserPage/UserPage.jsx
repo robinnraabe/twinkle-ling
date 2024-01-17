@@ -69,8 +69,8 @@ function UserPage() {
 
       <h2>Welcome, {user.username}!</h2>
 
-      {/* placeholder image for stats */}
-      <img src='https://www.statology.org/wp-content/uploads/2021/10/combo6.png' width='500px' alt='stats example' />
+      {/* placeholder image for stats 
+      <img src='https://www.statology.org/wp-content/uploads/2021/10/combo6.png' width='500px' alt='stats example' /> */}
 
       <h3>Recent Decks</h3>
       {/* make sure to sort by most recently used decks */}

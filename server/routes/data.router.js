@@ -13,7 +13,6 @@ router.get('/progress', (req, res) => {
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows[0].count);
-      console.log('res', chapterId, result.rows[0].count);
     }).catch((error) => {
       console.log('Error in COUNT /items/progress', error)
       res.sendStatus(500);
@@ -30,7 +29,6 @@ router.get('/total', (req, res) => {
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows[0].count);
-      console.log('res', chapterId, result.rows[0].count);
     }).catch((error) => {
       console.log('Error in COUNT /items/total', error)
       res.sendStatus(500);

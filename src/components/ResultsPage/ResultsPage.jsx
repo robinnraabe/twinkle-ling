@@ -54,7 +54,12 @@ function ResultsPage() {
 
   // This will get the new session and send user to StudyPage
   const getSession = () => {
-    dispatch({ type: 'SET_USER_SETTINGS', payload: {prompt: prompt, answer: answer, size: size} });
+    if ((answer != null) && (prompt != null) && (size > 0)) {
+      dispatch({ type: 'SET_USER_SETTINGS', payload: {prompt: prompt, answer: answer, size: size} });
+    }
+    setTimeout(() => {
+      dispatch({ type: 'FETCH_USER' });
+    }, '200');
     getDetails();
     let dispatched = false;
     axios.get(`/study/deck/review/${deck.id}`)

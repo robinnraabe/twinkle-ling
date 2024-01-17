@@ -12,6 +12,7 @@ function StudyPage() {
   const history = useHistory();
   const dispatch = useDispatch();
   const deck = useSelector(store => store.deckDetails[0]);
+  const user = useSelector(store => store.user);
   const lesson = useSelector(store => store.lesson);
   const [lessonLength] = useState(lesson.length);
   const lessonExtras = useSelector(store => store.lessonExtras);
@@ -172,12 +173,12 @@ function StudyPage() {
       <Stack direction='row' width='100%' justifyContent='space-between'>
         <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
           <ProgressBar fillColor="gold" progress={`${(correct/lessonLength)*100}%`} height={30} />
-          <h1>{checkItem.item}</h1> 
+          <h1>{checkItem[user.prompt]}</h1> 
           <br />
           {/* Test options */}
           <Grid container spacing={2}>
             {itemArray.map((item) => {
-                return <StudyItem key={item.i_id} item={item} checkAnswer={checkAnswer}/>
+                return <StudyItem key={item.i_id} item={item} user={user} checkAnswer={checkAnswer}/>
             })}
           </Grid>
         </Stack>

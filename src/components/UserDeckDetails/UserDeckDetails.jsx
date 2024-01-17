@@ -9,13 +9,13 @@ import ChapterItem from '../ChapterItem/ChapterItem';
 // Displays the details for the selected deck
 function DeckDetails() {
   const user = useSelector(store => store.user);
-  const deck = useSelector(store => store.deckDetails[0]);
   const chapters = useSelector(store => store.chapters);
-  const deckId = deck.id;
-  const languageId = deck.language_id;
   const history = useHistory();
   const dispatch = useDispatch();
-  const [updater, setUpdater] = useState(0);
+  const deck = useSelector(store => store.deckDetails[0]);
+  const deckId = deck.id;
+  const languageId = deck.language_id;
+  console.log(deck);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
@@ -27,7 +27,7 @@ function DeckDetails() {
   const toEditDeck = () => {
     axios.get(`/deck/${deckId}`)
       .then(response => {
-        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+        dispatch({ type: 'SET_EDIT_DETAILS', payload: response.data });
         history.push('/deck/edit');
       })
       .catch(error => {
@@ -278,8 +278,6 @@ function DeckDetails() {
             deckId={deckId}
             creatorId={deck.creator_id}
             languageId={languageId} 
-            setUpdater={setUpdater}
-            updater={updater}
             getChapterDetails={getChapterDetails}/>
         })} 
       </Grid>

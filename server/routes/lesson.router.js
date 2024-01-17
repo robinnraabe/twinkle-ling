@@ -7,7 +7,9 @@ router.get('/chapter/review/:id', (req, res) => {
   const queryText = `SELECT * FROM user_items
     JOIN items ON items.i_id = user_items.item_id
     WHERE item_chapter_id = ${chapterId}
-    AND learned_status = true;`;
+    AND learned_status = true
+    ORDER BY repetition ASC
+    LIMIT 5;`;
   pool.query(queryText)
     .then((result) => {
       console.log(result.rows);
@@ -23,7 +25,8 @@ const chapterId = req.params.id;
 const queryText = `SELECT * FROM user_items
   JOIN items ON items.i_id = user_items.item_id
   WHERE item_chapter_id = ${chapterId}
-  AND learned_status = false;`;
+  AND learned_status = false
+  LIMIT 5;`;
   pool.query(queryText)
     .then((result) => {
       console.log(result.rows);
@@ -35,12 +38,13 @@ const queryText = `SELECT * FROM user_items
 });
 
 router.get('/deck/review/:id', (req, res) => {
-  console.log('review req:', req);
   const deckId = req.params.id;
   const queryText = `SELECT * FROM user_items
     JOIN items ON items.i_id = user_items.item_id
     WHERE item_deck_id = ${deckId}
-    AND learned_status = true;`;
+    AND learned_status = true
+    ORDER BY repetition ASC
+    LIMIT 5;`;
   pool.query(queryText)
     .then((result) => {
       console.log(result.rows);
@@ -52,12 +56,12 @@ router.get('/deck/review/:id', (req, res) => {
 });
 
 router.get('/deck/learn/:id', (req, res) => {
-  console.log('learn req:', req);
   const deckId = req.params.id;
   const queryText = `SELECT * FROM user_items
     JOIN items ON items.i_id = user_items.item_id
     WHERE item_deck_id = ${deckId}
-    AND learned_status = false;`;
+    AND learned_status = false
+    LIMIT 5;`;
   pool.query(queryText)
     .then((result) => {
       console.log(result.rows);

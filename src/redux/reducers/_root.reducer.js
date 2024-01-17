@@ -14,6 +14,7 @@ import learnedCount from './learnedCount.reducer';
 import totalCount from './totalCount.reducer';
 import correct from './correct.reducer';
 import wrong from './wrong.reducer';
+import editDetails from './editDetails.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -36,7 +37,8 @@ const rootReducer = combineReducers({
   learnedCount,
   totalCount,
   correct,
-  wrong
+  wrong, 
+  editDetails
 
 });
 

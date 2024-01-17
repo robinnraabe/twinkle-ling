@@ -6,21 +6,23 @@ const router = express.Router();
 router.get('/:id', (req, res) => {
   let deckId = req.params.id;
   const queryText = `SELECT 
-    decks."id",
-    decks.title,
-    decks.image_url,
-    decks.details,
-    decks.creator_id,
-    decks.contributor_id,
-    decks.public_status,
-    "user".username,
-    languages."language",
-    languages.id AS language_id
-    FROM 
-    "decks"
-    JOIN "user" ON "user"."id" = decks.creator_id
-    JOIN "languages" ON languages.id = decks.language_id
-    WHERE decks.id = ${deckId};`;
+  decks."id",
+  decks.title,
+  decks.image_url,
+  decks.details,
+  decks.creator_id,
+  decks.contributor_id,
+  decks.public_status,
+  "user".username,
+  languages."language",
+  languages.id AS language_id,
+  creator.username AS creator 
+  FROM 
+  "decks"
+  JOIN "user" ON "user"."id" = decks.creator_id
+  JOIN "user" AS creator ON creator.id = decks.creator_id
+  JOIN "languages" ON languages.id = decks.language_id
+  WHERE decks.id = ${deckId};`;
   pool.query(queryText)
     .then((result) => {
       res.send(result.rows);
