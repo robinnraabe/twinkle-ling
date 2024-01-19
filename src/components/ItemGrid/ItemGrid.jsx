@@ -29,7 +29,6 @@ function ItemGrid(props) {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
             <TableCell align="center">Word</TableCell>
             <TableCell align="center">Definition/Translation</TableCell>
             <TableCell align="center">Audio</TableCell>

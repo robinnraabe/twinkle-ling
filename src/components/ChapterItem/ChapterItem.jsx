@@ -24,6 +24,7 @@ function ChapterItem(props) {
   const [newTitle, setTitle] = useState(props.chapter.title);
   const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
+  console.log(props.chapter.id, props.chapter.learned, props.chapter.total);
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {

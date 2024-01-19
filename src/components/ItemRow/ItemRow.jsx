@@ -40,7 +40,6 @@ function ItemRow(props) {
     <TableRow
       key={row.i_id}
       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-      <TableCell component="th" scope="row">{row.i_id}</TableCell>
       <TableCell align="center"><TextField variant='filled' value={item} onChange={(e) => handleChange('item', e.target.value)}/></TableCell>
       <TableCell align="center"><TextField variant='filled' value={description} onChange={(e) => handleChange('description', e.target.value)}/></TableCell>
       <TableCell align="center">{row.audio}</TableCell>

@@ -12,7 +12,7 @@ function Nav() {
 
 
       <Link to="/home">
-        <h2 className="nav-title">Language Flashcard App</h2>
+        <h2 className="nav-title">Twinkle Ling</h2>
       </Link>
 
 
@@ -37,9 +37,9 @@ function Nav() {
               User Profile
             </Link> */}
 
-            <Link className="navLink" to="/info">
+            {/* <Link className="navLink" to="/info">
               Info Page
-            </Link>
+            </Link> */}
 
             <LogOutButton className="navLink" />
           </>

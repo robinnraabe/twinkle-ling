@@ -15,7 +15,7 @@ function DeckDetails() {
   const deck = useSelector(store => store.deckDetails[0]);
   const deckId = deck.id;
   const languageId = deck.language_id;
-  console.log(deck);
+  console.log(chapters);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
@@ -46,55 +46,7 @@ function DeckDetails() {
         console.log('Error getting chapter details:', error);
         alert('Something went wrong!');
     })
-  }
-
-  // This gets the data for each chapter's progress bar
-  const getProgressData = (chapterId) => {
-    let learned, total;
-    const userId = user.id;
-    const request = {
-      params: {
-        chapterId: chapterId,
-        userId: userId
-      }
-    }
-
-    // This gets the number of learned items in chapter
-    axios.get(`/data/progress`, request)
-      .then(response => {
-        learned = response.data;
-      })
-      .catch(error => {
-        console.log('Error getting learned count:', error);
-        alert('Something went wrong!');
-    })
-
-    // This gets the total number of items in chapter
-    axios.get(`/data/total`, request)
-      .then(response => {
-        total = response.data;
-      })
-      .catch(error => {
-        console.log('Error getting total count:', error);
-        alert('Something went wrong!');
-    })
-
-    // This updates the chapter with 'learned' and 'total' numbers
-    axios.put(`/chapters/learned/${chapterId}`, [learned, total, userId])
-      .then(response => {
-        getChapterDetails();
-      })
-      .catch(error => {
-        console.log('Error updating ChapterItem/GetProgressData counts:', error);
-        alert('Something went wrong!');
-    })
-  }
-  
-  // This executes getProgressData for each chapter on page load
-  const updateChapterData = () => {
-    for (let chapter of chapters) {
-      getProgressData(chapter.id);
-    }
+    console.log('getChapterDetails');
   }
 
   // This adds a new chapter to the deck
@@ -189,8 +141,6 @@ function DeckDetails() {
   }
 
   useEffect(() => {
-    getChapterDetails();
-    updateChapterData();
   }, []);
 
   // Displays the information for the selected Deck

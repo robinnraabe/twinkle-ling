@@ -19,18 +19,89 @@ function UserPage() {
     setLanguage({[key]: event.target.value}); 
   }
 
+  // Gets details for all chapters in selected deck
+  const getChapterDetails = (deckId) => {
+    axios.get(`/chapters/${deckId}`)
+      .then(response => {
+        dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
+      })
+      .catch(error => {
+        console.log('Error getting chapter details:', error);
+        alert('Something went wrong!');
+    })
+    console.log('getChapterDetails');
+  }
+
   // Sends user to the page for the selected deck
   const toDeck = (deckId) => {
     axios.get(`/deck/${deckId}`)
       .then(response => {
         dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
-        history.push('/deck/details');
+        axios.get(`/chapters/${deckId}`)
+          .then(response => {
+            dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
+            for (let chapter of response.data) {
+              getProgressData(chapter.id, deckId);
+            }
+          })
+          .catch(error => {
+            console.log('Error getting chapter details:', error);
+            alert('Something went wrong!');
+        })
       })
       .catch(error => {
         console.log('Error getting deck details:', error);
         alert('Something went wrong!');
     })
+    setTimeout(() => {
+      history.push('/deck/details');
+    }, 500);
   }
+
+  // This gets the data for each chapter's progress bar
+  const getProgressData = (chapterId, deckId) => {
+    let learned, total;
+    const userId = user.id;
+    const request = {
+      params: {
+        chapterId: chapterId,
+        userId: userId
+      }
+    }
+
+    // This gets the number of learned items in chapter
+    axios.get(`/data/progress`, request)
+      .then(response => {
+        learned = response.data;
+      })
+      .catch(error => {
+        console.log('Error getting learned count:', error);
+        alert('Something went wrong!');
+    })
+    console.log('got learned:', learned);
+
+    // This gets the total number of items in chapter
+    axios.get(`/data/total`, request)
+      .then(response => {
+        total = response.data;
+      })
+      .catch(error => {
+        console.log('Error getting total count:', error);
+        alert('Something went wrong!');
+    })
+    console.log('got total:', total);
+
+    // This updates the chapter with 'learned' and 'total' numbers
+    axios.put(`/chapters/learned/${chapterId}`, [learned, total, userId])
+      .then(response => {
+        getChapterDetails(deckId);
+      })
+      .catch(error => {
+        console.log('Error updating ChapterItem/GetProgressData counts:', error);
+        alert('Something went wrong!');
+    })
+    console.log(learned, total);
+  }    
 
   // Creates a new (empty) deck and sends the user to the EditDeck page
   const addDeck = () => {

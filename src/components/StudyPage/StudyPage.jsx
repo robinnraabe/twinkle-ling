@@ -189,8 +189,8 @@ function StudyPage() {
           <h4>Missed: {missed}</h4>
           {/* <Button variant='contained' onClick={() => skipItem()}>SKIP</Button>
           <Button variant='contained' onClick={() => setStatus('difficult')}>DIFFICULT</Button>
-          <Button variant='contained' onClick={() => setStatus('known')}>KNOWN</Button> */}
-          <Button variant='contained' onClick={() => showHint()}>SHOW HINT</Button>
+          <Button variant='contained' onClick={() => setStatus('known')}>KNOWN</Button> 
+          <Button variant='contained' onClick={() => showHint()}>SHOW HINT</Button> */}
         </Stack>
       </Stack>
     </div>

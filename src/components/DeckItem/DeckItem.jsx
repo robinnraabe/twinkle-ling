@@ -94,7 +94,7 @@ function DeckItem(props) {
           <CardActions sx={{ margin: '0px', marginLeft: '-10px', padding: '0px', flexDirection: 'column'}}>
             <img onClick={props.toDeck} src={props.deck.image_url} width='100%' height='120px' objectFit='cover' />
             <Box onClick={() => toLesson()} sx={{ backgroundColor: 'black', color: 'white', width: '100%', height: '40px', margin: '0px', padding: '20px 0px 0px 0px', textAlign: 'center', justifyItems: 'center' }}>
-              Learn
+              Quick Practice
             </Box>
           </CardActions>
         }
