@@ -82,10 +82,7 @@ function DeckItem(props) {
         {flexDirection: 'column'},
         {borderRadius: '0px'}, 
         {backgroundColor: `white`},
-        {color: 'white'},
-        {'&:hover': {
-          opacity: .5
-        }}
+        {color: 'white'}
       ]}>
         {props.public ? 
           <CardActions sx={{ margin: '0px', marginLeft: '-10px', padding: '0px', flexDirection: 'column'}}>
@@ -94,13 +91,18 @@ function DeckItem(props) {
         :
           <CardActions sx={{ margin: '0px', marginLeft: '-10px', padding: '0px', flexDirection: 'column'}}>
             <img onClick={props.toDeck} src={props.deck.image_url} width='100%' height='120px' objectFit='cover' />
-            <Box onClick={() => toLesson()} sx={{ backgroundColor: 'black', color: 'white', width: '100%', height: '40px', margin: '0px', padding: '20px 0px 0px 0px', textAlign: 'center', justifyItems: 'center' }}>
+            <Box onClick={() => toLesson()} 
+              sx={[ {backgroundColor: 'black'}, {color: 'white'}, {width: '100%'}, 
+              {height: '40px'}, {margin: '0px'}, {padding: '20px 0px 0px 0px'}, 
+              {textAlign: 'center'}, {justifyItems: 'center'}, {'&:hover': {color: '#4cd3ff' }} ]}>
               Quick Practice
             </Box>
           </CardActions>
         }
-        <CardContent onClick={props.toDeck} sx={{ padding: '0px', margin: '0px', textAlign: 'center' }}>
-          <h4 style={{ margin: '0px' }}>{props.deck.title}</h4>
+
+        <CardContent onClick={props.toDeck} sx={[ {padding: '0px'}, {margin: '0px'}, 
+          {textAlign: 'center'}, {'&:hover': {opacity: .5 }} ]}>
+          <h4 style={{ margin: '0px', color: '#484848' }}>{props.deck.title}</h4>
           <h5 style={{ margin: '0px', fontWeight: '600', color: 'gray' }}>{props.deck.language}</h5>
           <h5 style={{ margin: '0px', fontWeight: '400', color: 'gray' }}>Created by {props.deck.creator}</h5>
         </CardContent>

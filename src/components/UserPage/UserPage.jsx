@@ -89,9 +89,9 @@ function UserPage() {
           {alignItems: 'center'},
           {flexDirection: 'column'},
           {borderRadius: '0px'}, 
-          {backgroundImage: `white`},
+          {backgroundColor: `#42d3ff`},
           {'&:hover': {
-              opacity: .5
+            backgroundColor: '#299eec'
           }}
         ]}>
           <CardContent sx={{ textAlign: 'center' }} className="black">

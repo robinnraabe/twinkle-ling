@@ -8,6 +8,8 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0px;
   background-color: #181818;
+  background-image: url('../../../public/images/black-sky.jpeg');
+  background-position: center;
   color: 'white';
 }
 

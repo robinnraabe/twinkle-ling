@@ -126,79 +126,82 @@ function DeckDetails() {
 }
 
   const boxStyle = {
-    color: 'lavender',
     padding: '20px',
-    backgroundImage: `url('${deck.image_url}')`,
-    backgroundSize: '250px',
-    backgroundRepeat: 'repeat'
   }
 
   const btnStyle = {
-    color: 'white',
-    margin: '5px 0px'
+    color: 'black',
+    backgroundColor: '#f4a500',
+    borderRadius: '0px',
+    fontWeight: '600'
   }
 
   useEffect(() => {
+    getChapterDetails();
   }, []);
 
   // Displays the information for the selected Deck
   return (
     <div data-testid="deckDetails" className='white'>
       {/* Top subheader */}
-      <Stack direction='row' justifyContent='space-between' >
+      <Stack direction='row' justifyContent='space-between' margin='auto' width='76%' >
 
         {/* Left subheader items */}
-        <Stack direction='row' alignItems='center' margin='0px 50px'>
+        <Stack direction='row' alignItems='center' margin='0px 50px' >
           <img src='https://static.tumblr.com/d7d601c9f738a1e6098326472def2cac/zd84lno/qI6p0mf8w/tumblr_static_9tutvrt14iskcs04w448040wo.png' 
             style={{borderRadius: '200px'}} 
             width='80px' height='80px' />
           <Stack direction='column' justifyItems='center'>
-            <h3 style={{ margin: '0px' }}>{deck.title}</h3>
-            <h4 style={{ margin: '0px', fontWeight: 'normal' }}>Created by {deck.username}</h4>
+            <h3 style={{ margin: '0px 0px 0px 20px' }}>{deck.title}</h3>
+            <h4 style={{ margin: '0px 0px 0px 20px', fontWeight: 'normal' }}>{deck.language}</h4>
+            <h4 style={{ margin: '0px 0px 0px 20px', fontWeight: 'normal' }}>Created by {deck.username}</h4>
           </Stack>
         </Stack>
 
         {/* Right subheader items */}
         <Stack alignItems='center'>
           <Button onClick={toUserDeckList}
-            sx={{ margin: '0px 50px' }} 
+          style={btnStyle}
+            sx={{ margin: '30px 50px' }} 
             disableRipple
             variant='contained'>
             Return to decks
           </Button>
-          <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.language}</h4>
         </Stack>
       </Stack>
       <br />
 
-      {/* Stats and deck options */}
-      <Box style={boxStyle} margin='0px 50px'>
+      {/* Deck options */}
+      <Box style={boxStyle} margin='auto' width='70%'>
         <Stack direction='row' justifyContent='space-between'>
-          <Stack direction='column'>
-            <Button variant='contained' style={btnStyle}
-              onClick={() => toLesson('learn')}>
-              Learn
-            </Button>
-            <Button variant='contained' style={btnStyle}
-              onClick={() => toLesson('review')}>
-              Review
-            </Button>
-          </Stack>
 
-          <Stack direction='column'>
-            { user.id === deck.creator_id ?
+            <Stack height='150px' direction='row' justifyContent='start'>
+              <img src={`${deck.image_url}`} height='150px' style={{marginRight: '20px'}}/>
+              <Button variant='contained' style={btnStyle} sx={{ marginRight: '20px' }}
+                onClick={() => toLesson('learn')}>
+                Learn
+              </Button>
               <Button variant='contained' style={btnStyle}
+                onClick={() => toLesson('review')}>
+                Review
+              </Button>
+            </Stack>
+
+          <Stack direction='column' height='150px' justifyContent='space-between'>
+            { user.id === deck.creator_id ?
+              <Button variant='contained' style={btnStyle} sx={{height: '65px'}}
                 onClick={() => toEditDeck()}>
                 Edit Deck
               </Button>
             :
-              <Tooltip title="You must be a creator or contributor to edit this deck">
-                <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+              <Tooltip title="You must be a creator or contributor to edit this deck" placement='top'>
+                <Button variant='contained' sx={[ {borderRadius: '0px'}, {fontWeight: '600'}, {backgroundColor: 'lightgrey'}, 
+                  {color: 'grey'}, {height: '65px'}, {'&:hover': {backgroundColor: 'lightgrey' }} ]}>
                   Edit Deck
                 </Button>
               </Tooltip>
             }
-              <Button variant='contained' style={btnStyle}
+              <Button variant='contained' style={btnStyle} sx={{ height: '65px' }}
                 onClick={() => resetProgress()}>
                 Reset Progress
               </Button>
@@ -207,12 +210,12 @@ function DeckDetails() {
       </Box>
 
       {/* Chapters header */}
-      <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 50px'}}>
+      <Stack direction='row' justifyContent='space-between' sx={{ width: '70%', margin: 'auto'}}>
         <h1>Chapters</h1>
         {user.id === deck.creator_id ? 
           <Button sx={{ fontSize: '24px' }} onClick={addChapter}>+ New Chapter</Button>
         :
-          <Tooltip title="You must be a creator or contributor to edit this deck">
+          <Tooltip title="You must be a creator or contributor to edit this deck" placement='top'>
             <Button sx={{ fontSize: '24px', color: 'gray' }} onClick={addChapter}>+ New Chapter</Button>
           </Tooltip>
         }   

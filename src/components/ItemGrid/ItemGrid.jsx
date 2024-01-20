@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination } from '@mui/material';
 import ItemRow from '../ItemRow/ItemRow';
 
 function ItemGrid(props) {
@@ -39,7 +39,11 @@ function ItemGrid(props) {
         </TableHead>
         <TableBody>
           {items.map((row) => (
-            <ItemRow row={row} chapterId={props.chapterId} updateList={props.updateList} setUpdateList={props.setUpdateList} />
+            <ItemRow row={row} 
+              chapterId={props.chapterId} 
+              updateList={props.updateList} 
+              setUpdateList={props.setUpdateList} 
+              creatorId={props.creatorId}/>
           ))}
         </TableBody> 
       </Table>
