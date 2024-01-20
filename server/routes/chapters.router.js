@@ -53,10 +53,10 @@ router.post('/', (req, res) => {
   });
 });
 
-// This updates the learned + total count for the selected chapter
+// This updates the learned count for the selected user_chapter
 router.put('/learned/:id', (req, res) => {
-  const queryValues = [req.body.learned, req.body.total, req.body.userId, req.params.id];
-  const queryText = `UPDATE user_chapters SET learned = $1, total = $2 WHERE user_id = $3 AND chapter_id = $4;`;
+  const queryValues = [req.body.learned, req.body.userId, req.params.id];
+  const queryText = `UPDATE user_chapters SET learned = $1 WHERE user_id = $2 AND chapter_id = $3;`;
 
   pool.query(queryText, queryValues)
     .then((result) => {
@@ -64,6 +64,32 @@ router.put('/learned/:id', (req, res) => {
     })
     .catch((error) => {
       console.log('Error in PUT /chapters/learned', error);
+      res.sendStatus(500);
+    });
+})
+
+router.put('/total/add/:id', (req, res) => {
+  const queryText = `UPDATE chapters SET total = total + 1 WHERE id = $1;`;
+
+  pool.query(queryText, [req.params.id])
+    .then((result) => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /chapters/total', error);
+      res.sendStatus(500);
+    });
+})
+
+router.put('/total/subtract/:id', (req, res) => {
+  const queryText = `UPDATE chapters SET total = total - 1 WHERE id = $1;`;
+
+  pool.query(queryText, [req.params.id])
+    .then((result) => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.log('Error in PUT /chapters/total', error);
       res.sendStatus(500);
     });
 })

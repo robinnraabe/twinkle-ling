@@ -24,7 +24,6 @@ function ChapterItem(props) {
   const [newTitle, setTitle] = useState(props.chapter.title);
   const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
-  console.log(props.chapter.id, props.chapter.learned, props.chapter.total);
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
@@ -126,12 +125,26 @@ function ChapterItem(props) {
       hints: '',
       custom: '',
     })
+
+    // Updates "total" number of items in chapter
+    axios.put(`/chapters/total/add/${props.chapter.id}`)
+      .catch(error => {
+        console.log('Error updating ChapterItem/GetProgressData counts:', error);
+        alert('Something went wrong!');
+    })
   }
 
   // This deletes the selected chapter from its deck
   const deleteChapter = (chapterAndDeck) => {
     dispatch({ type: 'DELETE_CHAPTER', payload: chapterAndDeck });
     // make sure to alert the user and require confirmation before deleting!
+
+    // Updates "total" number of items in chapter
+    axios.put(`/chapters/total/subtract/${props.chapter.id}`)
+      .catch(error => {
+        console.log('Error updating ChapterItem/GetProgressData counts:', error);
+        alert('Something went wrong!');
+    })
   }
 
   // This updates all items in chapter when saved

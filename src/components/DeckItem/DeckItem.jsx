@@ -82,6 +82,7 @@ function DeckItem(props) {
         {flexDirection: 'column'},
         {borderRadius: '0px'}, 
         {backgroundColor: `white`},
+        {color: 'white'},
         {'&:hover': {
           opacity: .5
         }}

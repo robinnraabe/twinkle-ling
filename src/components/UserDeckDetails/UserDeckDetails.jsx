@@ -15,7 +15,6 @@ function DeckDetails() {
   const deck = useSelector(store => store.deckDetails[0]);
   const deckId = deck.id;
   const languageId = deck.language_id;
-  console.log(chapters);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
@@ -46,7 +45,6 @@ function DeckDetails() {
         console.log('Error getting chapter details:', error);
         alert('Something went wrong!');
     })
-    console.log('getChapterDetails');
   }
 
   // This adds a new chapter to the deck
@@ -145,7 +143,7 @@ function DeckDetails() {
 
   // Displays the information for the selected Deck
   return (
-    <div data-testid="deckDetails">
+    <div data-testid="deckDetails" className='white'>
       {/* Top subheader */}
       <Stack direction='row' justifyContent='space-between' >
 
@@ -156,7 +154,7 @@ function DeckDetails() {
             width='80px' height='80px' />
           <Stack direction='column' justifyItems='center'>
             <h3 style={{ margin: '0px' }}>{deck.title}</h3>
-            <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.username}</h4>
+            <h4 style={{ margin: '0px', fontWeight: 'normal' }}>Created by {deck.username}</h4>
           </Stack>
         </Stack>
 

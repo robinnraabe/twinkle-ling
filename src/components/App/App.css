@@ -11,6 +11,14 @@ body {
   color: 'white';
 }
 
+.white {
+  color: white;
+}
+
+.black {
+  color: black;
+}
+
 img {
   display: inline-block;
   max-width: 100%;

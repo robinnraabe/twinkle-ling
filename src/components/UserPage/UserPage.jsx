@@ -67,12 +67,12 @@ function UserPage() {
     <div className="container">
       {/* <LogOutButton className="btn" /> */}
 
-      <h2>Welcome, {user.username}!</h2>
+      <h2 className="white">Welcome, {user.username}!</h2>
 
       {/* placeholder image for stats 
       <img src='https://www.statology.org/wp-content/uploads/2021/10/combo6.png' width='500px' alt='stats example' /> */}
 
-      <h3>Recent Decks</h3>
+      <h3 className="white">Recent Decks</h3>
       {/* make sure to sort by most recently used decks */}
       <Grid container spacing={1}>
         {userDeckList.map((deck) => {
@@ -94,14 +94,14 @@ function UserPage() {
               opacity: .5
           }}
         ]}>
-          <CardContent sx={{ textAlign: 'center' }}>
+          <CardContent sx={{ textAlign: 'center' }} className="black">
             <h1>View</h1> <h1>All</h1> <h1>Decks</h1>
           </CardContent>
         </Card>
         </Grid>
       </Grid>
       
-      <h3 onClick={toTrendingDeckList}> Trending Decks</h3>
+      <h3 className="white" onClick={toTrendingDeckList}> Trending Decks</h3>
       {/* make sure to sort by most used! still gotta figure out how that's calculated */}
       <Grid container spacing={1}>
         {publicDeckList.map((deck) => {
