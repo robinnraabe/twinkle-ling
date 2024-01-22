@@ -35,4 +35,20 @@ router.get('/total', (req, res) => {
   });
 });
 
+// This gets the data for the UserPage chart
+router.get('/user/:id', (req, res) => {
+  const userId = req.params.id;
+  const queryText = `SELECT * FROM user_data
+    WHERE user_id = ${userId}
+    ORDER BY date DESC
+    LIMIT 7;`;
+  pool.query(queryText)
+    .then((result) => {
+      res.send(result.rows);
+    }).catch((error) => {
+      console.log('Error in COUNT /data/user (userData)', error)
+      res.sendStatus(500);
+  });
+});
+
 module.exports = router;
