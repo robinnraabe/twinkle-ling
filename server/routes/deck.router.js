@@ -45,7 +45,6 @@ router.get('/public', (req, res) => {
 
 // This returns all of the user's decks on the UserDeckList
 router.get('/user/all/:id', (req, res) => {
-  console.log(req.params.id);
   const queryText = `SELECT decks.title, decks.image_url, decks.details, languages."language", decks.public_status, 
    "user".id AS user_id, decks.id,
     "user".username, creator.username AS creator, languages.id AS language_id

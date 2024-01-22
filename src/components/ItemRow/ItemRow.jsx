@@ -1,8 +1,10 @@
 import React from "react";
+import axios from "axios";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TableCell, TableRow, TextField, IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Swal from 'sweetalert2';
 
 function ItemRow(props) {
   const dispatch = useDispatch();
@@ -34,8 +36,27 @@ function ItemRow(props) {
   }
 
   const deleteItem = (itemId) => {
-    dispatch({ type: 'DELETE_ITEM', payload: [itemId, props.chapterId] });
-    // make sure to alert the user and require confirmation before deleting!
+    Swal.fire({
+      title: "Delete item?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#42d3ff",
+      cancelButtonColor: "#888888",
+      confirmButtonText: "Confirm",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch({ type: 'DELETE_ITEM', payload: [itemId, props.chapterId] });
+
+        // Updates "total" number of items in chapter
+        axios.put(`/chapters/total/subtract/${props.chapterId}`)
+          .catch(error => {
+            console.log('Error updating ItemRow/total/subtract:', error);
+            alert('Something went wrong!');
+        })
+      }
+    });
   }
 
   return (

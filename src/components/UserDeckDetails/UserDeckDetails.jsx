@@ -13,6 +13,7 @@ function DeckDetails() {
   const history = useHistory();
   const dispatch = useDispatch();
   const deck = useSelector(store => store.deckDetails);
+  console.log(user);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
@@ -150,7 +151,7 @@ function DeckDetails() {
 
         {/* Left subheader items */}
         <Stack direction='row' alignItems='center' margin='0px 50px' >
-          <img src='https://static.tumblr.com/d7d601c9f738a1e6098326472def2cac/zd84lno/qI6p0mf8w/tumblr_static_9tutvrt14iskcs04w448040wo.png' 
+          <img src={`${user.user_image}`} 
             style={{borderRadius: '200px'}} 
             width='80px' height='80px' />
           <Stack direction='column' justifyItems='center'>

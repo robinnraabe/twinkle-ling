@@ -10,6 +10,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ProgressBar from '../ProgressBar/ProgressBar';
+import Swal from 'sweetalert2';
 
 // This displays each chapter on the UserDeckDetails page
 function ChapterItem(props) {
@@ -22,9 +23,9 @@ function ChapterItem(props) {
     user_id: user.id,
     language_id: props.languageId
   });
+  const [edit, setEdit] = useState(false);
   const [newTitle, setTitle] = useState(props.chapter.title);
   const [updateList, setUpdateList] = useState([]);
-  let edit = props.chapter.edit;
 
   let ratio = () => {
     if (props.chapter.learned === 0 || props.chapter.total === 0) {
@@ -76,16 +77,27 @@ function ChapterItem(props) {
 
   // This toggles the editor for the selected chapter
   const editChapter = (chapterId) => {
-    axios.put(`/chapters/edit/${chapterId}`)
-      .then((response) => {
-        dispatch({ type: 'FETCH_CHAPTERS', payload: props.deckId })
-        props.getChapterDetails();
-      })
-      .catch((error) => {
-        console.log('Error in ChapterItem/editChapter PUT request:', error);
-        alert('Something went wrong!');
-    });
-    setUpdateList([]);
+    if (edit === true) {
+      Swal.fire({
+        title: "Close editor?",
+        text: "Unsaved changes will be lost.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#42d3ff",
+        cancelButtonColor: "#888888",
+        confirmButtonText: "Confirm",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setEdit(false);
+          setUpdateList([]);
+        }
+      });
+    }
+    else {
+      setEdit(true);
+      setUpdateList([]);
+    }
   }
 
   // This resets the progress for the selected chapter
@@ -141,22 +153,33 @@ function ChapterItem(props) {
     // Updates "total" number of items in chapter
     axios.put(`/chapters/total/add/${props.chapter.id}`)
       .catch(error => {
-        console.log('Error updating ChapterItem/GetProgressData counts:', error);
+        console.log('Error updating ChapterItem/total/add:', error);
         alert('Something went wrong!');
     })
   }
 
   // This deletes the selected chapter from its deck
   const deleteChapter = (chapterAndDeck) => {
-    dispatch({ type: 'DELETE_CHAPTER', payload: chapterAndDeck });
-    // make sure to alert the user and require confirmation before deleting!
-
-    // Updates "total" number of items in chapter
-    axios.put(`/chapters/total/subtract/${props.chapter.id}`)
-      .catch(error => {
-        console.log('Error updating ChapterItem/GetProgressData counts:', error);
-        alert('Something went wrong!');
-    })
+    Swal.fire({
+      title: "Delete chapter?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#42d3ff",
+      cancelButtonColor: "#888888",
+      confirmButtonText: "Confirm",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch({ type: 'DELETE_CHAPTER', payload: chapterAndDeck });
+        // Updates "total" number of items in chapter
+        axios.put(`/chapters/total/subtract/${props.chapter.id}`)
+          .catch(error => {
+            console.log('Error updating ChapterItem/GetProgressData counts:', error);
+            alert('Something went wrong!');
+        })
+      }
+    });
   }
 
   // This updates all items in chapter when saved

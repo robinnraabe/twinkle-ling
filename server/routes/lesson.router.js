@@ -13,7 +13,6 @@ router.get('/chapter/review/:id', (req, res) => {
     LIMIT ${userLimit};`;
   pool.query(queryText)
     .then((result) => {
-      console.log(result.rows);
       res.send(result.rows);
     }).catch((error) => {
       console.log('Error in GET /lesson/chapter', error)
@@ -31,7 +30,6 @@ const queryText = `SELECT * FROM user_items
   LIMIT ${userLimit};`;
   pool.query(queryText)
     .then((result) => {
-      console.log(result.rows);
       res.send(result.rows);
     }).catch((error) => {
       console.log('Error in GET /lesson/chapter', error)
@@ -50,7 +48,6 @@ router.get('/deck/review/:id', (req, res) => {
     LIMIT ${userLimit};`;
   pool.query(queryText)
     .then((result) => {
-      console.log(result.rows);
       res.send(result.rows);
     }).catch((error) => {
       console.log('Error in GET /lesson/deck', error)
@@ -68,7 +65,6 @@ router.get('/deck/learn/:id', (req, res) => {
     LIMIT ${userLimit};`;
   pool.query(queryText)
     .then((result) => {
-      console.log(result.rows);
       res.send(result.rows);
     }).catch((error) => {
       console.log('Error in GET /lesson/deck', error)

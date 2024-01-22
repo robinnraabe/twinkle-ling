@@ -48,7 +48,6 @@ router.post('/', (req, res) => {
     RETURNING "id";`;
   pool.query(queryText, deckValues)
     .then(result => {
-      console.log('deckId:', result);
       const deckId = result.rows[0].id;
       const joinedQueryText = `INSERT INTO "user_decks" 
         ("user_id", "deck_id")

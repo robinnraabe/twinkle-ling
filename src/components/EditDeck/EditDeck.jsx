@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button, Stack, Box, TextField, Select, MenuItem, Switch } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Swal from 'sweetalert2';
 
 function EditDeck() {
   const history = useHistory();
@@ -30,9 +31,21 @@ function EditDeck() {
 
   // This will delete the selected deck and send the user to the UserDeckList page
   const deleteDeck = () => {
-    dispatch({ type: 'DELETE_DECK', payload: [deck.id, user.id] });
-    // make sure to alert user for confirmation before deleting!
-    history.push('/decks')
+    Swal.fire({
+      title: "Delete deck?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#42d3ff",
+      cancelButtonColor: "#888888",
+      confirmButtonText: "Confirm",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch({ type: 'DELETE_DECK', payload: [deck.id, user.id] });
+        history.push('/decks')
+      }
+    });
   }
 
   // Adds new deck details to object
