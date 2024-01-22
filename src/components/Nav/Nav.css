@@ -6,7 +6,7 @@
   position: fixed;
   width: 100%;
   background-image: url('../../../public/images/black-sky.jpeg');
-
+  z-index: 9999;
   overflow: hidden;
 }
 

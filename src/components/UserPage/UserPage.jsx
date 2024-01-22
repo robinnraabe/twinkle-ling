@@ -41,7 +41,9 @@ function UserPage() {
   const toDeck = (deckId) => {
     axios.get(`/deck/${deckId}`).then(response => {
       dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
-      history.push('/deck/details');
+      setTimeout(() => {
+        history.push('/deck/details');
+      }, 500);
     })
       .catch(error => {
         console.log('Error getting deck details:', error);
@@ -54,6 +56,7 @@ function UserPage() {
     history.push('/trending')
   }
 
+  // Gets max number of total_correct from userData for styling the chart
   const getyMax = (array) => {
     let yHeight = 0;
     for (let data of array) {
@@ -95,6 +98,7 @@ function UserPage() {
     return cvs;
 }
 
+// Gets and sets the data to populate the chart
   const getUserData = () => {
     axios.get(`/data/user/${user.id}`)
       .then((response) => {
@@ -127,6 +131,7 @@ function UserPage() {
     })
   }
 
+  //
   const getUserDeckList = () => {
     axios.get(`/decks/user/${user.id}`)
       .then((response) => {
@@ -164,57 +169,78 @@ const options = {
     getUserData();
   }, [])
 
-  return (
-    <div className="container">
-      {/* <LogOutButton className="btn" /> */}
+    return (
+      <div className="container">
+        {/* <LogOutButton className="btn" /> */}
 
-      <h2 className="white" style={{ marginLeft: '2%' }}>Welcome, {user.username}!</h2>
-      <Box sx={{ backgroundColor: '#00000080', width: '60%', marginLeft: '10%', marginBottom: '120px', padding: '20px' }}>
-        <LineChart chartData={chartData} options={options} />
-      </Box>
+        <h2 className="white" style={{ marginLeft: '2%' }}>Welcome, {user.username}!</h2>
+        <Box sx={{ backgroundColor: '#00000080', width: '60%', marginLeft: '10%', marginBottom: '120px', padding: '20px' }}>
+          <LineChart chartData={chartData} options={options} />
+        </Box>
 
-      <h2 className="white" style={{ marginLeft: '2%' }}>Recent Decks</h2>
-      {/* make sure to sort by most recently used decks */}
-      <Grid container spacing={1} marginBottom='100px'>
-        {userDeckList.map((deck) => {
-          return <DeckItem key={deck.id} deck={deck} public={false} toDeck={() => toDeck(deck.id)} />
-        })} 
-        {/* last card links to the user's full list of decks*/}
-        <Grid item m={3}>
-        <Card onClick={toUserDeckList} sx={[
-          {width: '12vw'},
-          {height: '100%'},
-          {marginTop: '10px'},
-          {display: 'flex'}, 
-          {color: '#42d3ff'},
-          {justifyContent: 'center'},
-          {alignItems: 'center'},
-          {flexDirection: 'column'},
-          {borderRadius: '0px'}, 
-          {backgroundColor: '#181818'},
-          {'&:hover': {
-            backgroundColor: '#282828'
-          }}
-        ]}>
-          <CardContent sx={{ textAlign: 'center' }} >
-            <h1>View</h1> <h1>All</h1>
-          </CardContent>
-        </Card>
-        </Grid>
-      </Grid>
-      
-      <h2 className="white" style={{ marginLeft: '2%' }}> Trending Decks</h2>
-      {/* make sure to sort by most used! still gotta figure out how that's calculated */}
-      <div style={{ alignContent: 'center' }}>
-        <Grid container spacing={1} >
-          {publicDeckList.map((deck) => {
-            return <DeckItem key={deck.id} public={true} deck={deck} />
+        <h2 className="white" style={{ marginLeft: '2%' }}>Recent Decks</h2>
+        {/* make sure to sort by most recently used decks */}
+        <Grid container spacing={1} marginBottom='100px'>
+          {userDeckList.map((deck) => {
+            return <DeckItem key={deck.id} deck={deck} public={false} toDeck={() => toDeck(deck.id)} />
           })} 
-          {/* last card should be a link to trending list - stretch goal */}
+          {/* last card links to the user's full list of decks*/}
+          <Grid item m={3}>
+          <Card onClick={toUserDeckList} sx={[
+            {width: '12vw'},
+            {height: '100%'},
+            {marginTop: '10px'},
+            {display: 'flex'}, 
+            {color: '#42d3ff'},
+            {justifyContent: 'center'},
+            {alignItems: 'center'},
+            {flexDirection: 'column'},
+            {borderRadius: '0px'}, 
+            {backgroundColor: '#181818'},
+            {'&:hover': {
+              backgroundColor: '#282828'
+            }}
+          ]}>
+            <CardContent sx={{ textAlign: 'center' }} >
+              <h1>View</h1> <h1>All</h1>
+            </CardContent>
+          </Card>
+          </Grid>
         </Grid>
+        
+        <h2 className="white" style={{ marginLeft: '2%' }}> Trending Decks</h2>
+        {/* make sure to sort by most used! still gotta figure out how that's calculated */}
+        <div style={{ alignContent: 'center' }}>
+          <Grid container spacing={1} >
+            {publicDeckList.map((deck) => {
+              return <DeckItem key={deck.id} public={true} deck={deck} />
+            })} 
+            {/* last card links to the trending list (link is not set up yet) */}
+            <Grid item m={3}>
+              <Card sx={[
+                {width: '12vw'},
+                {height: '100%'},
+                {marginTop: '10px'},
+                {display: 'flex'}, 
+                {color: '#42d3ff'},
+                {justifyContent: 'center'},
+                {alignItems: 'center'},
+                {flexDirection: 'column'},
+                {borderRadius: '0px'}, 
+                {backgroundColor: '#181818'},
+                {'&:hover': {
+                  backgroundColor: '#282828'
+                }}
+              ]}>
+                <CardContent sx={{ textAlign: 'center' }} >
+                  <h1>View</h1> <h1>All</h1>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </div>
       </div>
-    </div>
-  )
+    )
 }
      
 export default UserPage;

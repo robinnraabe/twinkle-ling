@@ -6,9 +6,10 @@ import { useHistory } from 'react-router-dom';
 import { Card, Stack, CardContent, CardActions,
   Grid, Button, TextField, IconButton, Tooltip } from '@mui/material';
 import ItemGrid from '../ItemGrid/ItemGrid';
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ProgressBar from '../ProgressBar/ProgressBar';
 
 // This displays each chapter on the UserDeckDetails page
@@ -24,6 +25,15 @@ function ChapterItem(props) {
   const [newTitle, setTitle] = useState(props.chapter.title);
   const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
+
+  let ratio = () => {
+    if (props.chapter.learned === 0 || props.chapter.total === 0) {
+      return 0;
+    }
+    else {
+      return (props.chapter.learned/props.chapter.total) * 100;
+    }
+  }
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
@@ -192,13 +202,6 @@ function ChapterItem(props) {
     setUpdateList([]);
   }
 
-  const btnStyle = {
-    color: 'black',
-    backgroundColor: '#f4a500',
-    borderRadius: '0px',
-    fontWeight: '600'
-  }
-
   return (
     <Grid item xs={12}>
       {edit ?
@@ -236,8 +239,8 @@ function ChapterItem(props) {
                         bgcolor: "transparent"
                       }
                     }} >
-                    <Tooltip title="Close Editor">
-                        <CloseFullscreenIcon sx={{fontSize: '40px'}} />   
+                    <Tooltip title="Hide Details">
+                        <ExpandLessIcon sx={{fontSize: '40px'}} />   
                     </Tooltip>
                   </IconButton>
               </Stack>
@@ -289,21 +292,23 @@ function ChapterItem(props) {
               ''
               }
               <br /><br />
-              { user.id !== props.creatorId ?
+              { user.id === props.creatorId ?
                 <Stack direction='row' justifyContent='space-between'>
                   <Button type='button' variant= 'contained' 
-                    style={btnStyle}
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
                     onClick={() => deleteChapter([props.chapter.id, props.chapter.deck_id])}>Delete Chapter</Button>
                   <Button type='button' variant= 'contained' 
-                    style={btnStyle}
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
                     onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
                   <Button type='button' variant= 'contained' 
-                    style={btnStyle}
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
                     onClick={() => saveChanges(props.chapter.id)}>Save Changes</Button>
                 </Stack>
                 :
                 <Stack direction='row' justifyContent='center'>
-                  <Button type='button' variant= 'contained' onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
+                  <Button type='button' variant= 'contained' 
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+                    onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
                 </Stack>
                 }
           </CardContent>
@@ -319,7 +324,7 @@ function ChapterItem(props) {
             {flexDirection: 'row'},
             {justifyContent: 'space-between'},
             {borderRadius: '0px'}, 
-            {backgroundImage: `white`},
+            {backgroundColor: 'aliceblue'},
             {opacity: '.8'},
             {alignItems: 'center'}
         ]}>
@@ -328,7 +333,7 @@ function ChapterItem(props) {
           </CardContent>
           <Stack direction='row' spacing={20} width='70%' justifyContent='end'>
             <CardContent sx={{ padding: '0px', width: '100%' }}>
-              <ProgressBar progress={`${(props.chapter.learned/props.chapter.total)*100}%`} height={50} />
+              <ProgressBar progress={`${ratio()}%`} height={50} />
             </CardContent> 
             <CardActions>
               {props.chapter.learned < props.chapter.total ?
@@ -372,8 +377,8 @@ function ChapterItem(props) {
                     bgcolor: "transparent"
                   }
               }}>
-                <Tooltip title="Open Editor">
-                  <EditIcon sx={{fontSize: '40px'}} />   
+                <Tooltip title="Open Detailed View">
+                  <ExpandMoreIcon sx={{fontSize: '40px'}} />   
                 </Tooltip>
               </IconButton>
             </CardActions>
