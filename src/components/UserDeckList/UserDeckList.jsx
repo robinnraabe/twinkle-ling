@@ -14,22 +14,36 @@ function UserPage() {
   const [chosenLanguage, setLanguage] = useState({});
   const user = useSelector(store => store.user);
 
-  // Sets language ID for GET route
+  // This sets the language ID to GET decks
   const handleLanguageChange = (key) => (event) => {
     setLanguage({[key]: event.target.value}); 
   }
 
   // Sends user to the page for the selected deck
   const toDeck = (deckId) => {
+
+    // This gets details for the selected deck
     axios.get(`/deck/${deckId}`)
       .then(response => {
         dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
-        history.push('/deck/details');
+
+        // This gets details for all chapters in selected deck
+        axios.get(`/chapters/${deckId}`)
+          .then(response => {
+            dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
+          })
+          .catch(error => {
+            console.log('Error getting chapter details:', error);
+            alert('Something went wrong!');
+        })
       })
       .catch(error => {
         console.log('Error getting deck details:', error);
         alert('Something went wrong!');
     })
+    setTimeout(() => {
+      history.push('/deck/details');
+    }, 500);
   }
 
   // Creates a new (empty) deck and sends the user to the EditDeck page
@@ -67,7 +81,7 @@ function UserPage() {
   }, [])
 
   return (
-    <div>
+    <div className='white'>
       {/* Subheader filters */}
       <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
         {/* Language select filter - still need to make this select an option */}

@@ -1,11 +1,11 @@
 import React from 'react'
  
-const ProgressBar = ({fillColor, progress, height}) => {
+const ProgressBar = ({progress, height}) => {
     
     const outline = {
         height: height,
         width: '100%',
-        backgroundColor: 'black',
+        backgroundColor: '#282828',
         borderRadius: 40,
         margin: 50
       }
@@ -13,7 +13,10 @@ const ProgressBar = ({fillColor, progress, height}) => {
       const fill = {
         height: '100%',
         width: progress,
-        backgroundColor: fillColor,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundImage: "url(/images/shooting-star.jpeg)",
         borderRadius: 40,
         textAlign: 'right',
       }

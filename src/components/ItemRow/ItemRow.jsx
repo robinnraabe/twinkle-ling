@@ -1,11 +1,12 @@
 import React from "react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TableCell, TableRow, TextField, IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 function ItemRow(props) {
   const dispatch = useDispatch();
+  const user = useSelector(store => store.user);
   const row = props.row;
   const [item, setItem] = useState(row.item);
   const [description, setDescription] = useState(row.description);
@@ -37,33 +38,63 @@ function ItemRow(props) {
   }
 
   return (
-    <TableRow
-      key={row.i_id}
-      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-      <TableCell component="th" scope="row">{row.i_id}</TableCell>
-      <TableCell align="center"><TextField variant='filled' value={item} onChange={(e) => handleChange('item', e.target.value)}/></TableCell>
-      <TableCell align="center"><TextField variant='filled' value={description} onChange={(e) => handleChange('description', e.target.value)}/></TableCell>
-      <TableCell align="center">{row.audio}</TableCell>
-      <TableCell align="center">{row.image}</TableCell>
-      <TableCell align="center"><TextField variant='filled' value={custom} onChange={(e) => handleChange('custom', e.target.value)}/></TableCell>
-      <TableCell align="center"><TextField variant='filled' value={hint} onChange={(e) => handleChange('hint', e.target.value)}/></TableCell>
-      <TableCell align="center">
-        <IconButton onClick={() => deleteItem(row.i_id)}
-          disableElevation
-          disableRipple
-          size="large"
-          sx={{
-            ml: 1,
-            "&.MuiButtonBase-root:hover": {
-              bgcolor: "transparent"
-            }
-          }} >
-          <Tooltip title="Delete Row">
-              <DeleteIcon sx={{fontSize: '40px'}} />   
-          </Tooltip>
-        </IconButton>
-      </TableCell>
-    </TableRow>
+    <>
+      { user.id === props.creatorId ?
+        <TableRow
+          key={row.i_id}
+          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          <TableCell align="center"><TextField variant='filled' value={item} onChange={(e) => handleChange('item', e.target.value)}/></TableCell>
+          <TableCell align="center"><TextField variant='filled' value={description} onChange={(e) => handleChange('description', e.target.value)}/></TableCell>
+          <TableCell align="center">{row.audio}</TableCell>
+          <TableCell align="center">{row.image}</TableCell>
+          <TableCell align="center"><TextField variant='filled' value={custom} onChange={(e) => handleChange('custom', e.target.value)}/></TableCell>
+          <TableCell align="center"><TextField variant='filled' value={hint} onChange={(e) => handleChange('hint', e.target.value)}/></TableCell>
+          <TableCell align="center">
+            <IconButton onClick={() => deleteItem(row.i_id)}
+              disableElevation
+              disableRipple
+              size="large"
+              sx={{
+                ml: 1,
+                "&.MuiButtonBase-root:hover": {
+                  bgcolor: "transparent"
+                }
+              }} >
+              <Tooltip title="Delete Row">
+                  <DeleteIcon sx={{fontSize: '40px'}} />   
+              </Tooltip>
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      :
+        <TableRow
+        key={row.i_id}
+          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          <TableCell align="center">{row.item}</TableCell>
+          <TableCell align="center">{row.description}</TableCell>
+          <TableCell align="center">{row.audio}</TableCell>
+          <TableCell align="center">{row.image}</TableCell>
+          <TableCell align="center">{row.custom}</TableCell>
+          <TableCell align="center">{row.hint}</TableCell>
+          <TableCell align="center">
+            <IconButton 
+              disableElevation
+              disableRipple
+              size="large"
+              sx={{
+                ml: 1,
+                "&.MuiButtonBase-root:hover": {
+                  bgcolor: "transparent"
+                }
+              }} >
+              <Tooltip title="You must be a creator or contributor to edit this deck">
+                  <DeleteIcon sx={{fontSize: '40px'}} />   
+              </Tooltip>
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      }
+    </>
   )
 }
 

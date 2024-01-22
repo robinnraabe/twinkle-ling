@@ -15,11 +15,12 @@ function DeckDetails() {
   const deck = useSelector(store => store.deckDetails[0]);
   const deckId = deck.id;
   const languageId = deck.language_id;
-  console.log(deck);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
-    history.push('/decks');
+    setTimeout(() => {
+      history.push('/decks');
+    }, 500);
   }
 
   // Sends the user to the EditDeck page
@@ -46,55 +47,6 @@ function DeckDetails() {
         console.log('Error getting chapter details:', error);
         alert('Something went wrong!');
     })
-  }
-
-  // This gets the data for each chapter's progress bar
-  const getProgressData = (chapterId) => {
-    let learned, total;
-    const userId = user.id;
-    const request = {
-      params: {
-        chapterId: chapterId,
-        userId: userId
-      }
-    }
-
-    // This gets the number of learned items in chapter
-    axios.get(`/data/progress`, request)
-      .then(response => {
-        learned = response.data;
-      })
-      .catch(error => {
-        console.log('Error getting learned count:', error);
-        alert('Something went wrong!');
-    })
-
-    // This gets the total number of items in chapter
-    axios.get(`/data/total`, request)
-      .then(response => {
-        total = response.data;
-      })
-      .catch(error => {
-        console.log('Error getting total count:', error);
-        alert('Something went wrong!');
-    })
-
-    // This updates the chapter with 'learned' and 'total' numbers
-    axios.put(`/chapters/learned/${chapterId}`, [learned, total, userId])
-      .then(response => {
-        getChapterDetails();
-      })
-      .catch(error => {
-        console.log('Error updating ChapterItem/GetProgressData counts:', error);
-        alert('Something went wrong!');
-    })
-  }
-  
-  // This executes getProgressData for each chapter on page load
-  const updateChapterData = () => {
-    for (let chapter of chapters) {
-      getProgressData(chapter.id);
-    }
   }
 
   // This adds a new chapter to the deck
@@ -176,81 +128,93 @@ function DeckDetails() {
 }
 
   const boxStyle = {
-    color: 'lavender',
     padding: '20px',
-    backgroundImage: `url('${deck.image_url}')`,
-    backgroundSize: '250px',
-    backgroundRepeat: 'repeat'
   }
 
   const btnStyle = {
-    color: 'white',
-    margin: '5px 0px'
+    marginRight: '20px', 
+    borderRadius: '0px', 
+    fontWeight: '600', 
+    backgroundColor: '#42d3ff', 
+    color: 'black'
   }
 
   useEffect(() => {
     getChapterDetails();
-    updateChapterData();
   }, []);
 
   // Displays the information for the selected Deck
   return (
-    <div data-testid="deckDetails">
+    <div data-testid="deckDetails" className='white'>
+      <br />
       {/* Top subheader */}
-      <Stack direction='row' justifyContent='space-between' >
+      <Stack direction='row' justifyContent='space-between' margin='auto' width='76%' >
 
         {/* Left subheader items */}
-        <Stack direction='row' alignItems='center' margin='0px 50px'>
+        <Stack direction='row' alignItems='center' margin='0px 50px' >
           <img src='https://static.tumblr.com/d7d601c9f738a1e6098326472def2cac/zd84lno/qI6p0mf8w/tumblr_static_9tutvrt14iskcs04w448040wo.png' 
             style={{borderRadius: '200px'}} 
             width='80px' height='80px' />
           <Stack direction='column' justifyItems='center'>
-            <h3 style={{ margin: '0px' }}>{deck.title}</h3>
-            <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.username}</h4>
+            <h3 className='white' style={{ margin: '0px 0px 0px 20px' }}>{deck.title}</h3>
+            <h4 className='white' style={{ margin: '0px 0px 0px 20px', fontWeight: 'normal' }}>{deck.language}</h4>
+            <h4 className='white' style={{ margin: '0px 0px 0px 20px', fontWeight: 'normal' }}>Created by {deck.username}</h4>
           </Stack>
         </Stack>
 
         {/* Right subheader items */}
         <Stack alignItems='center'>
           <Button onClick={toUserDeckList}
-            sx={{ margin: '0px 50px' }} 
+            sx={{ margin: '30px 40px', height: '50px', width: '200px', borderRadius: '0px', 
+            fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
             disableRipple
             variant='contained'>
-            Return to decks
+            ←  Back to decks
           </Button>
-          <h4 style={{ margin: '0px', fontWeight: 'normal' }}>{deck.language}</h4>
         </Stack>
       </Stack>
       <br />
 
-      {/* Stats and deck options */}
-      <Box style={boxStyle} margin='0px 50px'>
+      {/* Deck options */}
+      <Box style={boxStyle} margin='auto' width='70%'>
         <Stack direction='row' justifyContent='space-between'>
-          <Stack direction='column'>
-            <Button variant='contained' style={btnStyle}
-              onClick={() => toLesson('learn')}>
-              Learn
-            </Button>
-            <Button variant='contained' style={btnStyle}
-              onClick={() => toLesson('review')}>
-              Review
-            </Button>
-          </Stack>
 
-          <Stack direction='column'>
+            <Stack height='150px' direction='row' justifyContent='start'>
+              <img src={`${deck.image_url}`} height='150px' style={{marginRight: '20px'}}/>
+              <Button variant='contained' disableRipple
+                sx={{ marginRight: '20px', height: '150px', borderRadius: '0px', 
+                  fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
+                onClick={() => toLesson('learn')}>
+                Learn
+              </Button>
+              <Button variant='contained' disableRipple
+                sx={{ marginRight: '20px', height: '150px', borderRadius: '0px', 
+                  fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
+                onClick={() => toLesson('review')}>
+                Review
+              </Button>
+            </Stack>
+
+          <Stack direction='column' height='150px' width='200px' justifyContent='space-between'>
             { user.id === deck.creator_id ?
-              <Button variant='contained' style={btnStyle}
+              <Button variant='contained' disableRipple
+                sx={{ marginRight: '20px', height: '65px', width: '200px', borderRadius: '0px', 
+                  fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
                 onClick={() => toEditDeck()}>
                 Edit Deck
               </Button>
             :
-              <Tooltip title="You must be a creator or contributor to edit this deck">
-                <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+              <Tooltip title="You must be a creator or contributor to edit this deck" placement='top'>
+                <Button variant='contained' disableRipple sx={[ {borderRadius: '0px'}, {fontWeight: '600'}, 
+                  {backgroundColor: 'lightgrey'}, {color: 'grey'}, {height: '65px'}, 
+                  {'&:hover': {backgroundColor: 'lightgrey' }} ]}>
                   Edit Deck
                 </Button>
               </Tooltip>
             }
-              <Button variant='contained' style={btnStyle}
+              <Button variant='contained' disableRipple
+                sx={{ marginRight: '20px', height: '65px', width: '200px', borderRadius: '0px', 
+                  fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
                 onClick={() => resetProgress()}>
                 Reset Progress
               </Button>
@@ -259,13 +223,13 @@ function DeckDetails() {
       </Box>
 
       {/* Chapters header */}
-      <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 50px'}}>
-        <h1>Chapters</h1>
+      <Stack direction='row' justifyContent='space-between' sx={{ width: '70%', margin: 'auto'}}>
+        <h1 className='white'>Chapters</h1>
         {user.id === deck.creator_id ? 
-          <Button sx={{ fontSize: '24px' }} onClick={addChapter}>+ New Chapter</Button>
+          <Button sx={{ fontSize: '24px', color: '#42d3ff' }} disableRipple onClick={addChapter}>+ New Chapter</Button>
         :
-          <Tooltip title="You must be a creator or contributor to edit this deck">
-            <Button sx={{ fontSize: '24px', color: 'gray' }} onClick={addChapter}>+ New Chapter</Button>
+          <Tooltip title="You must be a creator or contributor to edit this deck" placement='top'>
+            <Button sx={{ fontSize: '24px', color: 'gray' }} disableRipple onClick={addChapter}>+ New Chapter</Button>
           </Tooltip>
         }   
       </Stack>

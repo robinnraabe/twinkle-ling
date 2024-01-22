@@ -20,12 +20,31 @@ function ResultsPage() {
   const [chooseAnswer, setChooseAnswer] = useState(false);
   const promptList = useSelector(store => store.prompts);
   const answerList = useSelector(store => store.answers);
-  console.log('prompts', prompt);
-  console.log('answers', answer);
 
   // Returns user to the deck details page for the selected deck
   const exitSession = () => {
-    history.push('/deck/details');
+    // This gets details for the selected deck
+    axios.get(`/deck/${deck.id}`)
+      .then(response => {
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+
+        // This gets details for all chapters in selected deck
+        axios.get(`/chapters/${deck.id}`)
+          .then(response => {
+            dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
+          })
+          .catch(error => {
+            console.log('Error getting chapter details:', error);
+            alert('Something went wrong!');
+        })
+        setTimeout(() => {
+          history.push('/deck/details');
+        }, 500);
+      })
+      .catch(error => {
+        console.log('Error getting deck details:', error);
+        alert('Something went wrong!');
+    })
   }
 
   // Gets 5 extra random items in the same language for study session
@@ -111,11 +130,11 @@ function ResultsPage() {
   return (
     <div>
       {/* Header */}
-      <Box sx={{ backgroundColor: '#00acb0', margin: '20px' }}>
+      <Box sx={{ backgroundColor: '#42d3ff', margin: '20px' }}>
         <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
-          <Stack direction='row' alignItems='center' justifyContent='space-between' padding='20px 0px' width= '32%'>
+          <Stack direction='row' alignItems='center' justifyContent='start' padding='20px 0px'>
             <img src='https://www.jame-world.com/media/image/2011-06/4009.jpg' width='200px' />
-            <h1>{deck.title}</h1>
+            <h1 style={{ marginLeft: '20px' }}>{deck.title}</h1>
           </Stack>
           <IconButton onClick={() => exitSession()}
             disableElevation
@@ -135,7 +154,7 @@ function ResultsPage() {
       </Box>
 
       {/* Main */}
-      <h1 style={{ textAlign: 'center' }}>Lesson complete!</h1>
+      <h1 className='white' style={{ textAlign: 'center' }}>Lesson complete!</h1>
       <br />
       <Stack direction='row' width='100%' justifyContent='space-between'>
 

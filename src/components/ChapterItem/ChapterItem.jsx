@@ -6,9 +6,10 @@ import { useHistory } from 'react-router-dom';
 import { Card, Stack, CardContent, CardActions,
   Grid, Button, TextField, IconButton, Tooltip } from '@mui/material';
 import ItemGrid from '../ItemGrid/ItemGrid';
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ProgressBar from '../ProgressBar/ProgressBar';
 
 // This displays each chapter on the UserDeckDetails page
@@ -24,6 +25,15 @@ function ChapterItem(props) {
   const [newTitle, setTitle] = useState(props.chapter.title);
   const [updateList, setUpdateList] = useState([]);
   let edit = props.chapter.edit;
+
+  let ratio = () => {
+    if (props.chapter.learned === 0 || props.chapter.total === 0) {
+      return 0;
+    }
+    else {
+      return (props.chapter.learned/props.chapter.total) * 100;
+    }
+  }
 
   // Gets 5 extra random items in the same language for study session
   const getExtraItems = () => {
@@ -125,12 +135,26 @@ function ChapterItem(props) {
       hints: '',
       custom: '',
     })
+
+    // Updates "total" number of items in chapter
+    axios.put(`/chapters/total/add/${props.chapter.id}`)
+      .catch(error => {
+        console.log('Error updating ChapterItem/GetProgressData counts:', error);
+        alert('Something went wrong!');
+    })
   }
 
   // This deletes the selected chapter from its deck
   const deleteChapter = (chapterAndDeck) => {
     dispatch({ type: 'DELETE_CHAPTER', payload: chapterAndDeck });
     // make sure to alert the user and require confirmation before deleting!
+
+    // Updates "total" number of items in chapter
+    axios.put(`/chapters/total/subtract/${props.chapter.id}`)
+      .catch(error => {
+        console.log('Error updating ChapterItem/GetProgressData counts:', error);
+        alert('Something went wrong!');
+    })
   }
 
   // This updates all items in chapter when saved
@@ -183,7 +207,7 @@ function ChapterItem(props) {
       {edit ?
         // Displays chapter in edit mode
         <Card sx={[ 
-          {width: '90%'},
+          {width: '70%'},
           {margin: 'auto'},
           {padding: '0px 20px'},
           {display: 'flex'}, 
@@ -191,14 +215,19 @@ function ChapterItem(props) {
           {justifyContent: 'space-between'},
           {borderRadius: '0px'}, 
           {backgroundImage: `white`},
+          {opacity: '.8'},
           {alignItems: 'center'}
         ]}>
           <CardContent sx={{ width: '100%' }}>
               <Stack direction='row' justifyContent='space-between'>
-                <TextField label="Title" variant="outlined"
+                { user.id === props.creatorId ?
+                  <TextField label="Title" variant="outlined"
                     type="text" 
                     value={newTitle} 
                     onChange={e => setTitle(e.target.value)} />
+                :
+                  <h2>{props.chapter.title}</h2>
+                }
                   {/* Button to turn edit mode off */}
                   <IconButton onClick={() => editChapter(props.chapter.id)}
                     disableElevation
@@ -210,15 +239,19 @@ function ChapterItem(props) {
                         bgcolor: "transparent"
                       }
                     }} >
-                    <Tooltip title="Close Editor">
-                        <CloseFullscreenIcon sx={{fontSize: '40px'}} />   
+                    <Tooltip title="Hide Details">
+                        <ExpandLessIcon sx={{fontSize: '40px'}} />   
                     </Tooltip>
                   </IconButton>
               </Stack>
 
-              <ItemGrid chapterId={props.chapter.id} updateList={updateList} setUpdateList={setUpdateList}/>
+              <ItemGrid chapterId={props.chapter.id} 
+                updateList={updateList} 
+                setUpdateList={setUpdateList} 
+                creatorId={props.creatorId}/>
               <br />
-              <form>
+              { user.id === props.creatorId ?
+                <form>
                   <TextField label="Word" variant="outlined" sx={{}}
                       required 
                       type="text" 
@@ -254,20 +287,36 @@ function ChapterItem(props) {
                         <AddIcon sx={{fontSize: '40px'}} />   
                     </Tooltip>
                   </IconButton>
-              </form>
+                </form>
+              :
+              ''
+              }
               <br /><br />
-              <Stack direction='row' justifyContent='space-between'>
-                  <Button type='button' variant= 'contained' onClick={() => deleteChapter([props.chapter.id, props.chapter.deck_id])}>Delete Chapter</Button>
-                  <Button type='button' variant= 'contained' onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
-                  <Button type='button' variant= 'contained' onClick={() => saveChanges(props.chapter.id)}>Save Changes</Button>
-                  
-              </Stack>
+              { user.id === props.creatorId ?
+                <Stack direction='row' justifyContent='space-between'>
+                  <Button type='button' variant= 'contained' 
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+                    onClick={() => deleteChapter([props.chapter.id, props.chapter.deck_id])}>Delete Chapter</Button>
+                  <Button type='button' variant= 'contained' 
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+                    onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
+                  <Button type='button' variant= 'contained' 
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+                    onClick={() => saveChanges(props.chapter.id)}>Save Changes</Button>
+                </Stack>
+                :
+                <Stack direction='row' justifyContent='center'>
+                  <Button type='button' variant= 'contained' 
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+                    onClick={() => resetProgress(props.chapter.id)}>Reset Progress</Button>
+                </Stack>
+                }
           </CardContent>
         </Card>
       :
         // Displays chapter in minimized view mode
         <Card sx={[ 
-            {width: '90%'},
+            {width: '70%'},
             {height: '80px'},
             {margin: 'auto'},
             {padding: '0px 20px'},
@@ -275,7 +324,8 @@ function ChapterItem(props) {
             {flexDirection: 'row'},
             {justifyContent: 'space-between'},
             {borderRadius: '0px'}, 
-            {backgroundImage: `white`},
+            {backgroundColor: 'aliceblue'},
+            {opacity: '.8'},
             {alignItems: 'center'}
         ]}>
           <CardContent sx={{ padding: '0px' }}>
@@ -283,63 +333,54 @@ function ChapterItem(props) {
           </CardContent>
           <Stack direction='row' spacing={20} width='70%' justifyContent='end'>
             <CardContent sx={{ padding: '0px', width: '100%' }}>
-              <ProgressBar fillColor="gold" progress={`${(props.chapter.learned/props.chapter.total)*100}%`} height={30} />
+              <ProgressBar progress={`${ratio()}%`} height={50} />
             </CardContent> 
             <CardActions>
               {props.chapter.learned < props.chapter.total ?
                   // Clickable if there are unlearned words remaining
-                  <Button variant='contained' onClick={() => toLesson('learn', props.chapter.id)}>
+                  <Button variant='contained' 
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
+                    onClick={() => toLesson('learn', props.chapter.id)}>
                       Learn
                   </Button>
                   :
                   // Greyed out and unclickable
-                  <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+                  <Button variant='contained' 
+                    sx={[ {borderRadius: '0px'}, {fontWeight: '600'}, {backgroundColor: 'lightgrey'}, 
+                    {color: 'grey'}, {'&:hover': {backgroundColor: 'lightgrey' }} ]}>
                       Learn
                   </Button>
               }
               {props.chapter.learned > 0 ?
                   // Clickable if learned words > 0
-                  <Button variant='contained' onClick={() => toLesson('review', props.chapter.id)}>
+                  <Button variant='contained' 
+                    sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
+                    onClick={() => toLesson('review', props.chapter.id)}>
                       Review
                   </Button>
                   :
                   // Greyed out and unclickable
-                  <Button variant='contained' sx={{ backgroundColor: 'lightgrey', color: 'grey' }}>
+                  <Button variant='contained' 
+                    sx={[ {borderRadius: '0px'}, {fontWeight: '600'}, {backgroundColor: 'lightgrey'}, 
+                    {color: 'grey'}, {'&:hover': {backgroundColor: 'lightgrey' }} ]}>
                       Review
                   </Button>
               }
               {/* Button to turn edit mode on */}
-              { user.id === props.creatorId ?
-                <IconButton onClick={() => editChapter(props.chapter.id)}
-                  disableElevation
-                  disableRipple
-                  size="large"
-                  sx={{
-                    ml: 1,
-                    "&.MuiButtonBase-root:hover": {
-                      bgcolor: "transparent"
-                    }
-                }}>
-                  <Tooltip title="Open Editor">
-                    <EditIcon sx={{fontSize: '40px'}} />   
-                  </Tooltip>
-                </IconButton>
-              :
-                <IconButton
-                  disableElevation
-                  disableRipple
-                  size="large"
-                  sx={{
-                    ml: 1,
-                    "&.MuiButtonBase-root:hover": {
-                      bgcolor: "transparent"
-                    }
-                }}>
-                  <Tooltip title="You must be a creator or contributor to edit this deck">
-                    <EditIcon sx={{fontSize: '40px'}} />   
-                  </Tooltip>
-                </IconButton>
-              } 
+              <IconButton onClick={() => editChapter(props.chapter.id)}
+                disableElevation
+                disableRipple
+                size="large"
+                sx={{
+                  ml: 1,
+                  "&.MuiButtonBase-root:hover": {
+                    bgcolor: "transparent"
+                  }
+              }}>
+                <Tooltip title="Open Detailed View">
+                  <ExpandMoreIcon sx={{fontSize: '40px'}} />   
+                </Tooltip>
+              </IconButton>
             </CardActions>
           </Stack>
         </Card>

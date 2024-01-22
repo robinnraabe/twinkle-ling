@@ -26,11 +26,29 @@ function StudyPage() {
   // Checks if selected test option matches answer
   // Updates test item and all options for next question
   const checkAnswer = (itemId) => {
+    console.log(checkItem);
     if (checkItem.i_id === itemId) {
       lesson.splice(splice, 1);
       setCorrect(correct + 1);
-
+      // Updates "repetition" for the item AND updates "learned_status"
       axios.put(`/items/set/correct`, [itemId])
+        .then(response => {          
+          // Gets updated progress count for the item's chapter
+          axios.get(`/data/progress`, { params: {chapterId: checkItem.chapter_id, userId: user.id} })
+            .then(response => {
+              // Updates the progress count in user_chapters
+              console.log(response.data);
+              axios.put(`/chapters/learned/${checkItem.chapter_id}`, {learned: response.data, userId: user.id})
+                .catch(error => {
+                  console.log('Error updating ChapterItem/GetProgressData counts:', error);
+                  alert('Something went wrong!');
+              })
+            })
+            .catch(error => {
+              console.log('Error getting learned count:', error);
+              alert('Something went wrong!');
+          })
+        })
         .catch((error) => {
           console.log('Error in StudyPage/checkAnswer/correct PUT request:', error);
           alert('Something went wrong!');
@@ -84,6 +102,7 @@ function StudyPage() {
 
     // Picks 5 randomized items from 'lessonExtrasCopy', removes each from lessonExtrasCopy
     while (index > 0) {
+      console.log('itemArray:', itemArray);
       let randomIndex = getRandom(lessonExtrasCopy.length);
       const extraItem = lessonExtrasCopy[randomIndex];
       let itemNotInArray = true;
@@ -132,12 +151,44 @@ function StudyPage() {
 
   // Shows hint for item
   const showHint = (itemId) => {
-    
+  }
+
+  // Gets details for all chapters in selected deck
+  const getChapterDetails = (deckId) => {
+    axios.get(`/chapters/${deckId}`)
+      .then(response => {
+        dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
+      })
+      .catch(error => {
+        console.log('Error getting chapter details:', error);
+        alert('Something went wrong!');
+    })
   }
 
   // Returns user to the deck details page for the selected deck
   const exitSession = () => {
-    history.push('/deck/details');
+    // This gets details for the selected deck
+    axios.get(`/deck/${deck.id}`)
+      .then(response => {
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+
+        // This gets details for all chapters in selected deck
+        axios.get(`/chapters/${deck.id}`)
+          .then(response => {
+            dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
+          })
+          .catch(error => {
+            console.log('Error getting chapter details:', error);
+            alert('Something went wrong!');
+        })
+        setTimeout(() => {
+          history.push('/deck/details');
+        }, 500);
+      })
+      .catch(error => {
+        console.log('Error getting deck details:', error);
+        alert('Something went wrong!');
+    })
   }
   
   useEffect(() => {
@@ -147,7 +198,7 @@ function StudyPage() {
   return (
     <div>
       {/* Header */}
-      <Box sx={{ backgroundColor: '#00acb0', margin: '20px' }}>
+      <Box sx={{ backgroundColor: '#42d3ff', margin: '20px' }}>
         <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
           <Stack direction='row' alignItems='center' justifyContent='space-between' padding='20px 0px' width= '32%'>
             <img src='https://www.jame-world.com/media/image/2011-06/4009.jpg' width='200px' />
@@ -173,10 +224,10 @@ function StudyPage() {
       <Stack direction='row' width='100%' justifyContent='space-between'>
         <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
           <ProgressBar fillColor="gold" progress={`${(correct/lessonLength)*100}%`} height={30} />
-          <h1>{checkItem[user.prompt]}</h1> 
+          <h1 className='white'>{checkItem[user.prompt]}</h1> 
           <br />
           {/* Test options */}
-          <Grid container spacing={2}>
+          <Grid container spacing={0} sx={{ alignContent: 'center' }}>
             {itemArray.map((item) => {
                 return <StudyItem key={item.i_id} item={item} user={user} checkAnswer={checkAnswer}/>
             })}
@@ -185,12 +236,12 @@ function StudyPage() {
 
         {/* Right option bar, should probably be a toggle */}
         <Stack direction='column' spacing={2} sx={{marginRight: '50px'}}>
-          <h4>Correct: {correct}</h4>
-          <h4>Missed: {missed}</h4>
+          <h4 className='white'>Correct: {correct}</h4>
+          <h4 className='white'>Missed: {missed}</h4>
           {/* <Button variant='contained' onClick={() => skipItem()}>SKIP</Button>
           <Button variant='contained' onClick={() => setStatus('difficult')}>DIFFICULT</Button>
-          <Button variant='contained' onClick={() => setStatus('known')}>KNOWN</Button> */}
-          <Button variant='contained' onClick={() => showHint()}>SHOW HINT</Button>
+          <Button variant='contained' onClick={() => setStatus('known')}>KNOWN</Button> 
+          <Button variant='contained' onClick={() => showHint()}>SHOW HINT</Button> */}
         </Stack>
       </Stack>
     </div>
