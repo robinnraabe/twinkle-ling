@@ -154,20 +154,19 @@ function ResultsPage() {
       </Box>
 
       {/* Main */}
-      <h1 className='white' style={{ textAlign: 'center' }}>Lesson complete!</h1>
       <br />
       <Stack direction='row' width='100%' justifyContent='space-between'>
 
         {/* Progress */}
         <Stack direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
+          <h1 className='white' style={{ textAlign: 'center' }}>Lesson complete!</h1>
           <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center'
             sx={{ backgroundColor: 'white', padding: '20px' }}>
-            <h2 style={{ paddingBottom: '0px', marginBottom: '0px' }}>Accuracy: {(correct / (missed+correct)) * 100}%</h2>
+            <h2 style={{ paddingBottom: '0px', marginBottom: '0px' }}>Accuracy: {Math.floor((correct / (missed+correct)) * 100)}%</h2>
             <ProgressBar fillColor="gold" progress={`${(correct / (missed+correct)) * 100}%`} height={30} />
             <h3 style={{ paddingTop: '0px', marginTop: '0px' }}>Words reviewed: {correct}</h3>
           </Stack>
           <br />
-          <Button variant='contained' onClick={() => getSession()}>Next Lesson</Button>
         </Stack>
 
         {/* Learning settings */}
@@ -236,6 +235,9 @@ function ResultsPage() {
               value={size}
               onChange={e => setSize(e.target.value)} />
           </FormControl>
+          <Button variant='contained' 
+            sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+            onClick={() => getSession()}>Next Lesson</Button>
         </Stack>
       </Stack>
     </div>

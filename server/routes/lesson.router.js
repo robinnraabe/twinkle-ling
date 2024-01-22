@@ -5,7 +5,6 @@ const router = express.Router();
 router.get('/chapter/review/:id', (req, res) => {
   const chapterId = req.params.id;
   const userLimit = req.user.size;
-  console.log(userLimit);
   const queryText = `SELECT * FROM user_items
     JOIN items ON items.i_id = user_items.item_id
     WHERE item_chapter_id = ${chapterId}
@@ -25,7 +24,6 @@ router.get('/chapter/review/:id', (req, res) => {
 router.get('/chapter/learn/:id', (req, res) => {
 const chapterId = req.params.id;
 const userLimit = req.user.size;
-console.log(userLimit);
 const queryText = `SELECT * FROM user_items
   JOIN items ON items.i_id = user_items.item_id
   WHERE item_chapter_id = ${chapterId}
@@ -44,7 +42,6 @@ const queryText = `SELECT * FROM user_items
 router.get('/deck/review/:id', (req, res) => {
   const deckId = req.params.id;
   const userLimit = req.user.size;
-  console.log(userLimit);
   const queryText = `SELECT * FROM user_items
     JOIN items ON items.i_id = user_items.item_id
     WHERE item_deck_id = ${deckId}
@@ -64,7 +61,6 @@ router.get('/deck/review/:id', (req, res) => {
 router.get('/deck/learn/:id', (req, res) => {
   const deckId = req.params.id;
   const userLimit = req.user.size;
-  console.log(userLimit);
   const queryText = `SELECT * FROM user_items
     JOIN items ON items.i_id = user_items.item_id
     WHERE item_deck_id = ${deckId}

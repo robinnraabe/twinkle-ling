@@ -20,6 +20,7 @@ function StudyItem(props) {
       <Card onClick={() => props.checkAnswer(props.item.i_id)} 
         sx={[ 
           {maxWidth: '200px'},
+          {height: '100px'},
           {fontSize: `${fontSize}`},
           {margin: '10px 0px 0px 0px'},
           {display: 'flex'}, 
@@ -27,11 +28,10 @@ function StudyItem(props) {
           {borderRadius: '0px'}, 
           {backgroundColor: 'white'},
           {padding: '0px 0px'},
-          {alignItems: 'center'},
-          {fontWeight: '300'} 
+          {alignItems: 'center'}
         ]}>
           <CardContent>
-            <h4>{prompt}</h4>
+            <h4 style={{ fontWeight: 'normal', fontSize: '16px', userSelect: 'none' }}>{prompt}</h4>
           </CardContent>
       </Card>
     </Grid>

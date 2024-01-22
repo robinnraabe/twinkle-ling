@@ -200,9 +200,9 @@ function StudyPage() {
       {/* Header */}
       <Box sx={{ backgroundColor: '#42d3ff', margin: '20px' }}>
         <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
-          <Stack direction='row' alignItems='center' justifyContent='space-between' padding='20px 0px' width= '32%'>
+          <Stack direction='row' alignItems='center' justifyContent='start' padding='20px 0px'>
             <img src='https://www.jame-world.com/media/image/2011-06/4009.jpg' width='200px' />
-            <h1>{deck.title}</h1>
+            <h1 style={{ marginLeft: '20px' }}>{deck.title}</h1>
           </Stack>
           <IconButton onClick={() => exitSession()}
             disableElevation
@@ -222,12 +222,13 @@ function StudyPage() {
       </Box>
 
       <Stack direction='row' width='100%' justifyContent='space-between'>
-        <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
+        <Stack spacing={0} direction='column' width='70%' justifyItems='center' alignItems='center' margin='0px 100px'>
           <ProgressBar fillColor="gold" progress={`${(correct/lessonLength)*100}%`} height={30} />
-          <h1 className='white'>{checkItem[user.prompt]}</h1> 
-          <br />
+          <Box sx={{ backgroundColor: '#000000', boxShadow: '0 0 100px black', padding: '0px 10px' }}>
+            <h1 className='white' style={{ fontWeight: 'normal', fontSize: '40px', marginTop: '0px' }}>{checkItem[user.prompt]}</h1> 
+          </Box>
           {/* Test options */}
-          <Grid container spacing={0} sx={{ alignContent: 'center' }}>
+          <Grid container spacing={0} sx={{ alignContent: 'center', marginLeft: '70px'}}>
             {itemArray.map((item) => {
                 return <StudyItem key={item.i_id} item={item} user={user} checkAnswer={checkAnswer}/>
             })}
@@ -235,9 +236,13 @@ function StudyPage() {
         </Stack>
 
         {/* Right option bar, should probably be a toggle */}
-        <Stack direction='column' spacing={2} sx={{marginRight: '50px'}}>
-          <h4 className='white'>Correct: {correct}</h4>
-          <h4 className='white'>Missed: {missed}</h4>
+        <Stack direction='column' spacing={2} width='30%' sx={{marginRight: '50px'}}>
+          <Box sx={{ backgroundColor: '#42d3ff', textAlign: 'center' }}>
+            <h2 className='black'>Correct: {correct}</h2>
+          </Box>
+          <Box sx={{ backgroundColor: '#787878', textAlign: 'center' }}>
+            <h2 className='black'>Missed: {missed}</h2>
+          </Box>
           {/* <Button variant='contained' onClick={() => skipItem()}>SKIP</Button>
           <Button variant='contained' onClick={() => setStatus('difficult')}>DIFFICULT</Button>
           <Button variant='contained' onClick={() => setStatus('known')}>KNOWN</Button> 
