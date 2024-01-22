@@ -11,7 +11,7 @@ function ResultsPage() {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector(store => store.user);
-  const deck = useSelector(store => store.deckDetails[0]);
+  const deck = useSelector(store => store.deckDetails);
   const missed = useSelector(store => store.wrong);
   const correct = useSelector(store => store.correct) + 1;
   const [size, setSize] = useState(user.size);
@@ -26,7 +26,7 @@ function ResultsPage() {
     // This gets details for the selected deck
     axios.get(`/deck/${deck.id}`)
       .then(response => {
-        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data[0] });
 
         // This gets details for all chapters in selected deck
         axios.get(`/chapters/${deck.id}`)
@@ -63,7 +63,7 @@ function ResultsPage() {
   const getDetails = () => {
     axios.get(`/deck/${deck.id}`)
       .then(response => {
-        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data[0] });
       })
       .catch(error => {
         console.log('Error in DeckItem/getDetails GET request:', error);
@@ -133,7 +133,7 @@ function ResultsPage() {
       <Box sx={{ backgroundColor: '#42d3ff', margin: '20px' }}>
         <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
           <Stack direction='row' alignItems='center' justifyContent='start' padding='20px 0px'>
-            <img src='https://www.jame-world.com/media/image/2011-06/4009.jpg' width='200px' />
+            <img src={`${deck.image_url}`} width='200px' />
             <h1 style={{ marginLeft: '20px' }}>{deck.title}</h1>
           </Stack>
           <IconButton onClick={() => exitSession()}
@@ -163,7 +163,7 @@ function ResultsPage() {
           <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center'
             sx={{ backgroundColor: 'white', padding: '20px' }}>
             <h2 style={{ paddingBottom: '0px', marginBottom: '0px' }}>Accuracy: {Math.floor((correct / (missed+correct)) * 100)}%</h2>
-            <ProgressBar fillColor="gold" progress={`${(correct / (missed+correct)) * 100}%`} height={30} />
+            <ProgressBar fillColor="gold" progress={`${(correct / (missed+correct)) * 100}%`} height={50} />
             <h3 style={{ paddingTop: '0px', marginTop: '0px' }}>Words reviewed: {correct}</h3>
           </Stack>
           <br />

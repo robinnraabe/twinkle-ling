@@ -14,7 +14,7 @@ function ItemRow(props) {
   const [image, setImage] = useState(row.image);
   const [custom, setCustom] = useState(row.custom);
   const [hint, setHint] = useState(row.hint);
-  const newRow = {i_id: row.i_id, item: item, description: description, audio: audio, image: image, custom: custom, hint: hint};
+  const newRow = {i_id: row.i_id, item: item, description: description, image: image, custom: custom, hint: hint};
 
   const updateItem = (key, value) => {
     props.setUpdateList([...props.updateList, 
@@ -29,6 +29,7 @@ function ItemRow(props) {
     else if (type === 'description') { setDescription(value); }
     else if (type === 'custom') { setCustom(value); }
     else if (type === 'hint') { setHint(value); }
+    else if (type === 'image') { setImage(value); }
     updateItem(type, value);
   }
 
@@ -45,8 +46,7 @@ function ItemRow(props) {
           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell align="center"><TextField variant='filled' value={item} onChange={(e) => handleChange('item', e.target.value)}/></TableCell>
           <TableCell align="center"><TextField variant='filled' value={description} onChange={(e) => handleChange('description', e.target.value)}/></TableCell>
-          <TableCell align="center">{row.audio}</TableCell>
-          <TableCell align="center">{row.image}</TableCell>
+          <TableCell align="center"><TextField variant='filled' value={image} onChange={(e) => handleChange('image', e.target.value)}/></TableCell>
           <TableCell align="center"><TextField variant='filled' value={custom} onChange={(e) => handleChange('custom', e.target.value)}/></TableCell>
           <TableCell align="center"><TextField variant='filled' value={hint} onChange={(e) => handleChange('hint', e.target.value)}/></TableCell>
           <TableCell align="center">
@@ -72,8 +72,7 @@ function ItemRow(props) {
           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell align="center">{row.item}</TableCell>
           <TableCell align="center">{row.description}</TableCell>
-          <TableCell align="center">{row.audio}</TableCell>
-          <TableCell align="center">{row.image}</TableCell>
+          <TableCell align="center"><img src={row.image} height='50px' /></TableCell>
           <TableCell align="center">{row.custom}</TableCell>
           <TableCell align="center">{row.hint}</TableCell>
           <TableCell align="center">

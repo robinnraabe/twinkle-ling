@@ -26,7 +26,7 @@ function DeckItem(props) {
   const getDetails = () => {
     axios.get(`/deck/${props.deck.id}`)
       .then(response => {
-        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data[0] });
       })
       .catch(error => {
         console.log('Error in DeckItem/getDetails GET request:', error);

@@ -31,7 +31,6 @@ function ItemGrid(props) {
           <TableRow>
             <TableCell align="center">Word</TableCell>
             <TableCell align="center">Definition/Translation</TableCell>
-            <TableCell align="center">Audio</TableCell>
             <TableCell align="center">Image</TableCell>
             <TableCell align="center">Custom</TableCell>
             <TableCell align="center">Hint</TableCell>

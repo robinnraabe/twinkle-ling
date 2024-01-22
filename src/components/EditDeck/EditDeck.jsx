@@ -23,6 +23,7 @@ function EditDeck() {
     public_status: deck.public_status});
   const [details, setDetails] = useState(deck.details);
   const [title, setTitle] = useState(deck.title);
+  const [image, setImage] = useState(deck.image_url);
   const [chosenLanguage, setLanguage] = useState(deck.language_id);
   const [contributors, setContributors] = useState(deck.creator);
   const [status, setStatus] = useState(deck.public_status);
@@ -47,6 +48,7 @@ function EditDeck() {
     else if (type === 'language_id') { setLanguage(value); }
     else if (type === 'public_status') { setStatus(value); }
     else if (type === 'contriubtor_id') { setContributors(value); }
+    else if (type === 'image_url') { setImage(value); }
     updateDeck(type, value);
   }
 
@@ -56,9 +58,9 @@ function EditDeck() {
     event.preventDefault();
     axios.put('/deck/update', newInfo)
       .then(response => {
-        dispatch({ type: 'FETCH_DECK_DETAILS', payload: newInfo.id });
+        dispatch({ type: 'FETCH_DECK_DETAILS', payload: deck.id });
         setTimeout(() => {
-          history.push('/decks');
+          history.push('/deck/details');
         }, '500');
       })
       .catch(error => {
@@ -119,21 +121,30 @@ function EditDeck() {
   }, [deck]);
 
   return (
-    <Box sx={{ margin: '50px', height: '100%', backgroundColor: 'white', borderRadius: '20px' }}>
+    <Box sx={{ margin: '50px', width: '80%', backgroundColor: 'aliceblue', borderRadius: '20px', margin: 'auto' }}>
       <Stack style={stackStyle} direction='row' height='100%' justifyContent='space-between'>
 
         {/* Left stack */}
-        <Stack style={stackStyle} direction='column' justifyContent='space-between' >
+        <Stack style={stackStyle} direction='column' justifyContent='space-between' padding='18px 0px' >
           <Stack direction='column'>
-            <img src={deck.image_url} width='300px'/>
+            <img src={image} width='400px'/>
             <br /><br />
-            <Button type='button' variant='contained'> Upload </Button>
+            <Stack direction='row' alignItems='center' justifyContent='space-between'>
+              URL
+              <TextField variant='outlined' margin='0px 10px'
+                sx={{ width: '350px' }}
+                value={image}
+                onChange={(e) => handleChange('image_url', e.target.value)}
+              />
+            </Stack>
           </Stack>
-          <Button type='button' variant='contained' onClick={() => deleteDeck(deck.id)}> Delete Deck </Button>
+          <Button type='button' variant='contained' 
+            sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+            onClick={() => deleteDeck(deck.id)}> Delete Deck </Button>
         </Stack>
 
         {/* Right stack */}
-        <Stack style={stackStyle} direction='column' justifyContent='space-between' width='600px'>
+        <Stack style={stackStyle} direction='column' justifyContent='space-between' width='550px'>
           <Stack style={stackStyle} direction='row' alignItems='center' justifyContent='space-between'>
             Title 
             <TextField variant='outlined' 
@@ -171,7 +182,7 @@ function EditDeck() {
               value={details}
               onChange={(e) => handleChange('details', e.target.value)}
               sx={{ width: '400px' }}
-              inputProps={{ style: {fontWeight: '300'} }} 
+              inputProps={{ style: {fontWeight: '500'} }} 
             />
           </Stack>
 
@@ -190,10 +201,11 @@ function EditDeck() {
             <ToggleSwitch inputProps={{ 'aria-label': 'ant design' }} 
               /* value={status} onChange={(e) => handleChange('public_status', e.target.value)} */ />
           </Stack>
-
-        </Stack>
-        <Stack style={stackStyle} justifyContent='end'>
-          <Button type='submit' variant='contained' onClick={(e) => saveDetails(e)}>Save</Button>
+          <Stack style={stackStyle} width='100%'>
+            <Button type='submit' variant='contained' 
+              sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+              onClick={(e) => saveDetails(e)}>Save</Button>
+          </Stack>
         </Stack>
       </Stack>
     </Box>

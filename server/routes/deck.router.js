@@ -5,7 +5,7 @@ const router = express.Router();
 // This returns the user's 4 most recent decks on the UserPage
 router.get('/user/:id', (req, res) => {
   const queryText = `SELECT decks.title, decks.image_url, decks.details, languages."language", 
-    decks.public_status, decks.lessons_started, decks.lessons_finished, "user".id AS user_id, 
+    decks.public_status, "user".id AS user_id, 
     decks.id, "user".username, creator.username AS creator, languages.id AS language_id
     FROM "decks"
     JOIN user_decks ON decks.id = user_decks.deck_id
@@ -13,7 +13,7 @@ router.get('/user/:id', (req, res) => {
     JOIN "user" AS creator ON creator.id = decks.creator_id
     JOIN "languages" on "languages".id = decks.language_id
     WHERE "user".id = $1
-    ORDER BY last_used
+    ORDER BY last_used DESC
     LIMIT 4;`;
   pool.query(queryText, [req.params.id])
   .then((result) => {
@@ -27,12 +27,12 @@ router.get('/user/:id', (req, res) => {
 // This returns the top 4 public decks on the UserPage
 router.get('/public', (req, res) => {
   const queryText = `SELECT decks.id, decks.title, decks.language_id, decks.image_url, decks.details, 
-    languages."language", decks.public_status, decks.lessons_started, decks.lessons_finished, 
+    languages."language", decks.public_status, decks.items_tested,
     creator.username AS creator FROM "decks"
     JOIN "languages" on "languages".id = decks.language_id
     JOIN "user" AS creator ON creator.id = decks.creator_id
     WHERE "decks".public_status = true
-    ORDER BY lessons_started
+    ORDER BY items_tested DESC
     LIMIT 4;`;
   pool.query(queryText)
   .then((result) => {
@@ -47,7 +47,7 @@ router.get('/public', (req, res) => {
 router.get('/user/all/:id', (req, res) => {
   console.log(req.params.id);
   const queryText = `SELECT decks.title, decks.image_url, decks.details, languages."language", decks.public_status, 
-    decks.lessons_started, decks.lessons_finished, "user".id AS user_id, decks.id,
+   "user".id AS user_id, decks.id,
     "user".username, creator.username AS creator, languages.id AS language_id
     FROM "decks"
     JOIN user_decks ON decks.id = user_decks.deck_id

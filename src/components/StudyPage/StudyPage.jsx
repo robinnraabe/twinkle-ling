@@ -11,7 +11,7 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 function StudyPage() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const deck = useSelector(store => store.deckDetails[0]);
+  const deck = useSelector(store => store.deckDetails);
   const user = useSelector(store => store.user);
   const lesson = useSelector(store => store.lesson);
   const [lessonLength] = useState(lesson.length);
@@ -22,6 +22,7 @@ function StudyPage() {
   const [missed, setMissed] = useState(0);
   const [skip, setSkip] = useState(false);
   const [splice, setSplice] = useState();
+  console.log(deck);
 
   // Checks if selected test option matches answer
   // Updates test item and all options for next question
@@ -170,7 +171,7 @@ function StudyPage() {
     // This gets details for the selected deck
     axios.get(`/deck/${deck.id}`)
       .then(response => {
-        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data[0] });
 
         // This gets details for all chapters in selected deck
         axios.get(`/chapters/${deck.id}`)
@@ -201,7 +202,7 @@ function StudyPage() {
       <Box sx={{ backgroundColor: '#42d3ff', margin: '20px' }}>
         <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
           <Stack direction='row' alignItems='center' justifyContent='start' padding='20px 0px'>
-            <img src='https://www.jame-world.com/media/image/2011-06/4009.jpg' width='200px' />
+            <img src={`${deck.image_url}`} width='200px' />
             <h1 style={{ marginLeft: '20px' }}>{deck.title}</h1>
           </Stack>
           <IconButton onClick={() => exitSession()}
@@ -223,10 +224,16 @@ function StudyPage() {
 
       <Stack direction='row' width='100%' justifyContent='space-between'>
         <Stack spacing={0} direction='column' width='70%' justifyItems='center' alignItems='center' margin='0px 100px'>
-          <ProgressBar fillColor="gold" progress={`${(correct/lessonLength)*100}%`} height={30} />
-          <Box sx={{ backgroundColor: '#000000', boxShadow: '0 0 100px black', padding: '0px 10px' }}>
-            <h1 className='white' style={{ fontWeight: 'normal', fontSize: '40px', marginTop: '0px' }}>{checkItem[user.prompt]}</h1> 
-          </Box>
+          <ProgressBar fillColor="gold" progress={`${(correct/lessonLength)*100}%`} height={50} />
+          {user.prompt === 'image_url' ?
+            <Box sx={{ backgroundColor: '#000000', boxShadow: '0 0 100px black', padding: '0px 10px' }}>
+              <img src={`${checkItem.image}`} width='100px' />
+            </Box>
+          :
+            <Box sx={{ backgroundColor: '#000000', boxShadow: '0 0 100px black', padding: '0px 10px' }}>
+              <h1 className='white' style={{ fontWeight: 'normal', fontSize: '40px', marginTop: '0px' }}>{checkItem[user.prompt]}</h1> 
+            </Box>
+          }
           {/* Test options */}
           <Grid container spacing={0} sx={{ alignContent: 'center', marginLeft: '70px'}}>
             {itemArray.map((item) => {

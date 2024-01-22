@@ -13,10 +13,10 @@ function* updateDeckDetails(action) {
 function* fetchDeckDetails(action) {
     try { 
         const deckDetails = yield axios.get(`/deck/${action.payload}`);
-        console.log(action.payload);
+        console.log('deets:', deckDetails.data[0]);
         yield put ({
           type: 'SET_DECK_DETAILS',
-          payload: deckDetails
+          payload: deckDetails.data[0]
         });
       } catch (error) {
         console.log('Error fetching deck details:', error);

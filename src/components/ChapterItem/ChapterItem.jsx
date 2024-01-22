@@ -7,7 +7,6 @@ import { Card, Stack, CardContent, CardActions,
   Grid, Button, TextField, IconButton, Tooltip } from '@mui/material';
 import ItemGrid from '../ItemGrid/ItemGrid';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ProgressBar from '../ProgressBar/ProgressBar';
@@ -20,7 +19,8 @@ function ChapterItem(props) {
   const [newItem, setItem] = useState({ 
     chapter_id: props.chapter.id,
     deck_id: props.deckId,
-    user_id: user.id
+    user_id: user.id,
+    language_id: props.languageId
   });
   const [newTitle, setTitle] = useState(props.chapter.title);
   const [updateList, setUpdateList] = useState([]);
@@ -130,10 +130,12 @@ function ChapterItem(props) {
       chapter_id: props.chapter.id,
       deck_id: props.deckId,
       user_id: user.id,
+      language_id: props.languageId,
       item: '',
       description: '',
-      hints: '',
+      hint: '',
       custom: '',
+      image: ''
     })
 
     // Updates "total" number of items in chapter
@@ -214,8 +216,7 @@ function ChapterItem(props) {
           {flexDirection: 'row'},
           {justifyContent: 'space-between'},
           {borderRadius: '0px'}, 
-          {backgroundImage: `white`},
-          {opacity: '.8'},
+          {backgroundColor: 'aliceblue'},
           {alignItems: 'center'}
         ]}>
           <CardContent sx={{ width: '100%' }}>
@@ -269,10 +270,12 @@ function ChapterItem(props) {
                       onChange={handleChange('custom')} />
                   <TextField label="Hint" variant="outlined" sx={{}}
                       type="text" 
-                      value={newItem.hints} 
-                      onChange={handleChange('hints')} />
-                  {/* Image upload goes here */}
-
+                      value={newItem.hint} 
+                      onChange={handleChange('hint')} />
+                  <TextField label="Image" variant="outlined" sx={{}}
+                      type="text" 
+                      value={newItem.image} 
+                      onChange={handleChange('image')} />
                   <IconButton onClick={() => addItem()}
                     disableElevation
                     disableRipple
@@ -325,7 +328,6 @@ function ChapterItem(props) {
             {justifyContent: 'space-between'},
             {borderRadius: '0px'}, 
             {backgroundColor: 'aliceblue'},
-            {opacity: '.8'},
             {alignItems: 'center'}
         ]}>
           <CardContent sx={{ padding: '0px' }}>

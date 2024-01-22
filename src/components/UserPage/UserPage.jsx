@@ -40,7 +40,7 @@ function UserPage() {
   // Sends user to the page for the selected deck
   const toDeck = (deckId) => {
     axios.get(`/deck/${deckId}`).then(response => {
-      dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+      dispatch({ type: 'SET_DECK_DETAILS', payload: response.data[0] });
       setTimeout(() => {
         history.push('/deck/details');
       }, 500);

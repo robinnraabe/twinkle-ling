@@ -5,7 +5,7 @@ const ProgressBar = ({progress, height}) => {
     const outline = {
         height: height,
         width: '100%',
-        backgroundColor: '#282828',
+        backgroundColor: '#dbdbdb',
         borderRadius: 40,
         margin: 50
       }

@@ -25,7 +25,7 @@ function UserPage() {
     // This gets details for the selected deck
     axios.get(`/deck/${deckId}`)
       .then(response => {
-        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data });
+        dispatch({ type: 'SET_DECK_DETAILS', payload: response.data[0] });
 
         // This gets details for all chapters in selected deck
         axios.get(`/chapters/${deckId}`)
@@ -110,10 +110,10 @@ function UserPage() {
       </Stack>
 
       <Stack direction='row' justifyContent='space-between' sx={{ margin: '0px 20px'}}>
-            <h2>{user.username}'s Decks</h2>
-            <Button sx={{ fontSize: '24px' }} onClick={addDeck}>+ New Deck</Button>
-        </Stack>
-      <Grid container spacing={1}>
+            <h2 className='white' style={{ marginLeft: '2%' }}>{user.username}'s Decks</h2>
+            <Button sx={{ fontSize: '24px', marginRight: '2%', color: '#42d3ff', fontWeight: '600' }} onClick={addDeck}>+ New Deck</Button>
+      </Stack>
+      <Grid container spacing={1} sx={{ marginLeft: '1%' }}>
         {userDeckList.map((deck) => {
             return <DeckItem key={deck.id} deck={deck} toDeck={() => toDeck(deck.id)} />
         })} 
@@ -123,3 +123,4 @@ function UserPage() {
 }
 
 export default UserPage;
+

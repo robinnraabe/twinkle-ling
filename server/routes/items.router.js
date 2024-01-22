@@ -118,10 +118,12 @@ router.post('/', (req, res) => {
     req.body.item,
     req.body.description,
     req.body.custom,
-    req.body.hints
+    req.body.hint,
+    req.body.image,
+    req.body.language_id
   ]
-  const queryText = `INSERT INTO "items" (chapter_id, item, description, custom, hint)
-    VALUES ($1, $2, $3, $4, $5)
+  const queryText = `INSERT INTO "items" (chapter_id, item, description, custom, hint, image, language_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING i_id;`;
 
   pool.query(queryText, itemValues)

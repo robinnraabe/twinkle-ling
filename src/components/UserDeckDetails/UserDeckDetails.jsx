@@ -12,9 +12,7 @@ function DeckDetails() {
   const chapters = useSelector(store => store.chapters);
   const history = useHistory();
   const dispatch = useDispatch();
-  const deck = useSelector(store => store.deckDetails[0]);
-  const deckId = deck.id;
-  const languageId = deck.language_id;
+  const deck = useSelector(store => store.deckDetails);
 
   // Sends the user back to UserDeckList page
   const toUserDeckList = () => {
@@ -26,7 +24,7 @@ function DeckDetails() {
   // Sends the user to the EditDeck page
   // need to figure out how to create a page for each deck...
   const toEditDeck = () => {
-    axios.get(`/deck/${deckId}`)
+    axios.get(`/deck/${deck.id}`)
       .then(response => {
         dispatch({ type: 'SET_EDIT_DETAILS', payload: response.data });
         history.push('/deck/edit');
@@ -39,7 +37,7 @@ function DeckDetails() {
 
   // Gets details for all chapters in selected deck
   const getChapterDetails = () => {
-    axios.get(`/chapters/${deckId}`)
+    axios.get(`/chapters/${deck.id}`)
       .then(response => {
         dispatch({ type: 'SET_CHAPTER_DETAILS', payload: response.data });
       })
@@ -54,7 +52,7 @@ function DeckDetails() {
     if (user.id === deck.creator_id) {
       event.preventDefault();
       const newChapter = { 
-        deck_id: deckId,
+        deck_id: deck.id,
         title: '-- New Chapter',
         user_id: user.id
       };
@@ -65,7 +63,7 @@ function DeckDetails() {
 
   // This gets extra items for study session
   const getExtraItems = () => {
-    axios.get(`/items/language/${languageId}`).then(response => {
+    axios.get(`/items/language/${deck.language_id}`).then(response => {
       dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
     })
       .catch(error => {
@@ -77,7 +75,7 @@ function DeckDetails() {
   // This sends the user to the Study page and loads the selected deck for studying
   const toLesson = (type) => {
     if (type === 'learn') {
-      axios.get(`/study/deck/learn/${deckId}`).then(response => {
+      axios.get(`/study/deck/learn/${deck.id}`).then(response => {
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -87,7 +85,7 @@ function DeckDetails() {
     }
 
     else if (type === 'review') {
-      axios.get(`/study/deck/review/${deckId}`).then(response => {
+      axios.get(`/study/deck/review/${deck.id}`).then(response => {
         dispatch({ type: 'SET_LESSON', payload: response.data });
       })
         .catch(error => {
@@ -104,7 +102,7 @@ function DeckDetails() {
  const resetProgress = () => {
   const request = {
     params: {
-      deckId: deckId,
+      deckId: deck.id,
       userId: user.id
     }
   }
@@ -165,7 +163,7 @@ function DeckDetails() {
         {/* Right subheader items */}
         <Stack alignItems='center'>
           <Button onClick={toUserDeckList}
-            sx={{ margin: '30px 40px', height: '50px', width: '200px', borderRadius: '0px', 
+            sx={{ margin: '30px 48px', height: '50px', width: '200px', borderRadius: '0px', 
             fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
             disableRipple
             variant='contained'>
@@ -181,43 +179,42 @@ function DeckDetails() {
 
             <Stack height='150px' direction='row' justifyContent='start'>
               <img src={`${deck.image_url}`} height='150px' style={{marginRight: '20px'}}/>
+              { user.id === deck.creator_id ?
+                <Button variant='contained' disableRipple
+                  sx={{ marginRight: '20px', height: '150px', borderRadius: '0px', width: '110px',
+                    fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
+                  onClick={() => toEditDeck()}>
+                  Edit <br /> Deck
+                </Button>
+              :
+                <Button variant='contained' disableRipple
+                  sx={[ {marginRight: '20px'}, {borderRadius: '0px'}, {fontWeight: '600'}, 
+                  {backgroundColor: 'lightgrey'}, {color: 'grey'}, {height: '150px'}, {width: '110px'},
+                  {'&:hover': {backgroundColor: 'lightgrey' }} ]}>
+                  Edit <br /> Deck
+                </Button>
+              }
               <Button variant='contained' disableRipple
                 sx={{ marginRight: '20px', height: '150px', borderRadius: '0px', 
                   fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
-                onClick={() => toLesson('learn')}>
-                Learn
-              </Button>
-              <Button variant='contained' disableRipple
-                sx={{ marginRight: '20px', height: '150px', borderRadius: '0px', 
-                  fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
-                onClick={() => toLesson('review')}>
-                Review
+                onClick={() => resetProgress()}>
+                Reset <br /> Progress
               </Button>
             </Stack>
 
           <Stack direction='column' height='150px' width='200px' justifyContent='space-between'>
-            { user.id === deck.creator_id ?
-              <Button variant='contained' disableRipple
-                sx={{ marginRight: '20px', height: '65px', width: '200px', borderRadius: '0px', 
-                  fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
-                onClick={() => toEditDeck()}>
-                Edit Deck
-              </Button>
-            :
-              <Tooltip title="You must be a creator or contributor to edit this deck" placement='top'>
-                <Button variant='contained' disableRipple sx={[ {borderRadius: '0px'}, {fontWeight: '600'}, 
-                  {backgroundColor: 'lightgrey'}, {color: 'grey'}, {height: '65px'}, 
-                  {'&:hover': {backgroundColor: 'lightgrey' }} ]}>
-                  Edit Deck
-                </Button>
-              </Tooltip>
-            }
-              <Button variant='contained' disableRipple
-                sx={{ marginRight: '20px', height: '65px', width: '200px', borderRadius: '0px', 
-                  fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
-                onClick={() => resetProgress()}>
-                Reset Progress
-              </Button>
+            <Button variant='contained' disableRipple
+              sx={{ marginRight: '20px', height: '65px', width: '200px', borderRadius: '0px', 
+                fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
+              onClick={() => toLesson('learn')}>
+              Learn
+            </Button>
+            <Button variant='contained' disableRipple
+              sx={{ marginRight: '20px', height: '65px', width: '200px', borderRadius: '0px', 
+                fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }} 
+              onClick={() => toLesson('review')}>
+              Review
+            </Button>
           </Stack>
         </Stack>
       </Box>
@@ -226,10 +223,10 @@ function DeckDetails() {
       <Stack direction='row' justifyContent='space-between' sx={{ width: '70%', margin: 'auto'}}>
         <h1 className='white'>Chapters</h1>
         {user.id === deck.creator_id ? 
-          <Button sx={{ fontSize: '24px', color: '#42d3ff' }} disableRipple onClick={addChapter}>+ New Chapter</Button>
+          <Button sx={{ fontSize: '24px', color: '#42d3ff', fontWeight: '600' }} disableRipple onClick={addChapter}>+ New Chapter</Button>
         :
           <Tooltip title="You must be a creator or contributor to edit this deck" placement='top'>
-            <Button sx={{ fontSize: '24px', color: 'gray' }} disableRipple onClick={addChapter}>+ New Chapter</Button>
+            <Button sx={{ fontSize: '24px', color: 'gray', fontWeight: '600' }} disableRipple onClick={addChapter}>+ New Chapter</Button>
           </Tooltip>
         }   
       </Stack>
@@ -239,9 +236,9 @@ function DeckDetails() {
           return <ChapterItem 
             key={chapter.id} 
             chapter={chapter} 
-            deckId={deckId}
+            deckId={deck.id}
             creatorId={deck.creator_id}
-            languageId={languageId} 
+            languageId={deck.language_id} 
             getChapterDetails={getChapterDetails}/>
         })} 
       </Grid>
