@@ -51,4 +51,25 @@ router.get('/user/:id', (req, res) => {
   });
 });
 
+// Query help from https://stackoverflow.com/a/46952400
+router.post(`/user/:id`, (req, res) => {
+  const userId = req.params.id;
+  const queryText = `UPDATE user_data 
+    SET total_correct = total_correct + 1
+    WHERE user_id = ${userId} AND date=CURRENT_DATE;
+
+    INSERT INTO user_data
+    SELECT ${userId}, CURRENT_DATE
+    FROM user_data
+    WHERE date = CURRENT_DATE
+    HAVING COUNT(*) = 0;`;
+  pool.query(queryText)
+    .then((result) => {
+      res.send(result.rows);
+    }).catch((error) => {
+      console.log('Error in POST /data/user (userData)', error)
+      res.sendStatus(500);
+  });
+});
+
 module.exports = router;

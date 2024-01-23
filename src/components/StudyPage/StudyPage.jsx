@@ -38,8 +38,15 @@ function StudyPage() {
           axios.get(`/data/progress`, { params: {chapterId: checkItem.chapter_id, userId: user.id} })
             .then(response => {
               // Updates the progress count in user_chapters
-              console.log(response.data);
               axios.put(`/chapters/learned/${checkItem.chapter_id}`, {learned: response.data, userId: user.id})
+                .then(response => {
+                  // Updates the userData for use in the chart on UserPage
+                  axios.post(`/data/user/${user.id}`)
+                    .catch((error) => {
+                      console.log('GET /data/user error', error);
+                      alert("Something went wrong!");
+                  })
+                })
                 .catch(error => {
                   console.log('Error updating ChapterItem/GetProgressData counts:', error);
                   alert('Something went wrong!');
@@ -102,7 +109,7 @@ function StudyPage() {
     }
 
     // Picks 5 randomized items from 'lessonExtrasCopy', removes each from lessonExtrasCopy
-    while (index > 0) {
+    while (index > 0 && lessonExtrasCopy.length > 0) {
       console.log('itemArray:', itemArray);
       let randomIndex = getRandom(lessonExtrasCopy.length);
       const extraItem = lessonExtrasCopy[randomIndex];

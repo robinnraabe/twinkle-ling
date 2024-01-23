@@ -23,7 +23,6 @@ function DeckDetails() {
   }
 
   // Sends the user to the EditDeck page
-  // need to figure out how to create a page for each deck...
   const toEditDeck = () => {
     axios.get(`/deck/${deck.id}`)
       .then(response => {
@@ -130,14 +129,6 @@ function DeckDetails() {
     padding: '20px',
   }
 
-  const btnStyle = {
-    marginRight: '20px', 
-    borderRadius: '0px', 
-    fontWeight: '600', 
-    backgroundColor: '#42d3ff', 
-    color: 'black'
-  }
-
   useEffect(() => {
     getChapterDetails();
   }, []);
@@ -188,12 +179,14 @@ function DeckDetails() {
                   Edit <br /> Deck
                 </Button>
               :
-                <Button variant='contained' disableRipple
-                  sx={[ {marginRight: '20px'}, {borderRadius: '0px'}, {fontWeight: '600'}, 
-                  {backgroundColor: 'lightgrey'}, {color: 'grey'}, {height: '150px'}, {width: '110px'},
-                  {'&:hover': {backgroundColor: 'lightgrey' }} ]}>
-                  Edit <br /> Deck
-                </Button>
+                <Tooltip title="You must be a creator or contributor to edit this deck" placement='top'>
+                  <Button variant='contained' disableRipple
+                    sx={[ {marginRight: '20px'}, {borderRadius: '0px'}, {fontWeight: '600'}, 
+                    {backgroundColor: 'lightgrey'}, {color: 'grey'}, {height: '150px'}, {width: '110px'},
+                    {'&:hover': {backgroundColor: 'lightgrey' }} ]}>
+                    Edit <br /> Deck
+                  </Button>
+                </Tooltip>
               }
               <Button variant='contained' disableRipple
                 sx={{ marginRight: '20px', height: '150px', borderRadius: '0px', 

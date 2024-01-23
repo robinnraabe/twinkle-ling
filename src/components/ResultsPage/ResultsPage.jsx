@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Box, Stack, Tooltip, IconButton, Button, MenuItem, InputLabel, FormControl, FormHelperText, Select, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ProgressBar from '../ProgressBar/ProgressBar';
+import './ResultsPage.css';
 
 function ResultsPage() {
   const history = useHistory();
@@ -129,6 +130,13 @@ function ResultsPage() {
 
   return (
     <div>
+      <div class='night'>
+        <div class='star'></div>
+        <div class='star'></div>
+        <div class='star'></div>
+        <div class='star'></div>
+        <div class='star'></div>
+      </div>
       {/* Header */}
       <Box sx={{ backgroundColor: '#42d3ff', margin: '20px' }}>
         <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
@@ -160,7 +168,7 @@ function ResultsPage() {
         {/* Progress */}
         <Stack direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
           <h1 className='white' style={{ textAlign: 'center' }}>Lesson complete!</h1>
-          <Stack spacing={0} direction='column' width='100%' justifyItems='center' alignItems='center'
+          <Stack spacing={0} direction='column' width='80%' justifyItems='center' alignItems='center'
             sx={{ backgroundColor: 'white', padding: '20px' }}>
             <h2 style={{ paddingBottom: '0px', marginBottom: '0px' }}>Accuracy: {Math.floor((correct / (missed+correct)) * 100)}%</h2>
             <ProgressBar fillColor="gold" progress={`${(correct / (missed+correct)) * 100}%`} height={50} />

@@ -94,19 +94,6 @@ router.put('/total/subtract/:id', (req, res) => {
     });
 })
 
-router.put('/edit/:id', (req, res) => {
-  const queryText = `UPDATE user_chapters SET "edit" = NOT "edit" WHERE "chapter_id" = $1;`;
-
-  pool.query(queryText, [req.params.id])
-    .then((result) => {
-      res.sendStatus(200);
-    })
-    .catch((error) => {
-      console.log('Error in PUT /chapters', error);
-      res.sendStatus(500);
-  });
-})
-
 router.put('/update', (req, res) => {
   const queryValues = [req.body.title, req.body.chapterId];
 
