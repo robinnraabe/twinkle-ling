@@ -7,6 +7,7 @@ import { Box, Stack, Tooltip, IconButton, Button, MenuItem, InputLabel, FormCont
 import CloseIcon from '@mui/icons-material/Close';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import './ResultsPage.css';
+import './Stars.css';
 
 function ResultsPage() {
   const history = useHistory();
@@ -129,126 +130,128 @@ function ResultsPage() {
   }, [])
 
   return (
-    <div>
+    <>
       <div class='night'>
-        <div class='star'></div>
-        <div class='star'></div>
-        <div class='star'></div>
-        <div class='star'></div>
-        <div class='star'></div>
+        <div className='star'></div>
+        <div className='star'></div>
+        <div className='star'></div>
+        <div className='star'></div>
+        <div className='star'></div>
       </div>
-      {/* Header */}
-      <Box sx={{ backgroundColor: '#42d3ff', margin: '20px' }}>
-        <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
-          <Stack direction='row' alignItems='center' justifyContent='start' padding='20px 0px'>
-            <img src={`${deck.image_url}`} width='200px' />
-            <h1 style={{ marginLeft: '20px' }}>{deck.title}</h1>
+      <div className='result-app'>
+        {/* Header */}
+        <Box sx={{ backgroundColor: '#42d3ff', margin: '20px' }}>
+          <Stack direction='row' alignItems='center' justifyContent='space-between' margin='20px'>
+            <Stack direction='row' alignItems='center' justifyContent='start' padding='20px 0px'>
+              <img src={`${deck.image_url}`} width='200px' />
+              <h1 style={{ marginLeft: '20px' }}>{deck.title}</h1>
+            </Stack>
+            <IconButton onClick={() => exitSession()}
+              disableElevation
+              disableRipple
+              size="large"
+              sx={{
+                ml: 1,
+                "&.MuiButtonBase-root:hover": {
+                  bgcolor: "transparent"
+                }
+              }} >
+              <Tooltip title="End Session">
+                <CloseIcon sx={{fontSize: '80px'}} />   
+              </Tooltip>
+            </IconButton>
           </Stack>
-          <IconButton onClick={() => exitSession()}
-            disableElevation
-            disableRipple
-            size="large"
-            sx={{
-              ml: 1,
-              "&.MuiButtonBase-root:hover": {
-                bgcolor: "transparent"
-              }
-            }} >
-            <Tooltip title="End Session">
-              <CloseIcon sx={{fontSize: '80px'}} />   
-            </Tooltip>
-          </IconButton>
-        </Stack>
-      </Box>
+        </Box>
 
-      {/* Main */}
-      <br />
-      <Stack direction='row' width='100%' justifyContent='space-between'>
+        {/* Main */}
+        <br />
+        <Stack direction='row' width='100%' justifyContent='space-between'>
 
-        {/* Progress */}
-        <Stack direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
-          <h1 className='white' style={{ textAlign: 'center' }}>Lesson complete!</h1>
-          <Stack spacing={0} direction='column' width='80%' justifyItems='center' alignItems='center'
-            sx={{ backgroundColor: 'white', padding: '20px' }}>
-            <h2 style={{ paddingBottom: '0px', marginBottom: '0px' }}>Accuracy: {Math.floor((correct / (missed+correct)) * 100)}%</h2>
-            <ProgressBar fillColor="gold" progress={`${(correct / (missed+correct)) * 100}%`} height={50} />
-            <h3 style={{ paddingTop: '0px', marginTop: '0px' }}>Words reviewed: {correct}</h3>
+          {/* Progress */}
+          <Stack direction='column' width='100%' justifyItems='center' alignItems='center' margin='0px 100px'>
+            <h1 className='white' style={{ textAlign: 'center' }}>Lesson complete!</h1>
+            <Stack spacing={0} direction='column' width='80%' justifyItems='center' alignItems='center'
+              sx={{ backgroundColor: 'white', padding: '20px' }}>
+              <h2 style={{ paddingBottom: '0px', marginBottom: '0px' }}>Accuracy: {Math.floor((correct / (missed+correct)) * 100)}%</h2>
+              <ProgressBar fillColor="gold" progress={`${(correct / (missed+correct)) * 100}%`} height={50} />
+              <h3 style={{ paddingTop: '0px', marginTop: '0px' }}>Words reviewed: {correct}</h3>
+            </Stack>
+            <br />
           </Stack>
-          <br />
-        </Stack>
 
-        {/* Learning settings */}
-        <Stack direction='column' spacing={2} sx={{marginRight: '50px', backgroundColor: 'white', padding: '20px'}}>
-          <h4>Learning Settings</h4>
-          <p style={{ color: 'gray', fontSize: '12px' }}>*leave blank to keep current settings</p>
-          <FormControl sx={{ m: 1, minWidth: 120 }} >
-            <InputLabel>Prompt</InputLabel>
-            <Select sx={{ 
-              margin: '0px 3px', 
-              width: '200px'  }}
-              label='Prompt'
-              value={prompt}
-              onChange={e => { handlePromptChange(e.target.value) }}>
-              {promptList.map(prompt => {
-                return (
-                  <MenuItem 
-                    key={prompt.id} 
-                    value={prompt}>
-                      {prompt.prompt_label}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-
-          {chooseAnswer ?
-            // Allows answer selection
+          {/* Learning settings */}
+          <Stack direction='column' spacing={2} sx={{marginRight: '50px', backgroundColor: 'white', padding: '20px'}}>
+            <h4>Learning Settings</h4>
+            <p style={{ color: 'gray', fontSize: '12px' }}>*leave blank to keep current settings</p>
             <FormControl sx={{ m: 1, minWidth: 120 }} >
-              <InputLabel>Answer</InputLabel>
+              <InputLabel>Prompt</InputLabel>
               <Select sx={{ 
                 margin: '0px 3px', 
-                width: '200px' }}
-                value={answer}
-                label='Answer'
-                onChange={(e) => { setAnswer(e.target.value) }}>
-                {answerList.map(answer => {
+                width: '200px'  }}
+                label='Prompt'
+                value={prompt}
+                onChange={e => { handlePromptChange(e.target.value) }}>
+                {promptList.map(prompt => {
                   return (
                     <MenuItem 
-                      key={answer.id} 
-                      value={answer}>
-                        {answer.answer_label}
+                      key={prompt.id} 
+                      value={prompt}>
+                        {prompt.prompt_label}
                     </MenuItem>
                   );
                 })}
               </Select>
             </FormControl>
-            :
-            // Answer selection is disabled until Prompt is chosen
+
+            {chooseAnswer ?
+              // Allows answer selection
+              <FormControl sx={{ m: 1, minWidth: 120 }} >
+                <InputLabel>Answer</InputLabel>
+                <Select sx={{ 
+                  margin: '0px 3px', 
+                  width: '200px' }}
+                  value={answer}
+                  label='Answer'
+                  onChange={(e) => { setAnswer(e.target.value) }}>
+                  {answerList.map(answer => {
+                    return (
+                      <MenuItem 
+                        key={answer.id} 
+                        value={answer}>
+                          {answer.answer_label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              :
+              // Answer selection is disabled until Prompt is chosen
+              <FormControl sx={{ m: 1, minWidth: 120 }} disabled>
+                <InputLabel>Answer</InputLabel>
+                <Select sx={{ 
+                  margin: '0px 3px', 
+                  width: '200px' }}
+                  label='Answer'>
+                </Select>
+                <FormHelperText>Prompt Required</FormHelperText>
+              </FormControl>
+            }
             <FormControl sx={{ m: 1, minWidth: 120 }} disabled>
-              <InputLabel>Answer</InputLabel>
-              <Select sx={{ 
+              <TextField sx={{ 
                 margin: '0px 3px', 
                 width: '200px' }}
-                label='Answer'>
-              </Select>
-              <FormHelperText>Prompt Required</FormHelperText>
+                type='number'
+                label='Size'
+                value={size}
+                onChange={e => setSize(e.target.value)} />
             </FormControl>
-          }
-          <FormControl sx={{ m: 1, minWidth: 120 }} disabled>
-            <TextField sx={{ 
-              margin: '0px 3px', 
-              width: '200px' }}
-              type='number'
-              label='Size'
-              value={size}
-              onChange={e => setSize(e.target.value)} />
-          </FormControl>
-          <Button variant='contained' 
-            sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
-            onClick={() => getSession()}>Next Lesson</Button>
+            <Button variant='contained' 
+              sx={{ borderRadius: '0px', fontWeight: '600', backgroundColor: '#42d3ff', color: 'black' }}
+              onClick={() => getSession()}>Next Lesson</Button>
+          </Stack>
         </Stack>
-      </Stack>
-    </div>
+      </div>
+    </>
   );
 }
 

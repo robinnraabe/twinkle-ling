@@ -16,7 +16,6 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
-import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
@@ -27,8 +26,6 @@ import StudyPage from '../StudyPage/StudyPage';
 import ResultsPage from '../ResultsPage/ResultsPage';
 
 import './App.css';
-
-
 
 function App() {
   const dispatch = useDispatch();
@@ -46,8 +43,8 @@ function App() {
         <br /><br /><br />
         <Switch>
 
-          {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-          <Redirect exact from="/" to="/home" />
+          {/* Visiting localhost:3000 will redirect to localhost:3000/login */}
+          <Redirect exact from="/" to="/login" />
 
 
           {/* shows AboutPage at all times (logged in or not) */}
@@ -100,8 +97,8 @@ function App() {
               // Redirect to /user if the user is already logged in
               <Redirect to="/user" />
               :
-              // Otherwise, show the Landing page
-              <LandingPage />
+              // Otherwise, show the Login page
+              <LoginPage />
             }
           </Route>
 

@@ -111,7 +111,7 @@ function UserPage() {
             {
               label: "Words reviewed",
               data: userData.map((data) => data.total_correct),
-              backgroundColor: "#315bb530",
+              backgroundColor: "#315bb540",
               borderWidth: 0,
               fill: true, 
               pointRadius: 10,

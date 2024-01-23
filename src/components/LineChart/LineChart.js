@@ -33,7 +33,7 @@ function LineChart({ chartData }) {
                         color: ['#000000', 'aliceblue'], 
                         font: {size: 18},
                         beginAtZero: true,
-                        stepSize: 5,
+                        stepSize: 10,
                         autoSkip: false,
                         padding: 20 }
                 }

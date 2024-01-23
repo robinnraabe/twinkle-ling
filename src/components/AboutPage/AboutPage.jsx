@@ -1,38 +1,34 @@
 import React from 'react';
+import { Box } from '@mui/material';
 
 function AboutPage() {
   return (
-    <div className="container">
-      <div>
-        <p>This about page is for anyone to read!</p>
-        <h1>Technologies used</h1>
-        <ul>
-          <li>HTML/CSS</li>
-          <li>JavaScript</li>
-          <li>Node.js</li>
-          <li>Express</li>
-          <li>React.js</li>
-          <li>Redux</li>
-          <li>Redux-Sagas</li>
-          <li>Material UI</li>
-          <li>PostgreSQL</li>
-          <li>Chart.js</li>
+    <Box sx={{ backgroundColor: 'aliceblue', width: '40%', margin: 'auto', padding: '20px', opacity: .8 }}>
+      <h3 style={{ textAlign: 'center' }}>Technologies used:</h3>
+        <ul style={{ textAlign: 'center', padding: '0px' }}>
+          <p>HTML/CSS<br />
+          JavaScript<br />
+          Node.js<br />
+          Express<br />
+          React<br />
+          Redux<br />
+          Redux-Sagas<br />
+          Material UI<br />
+          PostgreSQL<br />
+          Chart.js</p>
         </ul>
-        <h1>Reflections</h1>
-          <h2>Challenges</h2>
-            <p>The most challenging part of this was</p>
-          <h2>Next Steps</h2>
-            <p>Next I hope to add image uploading, audio recording and playback, and shareability</p>
-        <h1>Acknowledgements</h1>
-          <ul>
-            <li>Chris Black</li>
-            <li>Prime Academy</li>
-            <li>Mentors</li>
-            <li>Everyone in Taaffeite</li>
-          </ul>
-
-      </div>
-    </div>
+        <h3 style={{ textAlign: 'center' }}>Challenges</h3>
+          <p style={{ width: '80%', margin: 'auto' }}>The most challenging part of this project was organizing 
+            all of the data while keeping track of all of the SQL queries and routes. </p>
+        <h3 style={{ textAlign: 'center' }}>Next Steps</h3>
+          <p style={{ width: '80%', margin: 'auto' }}>Next I hope to add image uploading, audio recording and playback, and links to share decks with friends.</p>
+      <h3 style={{ textAlign: 'center' }}>Thanks</h3>
+        <ul style={{ textAlign: 'center', padding: '0px' }}>
+          <p>Chris Black<br />
+          Prime Academy<br />
+          Taaffeite Cohort</p>
+        </ul>
+    </Box>
   );
 }
 
