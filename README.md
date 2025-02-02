@@ -11,9 +11,10 @@
 ## Description
 <!-- Description goes here -->
 <p dir="auto">
-This site provides a central portal where contractors and administrators can share project information. It enables contractors the opportunity to quickly communicate the status of their projects and allows administrators the ability to assess and assign translators at a faster pace. Reducing downtime and inefficiencies in getting projects up, out and completed. 
-This site also allows contractors to keep track of their projects and log their progress in order 
-to coordinate assignments with Borderless Translations as well as their fellow translators and proofreaders.
+Twinkle Ling is a language flashcard application that allows users to create, organize, and study flashcard decks. They can track their daily and weekly progress and choose between multiple study modes for each study session. See "How To Use" below for details on current functionality.
+
+More functionality is on the way, so please check back soon!
+Soon to be added: audio upload and replay, image upload, public deck and user search, user profile editing and visiting, and deck sharing.
 </p>
 
 ## Built With
