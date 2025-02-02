@@ -16,6 +16,7 @@ function StudyPage() {
   const lesson = useSelector(store => store.lesson);
   const [lessonLength] = useState(lesson.length);
   const lessonExtras = useSelector(store => store.lessonExtras);
+  console.log(lessonExtras);
   const [itemArray, setItemArray] = useState([]);
   const [checkItem, setCheckItem] = useState({});
   const [correct, setCorrect] = useState(0);
@@ -136,6 +137,7 @@ function StudyPage() {
     }
 
     setItemArray(itemArray);
+    console.log(itemArray);
   }
 
   const skipItem = () => {
@@ -237,7 +239,7 @@ function StudyPage() {
               <img src={`${checkItem.image}`} width='100px' />
             </Box>
           :
-            <Box sx={{ backgroundColor: '#000000', boxShadow: '0 0 100px black', padding: '0px 10px' }}>
+            <Box sx={{ backgroundColor: '#00000000', padding: '0px 10px' }}>
               <h1 className='white' style={{ fontWeight: 'normal', fontSize: '40px', marginTop: '0px' }}>{checkItem[user.prompt]}</h1> 
             </Box>
           }

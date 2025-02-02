@@ -174,13 +174,13 @@ const options = {
         {/* <LogOutButton className="btn" /> */}
 
         <h2 className="white" style={{ marginLeft: '2%' }}>Welcome, {user.username}!</h2>
-        <Box sx={{ backgroundColor: '#00000080', width: '60%', marginLeft: '10%', marginBottom: '120px', padding: '20px' }}>
+        <Box sx={{ backgroundColor: '#00000080', width: '60%', marginLeft: '10%', marginBottom: '50px', padding: '20px' }}>
           <LineChart chartData={chartData} options={options} />
         </Box>
 
-        <h2 className="white" style={{ marginLeft: '2%' }}>Recent Decks</h2>
+        <h2 className="white" style={{ marginLeft: '2%', marginBottom: '0px' }}>Recent Decks</h2>
         {/* make sure to sort by most recently used decks */}
-        <Grid container spacing={1} marginBottom='100px'>
+        <Grid container spacing={1} marginBottom='50px'>
           {userDeckList.map((deck) => {
             return <DeckItem key={deck.id} deck={deck} public={false} toDeck={() => toDeck(deck.id)} />
           })} 
@@ -208,7 +208,7 @@ const options = {
           </Grid>
         </Grid>
         
-        <h2 className="white" style={{ marginLeft: '2%' }}> Trending Decks</h2>
+        <h2 className="white" style={{ marginLeft: '2%', marginBottom: '0px' }}> Trending Decks</h2>
         {/* make sure to sort by most used! still gotta figure out how that's calculated */}
         <div style={{ alignContent: 'center' }}>
           <Grid container spacing={1} >

@@ -77,10 +77,10 @@ function ChapterItem(props) {
 
   // This toggles the editor for the selected chapter
   const editChapter = (chapterId) => {
-    if (edit === true) {
+    if (edit === true && props.creatorId === user.id) {
       Swal.fire({
         title: "Close editor?",
-        text: "Unsaved changes will be lost.",
+        text: "Any unsaved changes will be lost.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#42d3ff",
@@ -93,6 +93,10 @@ function ChapterItem(props) {
           setUpdateList([]);
         }
       });
+    }
+    else if (edit === true && props.creatorId !== user.id) {
+      setEdit(false);
+      setUpdateList([]);
     }
     else {
       setEdit(true);
@@ -225,6 +229,13 @@ function ChapterItem(props) {
       });
     }
     setUpdateList([]);
+    Swal.fire({
+      title: "Your changes have been saved.",
+      icon: "success",
+      confirmButtonColor: "#42d3ff",
+      cancelButtonColor: "#888888",
+      confirmButtonText: "Ok",
+    })
   }
 
   return (

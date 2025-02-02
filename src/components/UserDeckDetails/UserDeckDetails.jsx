@@ -65,6 +65,7 @@ function DeckDetails() {
   const getExtraItems = () => {
     axios.get(`/items/language/${deck.language_id}`).then(response => {
       dispatch({ type: 'SET_LESSON_EXTRAS', payload: response.data });
+      console.log('extras:', response.data);
     })
       .catch(error => {
         console.log('Error getting extra items:', error);
@@ -117,7 +118,6 @@ function DeckDetails() {
   axios.put(`/items/reset/deck/repetition`, request)
     .then((response) => {
       getChapterDetails();
-      updateChapterData();
     })
     .catch((error) => {
       console.log('Error in UserDeckDetails/resetProgress/repetition PUT request:', error);

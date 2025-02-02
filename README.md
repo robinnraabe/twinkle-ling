@@ -1,121 +1,82 @@
+# Twinkle Ling
 
-# Prime Solo Project Starting Repo
-This version uses React, Redux, Express, Passport, and PostgreSQL (a full list of dependencies can be found in `package.json`).
+<!-- Table of Contents -->
+## Table of Contents
+<ul dir="auto">
+<li><a href="#description">Description</a></li>
+<li><a href="#built-with">Built With</a></li>
+<li><a href="#usage">How To Use</a></li>
+</ul>
 
-We **STRONGLY** recommend following these instructions carefully. It's a lot, and will take some time to set up, but your life will be much easier this way in the long run.
+## Description
+<!-- Description goes here -->
+<p dir="auto">
+This site provides a central portal where contractors and administrators can share project information. It enables contractors the opportunity to quickly communicate the status of their projects and allows administrators the ability to assess and assign translators at a faster pace. Reducing downtime and inefficiencies in getting projects up, out and completed. 
+This site also allows contractors to keep track of their projects and log their progress in order 
+to coordinate assignments with Borderless Translations as well as their fellow translators and proofreaders.
+</p>
 
-## Use the Template for This Repository (Don't Clone)
+## Built With
+<!-- Built With -->
+<p><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="60" height="60"/> 
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="react" width="60" height="60"/>
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="60" height="60"/>
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="60" />
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redux/redux-original.svg" alt="redux" width="60" height="60"/>
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="50" height="50"/>
+<img src="https://inapp.com/wp-content/uploads/elementor/thumbs/express-js-01-1-q05uw85vt1jqloiy5k82sfy7tgvysgt1uqld8slsbc.png" alt="express" width="90" />
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Axios_logo_%282020%29.svg/150px-Axios_logo_%282020%29.svg.png" alt="axios" width="60"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" alt="postgresql" width="60" height="60">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Passportjs.svg/240px-Passportjs.svg.png" alt="PassportJS" width="60" height="60"/>
+<img src="https://v4.mui.com/static/logo.png" alt="Material UI" width="60" height="60" />
+<img src="https://cdn.worldvectorlogo.com/logos/postman.svg" alt="postman" width="60" height="60"/>
+</p>
 
-- Don't Fork or Clone. Instead, click the `Use this Template` button, and make a copy to your personal account. Make the project `PUBLIC`!
 
+## How To Use
 
-## Prerequisites
+### Dashboard
+Users can log in and see their user dashboard, which shows their weekly progress, recently used flashcard decks, and trending decks. 
+![Dashboard - Progress](./public/images/progress.png)
+![Dashboard - Decks](./public/images/dashboard-decks.png)
 
-Before you get started, make sure you have the following software installed on your computer:
+### Decks
+Users can view details of flashcard decks they use by clicking the chosen deck anywhere but the center 'Quick Study' banner. 
+![View Deck](./public/images/deck-details.png)
 
-- [Node.js](https://nodejs.org/en/)
-- [PostrgeSQL](https://www.postgresql.org/)
-- [Nodemon](https://nodemon.io/)
+On the details page, each chapter has a progress bar to show progress towards chapter completion, and each chapter can be expanded to show the words it contains. A deck requires a minimum of 1 chapter, but a chapter can contain any number of words.
+![View Items](./public/images/deck-show-items.png)
 
-## Create database and table
+Users can only edit flashcard decks they own. Inaccesible options are grayed out for the user, and uneditable items are shown in view-mode only.
+![Edit Deck](./public/images/deck-settings.png)
+![Edit Items](./public/images/deck-edit-items.png)
 
-Create a new database called `prime_app` and create a `user` table:
+### Study
+Users can edit their study settings to choose prompt options, answer options, and number of words per session.
+![Settings](./public/images/edit-settings.png)  
 
-```SQL
-CREATE TABLE "user" (
-    "id" SERIAL PRIMARY KEY,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
-);
-```
+Users can enter a study session by:
+<ul>
+  <li>Clicking "Quick Study" on the chosen deck on their dashboard or deck list, which defaults to a review session of all words in that deck, or a learning session if no words have been learned by the user.</li>
 
-If you would like to name your database something else, you will need to change `prime_app` to the name of your new database name in `server/modules/pool.js`
+  ![Quick Study](./public/images/quick-study.png)
 
-## Development Setup Instructions
+  <li>Clicking "learn" or "review" from the deck's details page, which begins a session with only new words, or a session with only previously learned words, respectively. Each option can be chosen only if it is available for the deck.</li>
 
-- Run `npm install`
-- Create a `.env` file at the root of the project and paste this line into the file:
-  ```
-  SERVER_SESSION_SECRET=superDuperSecret
-  ```
-  While you're in your new `.env` file, take the time to replace `superDuperSecret` with some long random string like `25POUbVtx6RKVNWszd9ERB9Bb6` to keep your application secure. Here's a site that can help you: [https://passwordsgenerator.net/](https://passwordsgenerator.net/). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
-- Start postgres if not running already by using `brew services start postgresql`
-- Run `npm run server`
-- Run `npm run client`
-- Navigate to `localhost:3000`
+  ![Deck - Learn & Review](./public/images/review-deck.png)
 
-## Debugging
+  <li>Clicking "learn" or "review" from an individual chapter from a deck's details page to only learn or review the words in the selected chapter. Each option can be chosen only if it is available for the chapter.</li>
 
-To debug, you will need to run the client-side separately from the server. Start the client by running the command `npm run client`. Start the debugging server by selecting the Debug button.
+  ![Chapter - Learn & Review](./public/images/learn-chapter.png)
+</ul> 
 
-![VSCode Toolbar](documentation/images/vscode-toolbar.png)
+During a study session, each word will be presented in the user's chosen prompt type, and 6 randomized answer options (chosen from the same deck) are presented beneath it. There is a counter on the top right to record how many correct guesses and mistakes the user makes. There is a progress bar at the top to show the user how far they are in the session, and it automatically updates when they make a correct guess. Sessions do not end until every prompt is answered correctly.
+![Session](./public/images/study-session.png) ![Session Alt](./public/images/study-session-2.png)
 
-Then make sure `Launch Program` is selected from the dropdown, then click the green play arrow.
+If a study session is ended prematurely, all session progress is saved but no session summary is shown, and the user is redirected to details page for that deck.
 
-![VSCode Debug Bar](documentation/images/vscode-debug-bar.png)
+When a session is finished, the user can view their session summary and edit their study settings before the next session.
+![Session End](./public/images/session-end.png)
 
-## Testing Routes with Postman
-
-To use Postman with this repo, you will need to set up requests in Postman to register a user and login a user at a minimum.
-
-Keep in mind that once you using the login route, Postman will manage your session cookie for you just like a browser, ensuring it is sent with each subsequent request. If you delete the `localhost` cookie in Postman, it will effectively log you out.
-
-1. Start the server - `npm run server`
-2. Import the sample routes JSON file [v2](./PostmanPrimeSoloRoutesv2.json) by clicking `Import` in Postman. Select the file.
-3. Click `Collections` and `Send` the following three calls in order:
-   1. `POST /api/user/register` registers a new user, see body to change username/password
-   2. `POST /api/user/login` will login a user, see body to change username/password
-   3. `GET /api/user` will get user information, by default it's not very much
-
-After running the login route above, you can try any other route you've created that requires a logged in user!
-
-## Production Build
-
-Before pushing to Heroku, run `npm run build` in terminal. This will create a build folder that contains the code Heroku will be pointed at. You can test this build by typing `npm start`. Keep in mind that `npm start` will let you preview the production build but will **not** auto update.
-
-- Start postgres if not running already by using `brew services start postgresql`
-- Run `npm start`
-- Navigate to `localhost:5000`
-
-## Lay of the Land
-
-There are a few videos linked below that show a walkthrough the client and sever setup to help acclimatize to the boilerplate. Please take some time to watch the videos in order to get a better understanding of what the boilerplate is like.
-
-- [Initial Set](https://vimeo.com/453297271)
-- [Server Walkthrough](https://vimeo.com/453297212)
-- [Client Walkthrough](https://vimeo.com/453297124)
-
-Directory Structure:
-
-- `src/` contains the React application
-- `public/` contains static assets for the client-side
-- `build/` after you build the project, contains the transpiled code from `src/` and `public/` that will be viewed on the production site
-- `server/` contains the Express App
-
-This code is also heavily commented. We recommend reading through the comments, getting a lay of the land, and becoming comfortable with how the code works before you start making too many changes. If you're wondering where to start, consider reading through component file comments in the following order:
-
-- src/components
-  - App/App
-  - Footer/Footer
-  - Nav/Nav
-  - AboutPage/AboutPage
-  - InfoPage/InfoPage
-  - UserPage/UserPage
-  - LoginPage/LoginPage
-  - RegisterPage/RegisterPage
-  - LogOutButton/LogOutButton
-  - ProtectedRoute/ProtectedRoute
-
-## Deployment
-
-1. Create a new Heroku project
-1. Link the Heroku project to the project GitHub Repo
-1. Create an Heroku Postgres database
-1. Connect to the Heroku Postgres database from Postico
-1. Create the necessary tables
-1. Add an environment variable for `SERVER_SESSION_SECRET` with a nice random string for security
-1. In the deploy section, select manual deploy
-
-## Update Documentation
-
-Customize this ReadMe and the code comments in this project to read less like a starter repo and more like a project. Here is an example: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
+### Sharing
+Deck sharing feature coming soon.

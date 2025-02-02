@@ -12,7 +12,7 @@ body {
   background-image: url('../../../public/images/telescope.png'), url('../../../public/images/blue.png'), url('../../../public/images/black-sky.jpeg');
   background-repeat: no-repeat, no-repeat, repeat;
   background-position: right bottom, center bottom, left top;
-  background-position-y: 420px, 380px, 0px;
+  background-position-y: 450px, 320px, 0px;
   opacity: 1, .6, 1;
   background-size: 500px, 100%, 30%;
   background-attachment: fixed, fixed, fixed;

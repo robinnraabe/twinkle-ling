@@ -83,7 +83,7 @@ function DeckItem(props) {
         {borderRadius: '0px'}, 
         {backgroundColor: 'aliceblue'},
         {color: 'white'}
-      ]}>
+      ]}> 
         {props.public ? 
           <CardActions sx={{ margin: '0px', marginLeft: '-10px', padding: '0px', flexDirection: 'column'}}>
             <img onClick={props.toDeck} src={props.deck.image_url} width='100%' height='120px' />
@@ -93,7 +93,7 @@ function DeckItem(props) {
             <img onClick={props.toDeck} src={props.deck.image_url} width='100%' height='120px' />
             <Box onClick={() => toLesson()} 
               sx={[ {backgroundColor: 'black'}, {color: 'white'}, {width: '100%'}, 
-              {height: '40px'}, {margin: '0px'}, {padding: '20px 0px 0px 0px'}, 
+              {height: '30px'}, {margin: '0px'}, {padding: '10px 0px 0px 0px'}, 
               {textAlign: 'center'}, {justifyItems: 'center'}, {'&:hover': {color: '#4cd3ff', backgroundColor: '#282828' }} ]}>
               Quick Practice
             </Box>

@@ -15,17 +15,16 @@ function AboutPage() {
           Redux-Sagas<br />
           Material UI<br />
           PostgreSQL<br />
-          Chart.js</p>
+          Postico<br />
+          Chart.js<br />
+          SweetAlert</p>
         </ul>
-        <h3 style={{ textAlign: 'center' }}>Challenges</h3>
-          <p style={{ width: '80%', margin: 'auto' }}>The most challenging part of this project was organizing 
-            all of the data while keeping track of all of the SQL queries and routes. </p>
         <h3 style={{ textAlign: 'center' }}>Next Steps</h3>
-          <p style={{ width: '80%', margin: 'auto' }}>Next I hope to add image uploading, audio recording and playback, and links to share decks with friends.</p>
+          <p style={{ width: '80%', margin: 'auto' }}>Next I hope to add image uploading, audio recording and playback, links to share decks with friends, and search functionality to find public decks.</p>
       <h3 style={{ textAlign: 'center' }}>Thanks</h3>
         <ul style={{ textAlign: 'center', padding: '0px' }}>
           <p>Chris Black<br />
-          Prime Academy<br />
+          Prime Digital Academy<br />
           Taaffeite Cohort</p>
         </ul>
     </Box>
