@@ -95,7 +95,7 @@ function DeckItem(props) {
               sx={[ {backgroundColor: 'black'}, {color: 'white'}, {width: '100%'}, 
               {height: '30px'}, {margin: '0px'}, {padding: '10px 0px 0px 0px'}, 
               {textAlign: 'center'}, {justifyItems: 'center'}, {'&:hover': {color: '#4cd3ff', backgroundColor: '#282828' }} ]}>
-              Quick Practice
+              Quick Study
             </Box>
           </CardActions>
         }

@@ -45,7 +45,7 @@ Users can view details of flashcard decks they use by clicking the chosen deck a
 ![View Deck](./public/images/deck-details.png)
 
 On the details page, each chapter has a progress bar to show progress towards chapter completion, and each chapter can be expanded to show the words it contains. A deck requires a minimum of 1 chapter, but a chapter can contain any number of words.
-![View Items](./public/images/deck-show-items.png)
+![View Items](./public/images/deck-view-items.png)
 
 Users can only edit flashcard decks they own. Inaccesible options are grayed out for the user, and uneditable items are shown in view-mode only.
 ![Edit Deck](./public/images/deck-settings.png)
