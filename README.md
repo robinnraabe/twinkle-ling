@@ -5,7 +5,7 @@
 <ul dir="auto">
 <li><a href="#description">Description</a></li>
 <li><a href="#built-with">Built With</a></li>
-<li><a href="#demonstration">Demonstration</a></li>
+<li><a href="#demo">Demo</a></li>
 <li><a href="#usage">Usage</a></li>
 </ul>
 
@@ -34,10 +34,8 @@ Soon to be added: audio upload and replay, image upload, public deck and user se
 <img src="https://cdn.worldvectorlogo.com/logos/postman.svg" alt="postman" width="60" height="60"/>
 </p>
 
-## Demonstration
-<video controls="controls" width="800" height="600" name="Twinkle Ling Demo" 
-  src="https://www.youtube.com/watch?v=oahboXw4BH4">
-</video>
+## Demo
+[![YouTube](http://i.ytimg.com/vi/oahboXw4BH4/hqdefault.jpg)](https://www.youtube.com/watch?v=oahboXw4BH4) 
 
 ## Usage
 
