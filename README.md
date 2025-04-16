@@ -5,7 +5,7 @@
 <ul dir="auto">
 <li><a href="#description">Description</a></li>
 <li><a href="#built-with">Built With</a></li>
-<li><a href="#demo">Demonstration</a></li>
+<li><a href="#demonstration">Demonstration</a></li>
 <li><a href="#usage">Usage</a></li>
 </ul>
 
