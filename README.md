@@ -5,7 +5,8 @@
 <ul dir="auto">
 <li><a href="#description">Description</a></li>
 <li><a href="#built-with">Built With</a></li>
-<li><a href="#usage">How To Use</a></li>
+<li><a href="#demo">Demonstration</a></li>
+<li><a href="#usage">Usage</a></li>
 </ul>
 
 ## Description
@@ -33,8 +34,10 @@ Soon to be added: audio upload and replay, image upload, public deck and user se
 <img src="https://cdn.worldvectorlogo.com/logos/postman.svg" alt="postman" width="60" height="60"/>
 </p>
 
+## Demonstration
+[![YouTube](http://i.ytimg.com/vi/oahboXw4BH4/hqdefault.jpg)](https://www.youtube.com/watch?v=oahboXw4BH4)
 
-## How To Use
+## Usage
 
 ### Dashboard
 Users can log in and see their user dashboard, which shows their weekly progress, recently used flashcard decks, and trending decks. 
