@@ -35,8 +35,8 @@ Soon to be added: audio upload and replay, image upload, public deck and user se
 </p>
 
 ## Demonstration
-<video controls="controls" width="800" height="600" name="Twinkle Ling Demo">
-  <source src="https://www.youtube.com/watch?v=oahboXw4BH4">
+<video controls="controls" width="800" height="600" name="Twinkle Ling Demo" 
+  src="https://www.youtube.com/watch?v=oahboXw4BH4">
 </video>
 
 ## Usage
